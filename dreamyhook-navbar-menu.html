@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Animated Navbar Menu</title>
+
+    <!--
+    ========================================================================
+    DREAMYHOOK NAVBAR MENU - INTEGRATION GUIDE
+    ========================================================================
+
+    This component provides an animated dropdown navigation menu styled with
+    the DreamyHook brand theme colors and design system.
+
+    BRAND THEME:
+    - Primary: Marigold Yellow (#FCBF49)
+    - Secondary: Midnight Blue (#0A1128)
+    - Accent: Buttercup Yellow (#FFD23F)
+    - Coral: #FF6B4A (warm accent for CTAs)
+    - Sky Blue: #0ea5e9 (fresh accent)
+
+    TECH STACK:
+    - Pure HTML5
+    - CSS3 with custom animations
+    - Vanilla JavaScript (no dependencies)
+    - Single file implementation
+
+    FEATURES:
+    - Smooth dropdown animations on hover
+    - Responsive design
+    - Glassmorphism effects
+    - Golden glow hover states
+    - Accessible keyboard navigation
+    - Mobile-friendly responsive menu
+
+    STRUCTURE:
+    1. Navigation container (.navbar-menu)
+    2. Menu items with dropdown capability (.menu-item)
+    3. Dropdown content containers (.dropdown-content)
+    4. Product cards for featured items (.product-item)
+    5. Simple links (.hovered-link)
+
+    CUSTOMIZATION GUIDE:
+
+    1. To add new menu items:
+       - Copy a .menu-item div
+       - Update the data-item attribute
+       - Add corresponding .dropdown-content with same data-item
+
+    2. To add product items:
+       - Use .product-item structure
+       - Replace image src with your product image
+       - Update title, description, and href
+
+    3. To add simple links:
+       - Use .hovered-link class on anchor tags
+       - Links automatically get hover effects
+
+    4. Color customization:
+       - Modify CSS custom properties in :root
+       - All colors use DreamyHook brand palette
+
+    5. Animation customization:
+       - Adjust @keyframes for different effects
+       - Modify transition timing in .dropdown-content
+
+    RESPONSIVE BEHAVIOR:
+    - Desktop: Full dropdown menus
+    - Tablet: Compact spacing
+    - Mobile: Hamburger menu (can be extended)
+
+    ASSETS NEEDED:
+    - Product images (140x70px recommended)
+    - Logo/icons (optional, can use text)
+
+    INTEGRATION STEPS:
+
+    1. Copy this entire file to your project
+
+    2. If integrating into existing site:
+       - Extract CSS to your stylesheet
+       - Extract JS to your scripts file
+       - Copy HTML structure to desired location
+
+    3. Replace placeholder content:
+       - Update menu item names
+       - Replace product images with your assets
+       - Update all href links to your routes
+       - Customize dropdown content
+
+    4. Test interactions:
+       - Verify hover states work
+       - Check mobile responsiveness
+       - Test keyboard navigation
+       - Validate all links
+
+    5. Optional enhancements:
+       - Add search functionality
+       - Integrate with routing system
+       - Add authentication state
+       - Include notification badges
+
+    QUESTIONS TO CONSIDER:
+
+    - What menu items does your site need?
+    - Do you have product/service images ready?
+    - Should dropdowns open on click or hover (currently hover)?
+    - Do you need mega-menu layouts for complex navigation?
+    - Should the navbar be sticky/fixed on scroll?
+    - Do you need different menu items for authenticated users?
+    - What is your mobile navigation preference?
+
+    BEST PRACTICES:
+
+    - Keep menu depth to 2 levels for usability
+    - Use descriptive labels for accessibility
+    - Optimize images for web (WebP format recommended)
+    - Test on multiple devices and browsers
+    - Ensure sufficient color contrast for text
+    - Add aria-labels for screen readers
+    - Keep dropdown content concise
+
+    ========================================================================
+    -->
+
+    <!-- Google Fonts: Inter for body, Poppins for headings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ====================== CSS RESET & BASE ====================== */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* DreamyHook Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-white: #ffffff;
+            --color-warm-white: #fffef9;
+            --color-cream: #fef9e7;
+            --color-light-cream: #fdf4d3;
+            --color-neutral-500: #78716c;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-text: var(--color-secondary);
+            --color-background: var(--color-warm-white);
+            --color-border: rgba(10, 17, 40, 0.1);
+
+            /* Typography */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-glow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-glow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+
+            /* Border Radius */
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 1.5rem;
+            --radius-xl: 2rem;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-base: 300ms ease;
+            --transition-slow: 500ms ease;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, var(--color-warm-white) 0%, var(--color-cream) 100%);
+            color: var(--color-text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        /* ====================== NAVBAR MENU STYLES ====================== */
+
+        .navbar-container {
+            position: fixed;
+            top: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            max-width: 56rem;
+            width: 90%;
+        }
+
+        .navbar-menu {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(10, 17, 40, 0.08);
+            box-shadow: var(--shadow-medium);
+            transition: all var(--transition-base);
+        }
+
+        .navbar-menu:hover {
+            box-shadow: var(--shadow-hard);
+        }
+
+        /* ====================== MENU ITEM STYLES ====================== */
+
+        .menu-item {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .menu-item-text {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--color-text);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-base);
+            position: relative;
+        }
+
+        .menu-item:hover .menu-item-text {
+            color: var(--color-primary);
+            background: rgba(252, 191, 73, 0.05);
+        }
+
+        /* Animated underline effect */
+        .menu-item-text::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+            transform: translateX(-50%);
+            transition: width var(--transition-base);
+        }
+
+        .menu-item:hover .menu-item-text::after {
+            width: 80%;
+        }
+
+        /* ====================== DROPDOWN STYLES ====================== */
+
+        .dropdown-content {
+            position: absolute;
+            top: calc(100% + 1.2rem);
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            min-width: 16rem;
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(10, 17, 40, 0.1);
+            box-shadow: var(--shadow-hard);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-base);
+            pointer-events: none;
+        }
+
+        .dropdown-content.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) scale(1);
+            pointer-events: auto;
+            animation: dropdownSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes dropdownSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0) scale(1);
+            }
+        }
+
+        /* Dropdown arrow indicator */
+        .dropdown-content::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.98);
+            border-left: 1px solid rgba(10, 17, 40, 0.1);
+            border-top: 1px solid rgba(10, 17, 40, 0.1);
+        }
+
+        /* ====================== LINK STYLES ====================== */
+
+        .link-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .hovered-link {
+            display: block;
+            padding: 0.625rem 1rem;
+            color: var(--color-neutral-700);
+            text-decoration: none;
+            font-size: 0.875rem;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hovered-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(252, 191, 73, 0.1), transparent);
+            transition: left var(--transition-base);
+        }
+
+        .hovered-link:hover {
+            color: var(--color-secondary);
+            background: rgba(255, 210, 63, 0.08);
+            transform: translateX(4px);
+        }
+
+        .hovered-link:hover::before {
+            left: 100%;
+        }
+
+        /* ====================== PRODUCT GRID STYLES ====================== */
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            min-width: 32rem;
+        }
+
+        .product-item {
+            display: flex;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-base);
+            border: 1px solid transparent;
+        }
+
+        .product-item:hover {
+            background: linear-gradient(135deg, rgba(255, 210, 63, 0.05), rgba(252, 191, 73, 0.05));
+            border-color: rgba(252, 191, 73, 0.2);
+            box-shadow: var(--shadow-glow-marigold);
+            transform: translateY(-2px);
+        }
+
+        .product-image {
+            width: 140px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-soft);
+            flex-shrink: 0;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-title {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .product-description {
+            font-size: 0.875rem;
+            color: var(--color-neutral-700);
+            line-height: 1.4;
+            max-width: 10rem;
+        }
+
+        /* ====================== DEMO CONTENT STYLES ====================== */
+
+        .demo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: var(--spacing-xl);
+        }
+
+        .demo-text {
+            margin-top: 12rem;
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+            text-align: center;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ====================== RESPONSIVE STYLES ====================== */
+
+        @media (max-width: 768px) {
+            .navbar-container {
+                width: 95%;
+                top: 1rem;
+            }
+
+            .navbar-menu {
+                padding: 1rem 1.25rem;
+                gap: var(--spacing-xs);
+            }
+
+            .menu-item-text {
+                font-size: 0.875rem;
+                padding: 0.375rem 0.75rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+                min-width: 18rem;
+            }
+
+            .dropdown-content {
+                left: 0;
+                transform: translateX(0) scale(0.95);
+            }
+
+            .dropdown-content.active {
+                transform: translateX(0) scale(1);
+            }
+
+            .dropdown-content::before {
+                left: 2rem;
+            }
+
+            .demo-text {
+                font-size: 1.125rem;
+                margin-top: 8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-menu {
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+
+            .product-grid {
+                min-width: auto;
+            }
+        }
+
+        /* ====================== ACCESSIBILITY ====================== */
+
+        .menu-item:focus-within .menu-item-text {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .hovered-link:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Container -->
+    <div class="demo-container">
+        <!-- Navbar -->
+        <div class="navbar-container">
+            <nav class="navbar-menu" id="navbar">
+                <!-- Menu Item: Services -->
+                <div class="menu-item" data-item="services">
+                    <div class="menu-item-text">Services</div>
+                    <div class="dropdown-content" data-dropdown="services">
+                        <div class="link-list">
+                            <a href="#web-dev" class="hovered-link">Web Development</a>
+                            <a href="#interface-design" class="hovered-link">Interface Design</a>
+                            <a href="#seo" class="hovered-link">Search Engine Optimization</a>
+                            <a href="#branding" class="hovered-link">Branding</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Item: Products -->
+                <div class="menu-item" data-item="products">
+                    <div class="menu-item-text">Products</div>
+                    <div class="dropdown-content" data-dropdown="products">
+                        <div class="product-grid">
+                            <a href="https://unsplash.com/photos/macbook-pro-on-black-wooden-table-5QgIuuBxKwM" class="product-item">
+                                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=140&h=70&fit=crop"
+                                     alt="Web Development"
+                                     class="product-image">
+                                <div class="product-info">
+                                    <h4 class="product-title">WebCraft Pro</h4>
+                                    <p class="product-description">Build stunning websites with our premium toolkit.</p>
+                                </div>
+                            </a>
+
+                            <a href="https://unsplash.com/photos/macbook-pro-displaying-group-of-people-iEEBWgY_6lA" class="product-item">
+                                <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=140&h=70&fit=crop"
+                                     alt="Design System"
+                                     class="product-image">
+                                <div class="product-info">
+                                    <h4 class="product-title">Design System</h4>
+                                    <p class="product-description">Production-ready components for your next project.</p>
+                                </div>
+                            </a>
+
+                            <a href="https://unsplash.com/photos/person-using-macbook-pro-npxXWgQ33ZQ" class="product-item">
+                                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=140&h=70&fit=crop"
+                                     alt="Analytics"
+                                     class="product-image">
+                                <div class="product-info">
+                                    <h4 class="product-title">Analytics Hub</h4>
+                                    <p class="product-description">Track and optimize your business metrics.</p>
+                                </div>
+                            </a>
+
+                            <a href="https://unsplash.com/photos/person-holding-pencil-near-laptop-computer-5fNmWej4tAA" class="product-item">
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=140&h=70&fit=crop"
+                                     alt="Marketing Tools"
+                                     class="product-image">
+                                <div class="product-info">
+                                    <h4 class="product-title">Marketing Suite</h4>
+                                    <p class="product-description">Grow your audience with powerful tools.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Item: Pricing -->
+                <div class="menu-item" data-item="pricing">
+                    <div class="menu-item-text">Pricing</div>
+                    <div class="dropdown-content" data-dropdown="pricing">
+                        <div class="link-list">
+                            <a href="#hobby" class="hovered-link">Hobby</a>
+                            <a href="#individual" class="hovered-link">Individual</a>
+                            <a href="#team" class="hovered-link">Team</a>
+                            <a href="#enterprise" class="hovered-link">Enterprise</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Demo Text -->
+        <p class="demo-text">
+            The DreamyHook Navbar will show on top of the page
+        </p>
+    </div>
+
+    <script>
+        // ====================== NAVBAR MENU INTERACTIONS ======================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.getElementById('navbar');
+            const menuItems = document.querySelectorAll('.menu-item');
+            let activeDropdown = null;
+            let hideTimeout = null;
+
+            // Handle menu item hover
+            menuItems.forEach(item => {
+                const itemName = item.dataset.item;
+                const dropdown = item.querySelector(`[data-dropdown="${itemName}"]`);
+
+                // Mouse enter
+                item.addEventListener('mouseenter', function() {
+                    // Clear any pending hide timeout
+                    if (hideTimeout) {
+                        clearTimeout(hideTimeout);
+                        hideTimeout = null;
+                    }
+
+                    // Hide currently active dropdown if different
+                    if (activeDropdown && activeDropdown !== dropdown) {
+                        activeDropdown.classList.remove('active');
+                    }
+
+                    // Show this dropdown
+                    if (dropdown) {
+                        dropdown.classList.add('active');
+                        activeDropdown = dropdown;
+                    }
+                });
+
+                // Mouse leave
+                item.addEventListener('mouseleave', function(e) {
+                    // Only hide if not moving to the dropdown
+                    if (dropdown && !dropdown.contains(e.relatedTarget)) {
+                        hideTimeout = setTimeout(() => {
+                            dropdown.classList.remove('active');
+                            if (activeDropdown === dropdown) {
+                                activeDropdown = null;
+                            }
+                        }, 150);
+                    }
+                });
+
+                // Dropdown hover to keep it visible
+                if (dropdown) {
+                    dropdown.addEventListener('mouseenter', function() {
+                        if (hideTimeout) {
+                            clearTimeout(hideTimeout);
+                            hideTimeout = null;
+                        }
+                    });
+
+                    dropdown.addEventListener('mouseleave', function() {
+                        hideTimeout = setTimeout(() => {
+                            dropdown.classList.remove('active');
+                            if (activeDropdown === dropdown) {
+                                activeDropdown = null;
+                            }
+                        }, 150);
+                    });
+                }
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navbar.contains(e.target)) {
+                    if (activeDropdown) {
+                        activeDropdown.classList.remove('active');
+                        activeDropdown = null;
+                    }
+                }
+            });
+
+            // Keyboard navigation
+            menuItems.forEach((item, index) => {
+                item.setAttribute('tabindex', '0');
+
+                item.addEventListener('keydown', function(e) {
+                    const itemName = item.dataset.item;
+                    const dropdown = item.querySelector(`[data-dropdown="${itemName}"]`);
+
+                    // Enter or Space to toggle dropdown
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (dropdown) {
+                            if (dropdown.classList.contains('active')) {
+                                dropdown.classList.remove('active');
+                                activeDropdown = null;
+                            } else {
+                                if (activeDropdown) {
+                                    activeDropdown.classList.remove('active');
+                                }
+                                dropdown.classList.add('active');
+                                activeDropdown = dropdown;
+                            }
+                        }
+                    }
+
+                    // Escape to close dropdown
+                    if (e.key === 'Escape') {
+                        if (activeDropdown) {
+                            activeDropdown.classList.remove('active');
+                            activeDropdown = null;
+                        }
+                    }
+
+                    // Arrow keys for navigation
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        const nextItem = menuItems[index + 1] || menuItems[0];
+                        nextItem.focus();
+                    }
+
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        const prevItem = menuItems[index - 1] || menuItems[menuItems.length - 1];
+                        prevItem.focus();
+                    }
+                });
+            });
+
+            // Add smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#' && href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                        // Close dropdown after clicking link
+                        if (activeDropdown) {
+                            activeDropdown.classList.remove('active');
+                            activeDropdown = null;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
