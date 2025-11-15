@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Infinite Scroll Carousel</title>
+
+    <!-- Google Fonts - DreamyHook Brand Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ======================= DreamyHook Theme Variables ======================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral accent */
+            --color-sky: #0ea5e9;            /* Sky Blue accent */
+
+            /* Neutral Colors - Warm Gray Palette */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Typography */
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+            --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --spacing-2xl: 4rem;
+            --spacing-3xl: 5rem;
+            --spacing-4xl: 6rem;
+
+            /* Border Radius */
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 1.5rem;
+            --radius-xl: 2rem;
+        }
+
+        /* ======================= Reset & Base Styles ======================= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--color-neutral-200) 0%, var(--color-neutral-400) 100%);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ======================= Selection Styles ======================= */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ======================= Container & Layout ======================= */
+        .container {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .section {
+            width: 100%;
+            padding: var(--spacing-4xl) 0;
+        }
+
+        /* ======================= Typography ======================= */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--color-secondary);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: var(--spacing-md);
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            margin-bottom: var(--spacing-md);
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--color-neutral-600);
+        }
+
+        /* ======================= Carousel Component Styles ======================= */
+        .carousel-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xl);
+            padding: var(--spacing-xl) 0;
+        }
+
+        .carousel-header {
+            max-width: 800px;
+        }
+
+        .carousel-header h2 {
+            font-size: clamp(1.25rem, 3vw, 3rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-neutral-700) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Carousel Container */
+        .carousel-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            background: var(--color-neutral-100);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg) 0;
+            box-shadow: var(--shadow-warm);
+        }
+
+        /* Carousel Track - This will slide */
+        .carousel-track {
+            display: flex;
+            gap: var(--spacing-md);
+            animation: scroll 20s linear infinite;
+            width: fit-content;
+        }
+
+        .carousel-track:hover {
+            animation-play-state: paused;
+        }
+
+        /* Carousel Item */
+        .carousel-item {
+            flex: 0 0 auto;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--color-neutral-100) 0%, var(--color-neutral-300) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--color-neutral-300);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .carousel-item:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: var(--shadow-marigold-glow);
+            border-color: var(--color-primary);
+        }
+
+        .carousel-item:hover::before {
+            opacity: 0.1;
+        }
+
+        .carousel-item-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-neutral-100);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .logo-text {
+            font-family: var(--font-heading);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+        }
+
+        /* Fade effect on edges */
+        .carousel-container::before,
+        .carousel-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .carousel-container::before {
+            left: 0;
+            background: linear-gradient(to right, var(--color-neutral-100), transparent);
+        }
+
+        .carousel-container::after {
+            right: 0;
+            background: linear-gradient(to left, var(--color-neutral-100), transparent);
+        }
+
+        /* Infinite Scroll Animation */
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ======================= Responsive Design ======================= */
+
+        /* Tablet */
+        @media screen and (max-width: 991px) {
+            .section {
+                padding: var(--spacing-3xl) 0;
+            }
+
+            .carousel-item {
+                width: 160px;
+                height: 160px;
+            }
+
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
+
+            .container {
+                padding: 0 var(--spacing-md);
+            }
+        }
+
+        /* Mobile Landscape */
+        @media screen and (max-width: 767px) {
+            .section {
+                padding: var(--spacing-2xl) 0;
+            }
+
+            .carousel-item {
+                width: 140px;
+                height: 140px;
+            }
+
+            .logo-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.125rem;
+            }
+
+            .carousel-container::before,
+            .carousel-container::after {
+                width: 50px;
+            }
+        }
+
+        /* Mobile Portrait */
+        @media screen and (max-width: 479px) {
+            .carousel-item {
+                width: 120px;
+                height: 120px;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .logo-text {
+                font-size: 0.75rem;
+            }
+
+            .carousel-header h2 {
+                font-size: 1.25rem;
+            }
+
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
+        }
+
+        /* ======================= Utility Classes ======================= */
+        .text-gradient-golden {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-gradient-warm {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <div class="container">
+            <div class="carousel-section">
+                <!-- Header -->
+                <div class="carousel-header">
+                    <h2>Trusted by thousands of businesses worldwide</h2>
+                </div>
+
+                <!-- Carousel Container -->
+                <div class="carousel-container">
+                    <div class="carousel-track" id="carouselTrack">
+                        <!-- Items will be duplicated via JavaScript for infinite scroll -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ======================= Carousel Logic =======================
+
+        // Configuration
+        const LOGO_COUNT = 15;
+        const SCROLL_SPEED = 20000; // milliseconds for one complete scroll
+
+        // Logo data - you can customize these
+        const logoData = [
+            { name: 'Logo 1', initial: 'L1', color: '#FCBF49' },
+            { name: 'Logo 2', initial: 'L2', color: '#FFD23F' },
+            { name: 'Logo 3', initial: 'L3', color: '#FF6B4A' },
+            { name: 'Logo 4', initial: 'L4', color: '#0ea5e9' },
+            { name: 'Logo 5', initial: 'L5', color: '#FCBF49' },
+            { name: 'Logo 6', initial: 'L6', color: '#FFD23F' },
+            { name: 'Logo 7', initial: 'L7', color: '#FF6B4A' },
+            { name: 'Logo 8', initial: 'L8', color: '#0ea5e9' },
+            { name: 'Logo 9', initial: 'L9', color: '#FCBF49' },
+            { name: 'Logo 10', initial: 'L10', color: '#FFD23F' },
+            { name: 'Logo 11', initial: 'L11', color: '#FF6B4A' },
+            { name: 'Logo 12', initial: 'L12', color: '#0ea5e9' },
+            { name: 'Logo 13', initial: 'L13', color: '#FCBF49' },
+            { name: 'Logo 14', initial: 'L14', color: '#FFD23F' },
+            { name: 'Logo 15', initial: 'L15', color: '#FF6B4A' }
+        ];
+
+        // Create carousel item HTML
+        function createCarouselItem(logo, index) {
+            return `
+                <div class="carousel-item">
+                    <div class="carousel-item-content">
+                        <div class="logo-icon" style="background: linear-gradient(135deg, ${logo.color}, ${adjustColor(logo.color, -20)});">
+                            ${index + 1}
+                        </div>
+                        <span class="logo-text">${logo.name}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Helper function to darken color
+        function adjustColor(color, percent) {
+            const num = parseInt(color.replace("#", ""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (
+                0x1000000 +
+                (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+                (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+                (B < 255 ? (B < 1 ? 0 : B) : 255)
+            ).toString(16).slice(1);
+        }
+
+        // Initialize carousel
+        function initCarousel() {
+            const track = document.getElementById('carouselTrack');
+
+            // Create items HTML
+            let itemsHTML = '';
+            logoData.forEach((logo, index) => {
+                itemsHTML += createCarouselItem(logo, index);
+            });
+
+            // Duplicate items for seamless infinite scroll
+            // We need at least 2 sets to make the loop seamless
+            track.innerHTML = itemsHTML + itemsHTML;
+        }
+
+        // Auto-scroll functionality (alternative approach using requestAnimationFrame)
+        let scrollPosition = 0;
+        let animationId = null;
+        let isHovering = false;
+
+        function autoScroll() {
+            if (!isHovering) {
+                const track = document.getElementById('carouselTrack');
+                const trackWidth = track.scrollWidth / 2; // Half because we duplicated
+
+                scrollPosition += 0.5; // Adjust speed here
+
+                if (scrollPosition >= trackWidth) {
+                    scrollPosition = 0;
+                }
+
+                track.style.transform = `translateX(-${scrollPosition}px)`;
+            }
+
+            animationId = requestAnimationFrame(autoScroll);
+        }
+
+        // Pause on hover
+        function setupHoverListeners() {
+            const track = document.getElementById('carouselTrack');
+
+            track.addEventListener('mouseenter', () => {
+                isHovering = true;
+            });
+
+            track.addEventListener('mouseleave', () => {
+                isHovering = false;
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initCarousel();
+            setupHoverListeners();
+            // Using CSS animation instead of JS for better performance
+            // autoScroll();
+        });
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        });
+    </script>
+</body>
+</html>
