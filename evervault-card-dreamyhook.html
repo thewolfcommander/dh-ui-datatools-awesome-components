@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook Evervault Card - Interactive Hover Effect</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral accent */
+            --color-sky: #0ea5e9;            /* Sky Blue accent */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+        }
+
+        /* ========================= Base Styles ========================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1 {
+            font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .intro-text {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--color-neutral-700);
+            font-size: 1.125rem;
+            line-height: 1.75;
+        }
+
+        /* ========================= Card Wrapper ========================= */
+        .card-wrapper {
+            max-width: 28rem;
+            margin: 0 auto;
+            position: relative;
+            padding: 1rem;
+            border: 2px solid rgba(10, 17, 40, 0.15);
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            height: 30rem;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .card-wrapper:hover {
+            box-shadow: 0 10px 40px 0 rgba(252, 191, 73, 0.25);
+            border-color: var(--color-primary);
+        }
+
+        /* Corner Icons */
+        .corner-icon {
+            position: absolute;
+            width: 1.5rem;
+            height: 1.5rem;
+            color: var(--color-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .card-wrapper:hover .corner-icon {
+            color: var(--color-primary);
+        }
+
+        .corner-icon.top-left { top: -0.75rem; left: -0.75rem; }
+        .corner-icon.top-right { top: -0.75rem; right: -0.75rem; }
+        .corner-icon.bottom-left { bottom: -0.75rem; left: -0.75rem; }
+        .corner-icon.bottom-right { bottom: -0.75rem; right: -0.75rem; }
+
+        /* ========================= Evervault Card ========================= */
+        .evervault-card {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 1.5rem;
+            background: transparent;
+            cursor: crosshair;
+        }
+
+        /* Card Pattern Layers */
+        .card-pattern {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border-radius: 1.5rem;
+        }
+
+        .pattern-base {
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
+            opacity: 0.3;
+            transition: opacity 0.5s ease;
+        }
+
+        .evervault-card:hover .pattern-base {
+            opacity: 0.5;
+        }
+
+        .pattern-gradient {
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--color-coral) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
+        .evervault-card:hover .pattern-gradient {
+            opacity: 0.7;
+        }
+
+        .pattern-text {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            mix-blend-mode: overlay;
+            transition: opacity 0.5s ease;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+
+        .evervault-card:hover .pattern-text {
+            opacity: 1;
+        }
+
+        .random-string {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--color-neutral-100);
+            word-break: break-all;
+            white-space: pre-wrap;
+            padding: 1rem;
+            line-height: 1.2;
+            text-shadow: 0 0 10px rgba(252, 191, 73, 0.5);
+        }
+
+        /* Center Circle */
+        .card-center {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .center-circle {
+            position: relative;
+            width: 11rem;
+            height: 11rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .evervault-card:hover .center-circle {
+            transform: scale(1.05);
+        }
+
+        .circle-blur {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 254, 249, 0.9);
+            border-radius: 50%;
+            filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .evervault-card:hover .circle-blur {
+            background: rgba(252, 191, 73, 0.2);
+            filter: blur(12px);
+        }
+
+        .circle-text {
+            position: relative;
+            z-index: 20;
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            color: var(--color-secondary);
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 10px rgba(10, 17, 40, 0.1);
+        }
+
+        .evervault-card:hover .circle-text {
+            color: var(--color-primary);
+            text-shadow: 0 0 20px rgba(252, 191, 73, 0.5);
+        }
+
+        /* ========================= Card Footer ========================= */
+        .card-footer {
+            margin-top: 1rem;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--color-neutral-700);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .card-badge {
+            display: inline-block;
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--color-secondary);
+            padding: 0.375rem 0.875rem;
+            border: 1.5px solid rgba(10, 17, 40, 0.2);
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            background: var(--color-neutral-200);
+        }
+
+        .card-badge:hover {
+            border-color: var(--color-primary);
+            background: var(--color-accent);
+            color: var(--color-secondary);
+            box-shadow: 0 0 20px rgba(255, 210, 63, 0.3);
+        }
+
+        /* ========================= Instructions Section ========================= */
+        .instructions {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 1rem;
+            border: 2px solid rgba(252, 191, 73, 0.2);
+            box-shadow: 0 4px 20px 0 rgba(252, 191, 73, 0.1);
+        }
+
+        .instructions h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions li {
+            padding: 0.75rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--color-neutral-700);
+            line-height: 1.6;
+        }
+
+        .instructions li::before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+            color: var(--color-secondary);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media screen and (max-width: 767px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .intro-text {
+                font-size: 1rem;
+            }
+
+            .card-wrapper {
+                height: 26rem;
+            }
+
+            .center-circle {
+                width: 9rem;
+                height: 9rem;
+            }
+
+            .circle-text {
+                font-size: 2rem;
+            }
+        }
+
+        @media screen and (max-width: 479px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .card-wrapper {
+                height: 22rem;
+            }
+
+            .center-circle {
+                width: 7rem;
+                height: 7rem;
+            }
+
+            .circle-text {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Selection styling */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DreamyHook Evervault Card</h1>
+        <p class="intro-text">
+            An interactive card component with a mesmerizing hover effect.
+            Move your mouse over the card to reveal the magic.
+        </p>
+
+        <div class="card-wrapper">
+            <!-- Corner Icons -->
+            <svg class="corner-icon top-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+            </svg>
+            <svg class="corner-icon top-right" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+            </svg>
+            <svg class="corner-icon bottom-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+            </svg>
+            <svg class="corner-icon bottom-right" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+            </svg>
+
+            <!-- Evervault Card -->
+            <div class="evervault-card" id="evervaultCard">
+                <div class="card-pattern">
+                    <div class="pattern-base"></div>
+                    <div class="pattern-gradient" id="patternGradient"></div>
+                    <div class="pattern-text" id="patternText">
+                        <div class="random-string" id="randomString"></div>
+                    </div>
+                </div>
+
+                <div class="card-center">
+                    <div class="center-circle">
+                        <div class="circle-blur"></div>
+                        <span class="circle-text">hover</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer">
+                <h2 class="card-title">
+                    Hover over this card to reveal an awesome effect with DreamyHook's signature golden glow.
+                </h2>
+                <span class="card-badge">Watch me hover</span>
+            </div>
+        </div>
+
+        <!-- Instructions Section -->
+        <div class="instructions">
+            <h2>Component Features</h2>
+            <ul>
+                <li>
+                    Mouse-tracking radial gradient effect
+                    <span class="feature-tag">Interactive</span>
+                </li>
+                <li>
+                    Dynamic random string generation on hover
+                    <span class="feature-tag">Animated</span>
+                </li>
+                <li>
+                    DreamyHook brand theme with Marigold Yellow & Midnight Blue
+                    <span class="feature-tag">Branded</span>
+                </li>
+                <li>
+                    Smooth transitions and glassmorphism effects
+                    <span class="feature-tag">Modern</span>
+                </li>
+                <li>
+                    Fully responsive design for all screen sizes
+                    <span class="feature-tag">Responsive</span>
+                </li>
+                <li>
+                    Pure HTML/CSS/JavaScript - no dependencies required
+                    <span class="feature-tag">Lightweight</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // ========================= Evervault Card JavaScript ========================= //
+
+        const evervaultCard = document.getElementById('evervaultCard');
+        const patternGradient = document.getElementById('patternGradient');
+        const patternText = document.getElementById('patternText');
+        const randomString = document.getElementById('randomString');
+
+        // Character set for random string generation
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        /**
+         * Generate a random string of specified length
+         * @param {number} length - Length of the random string
+         * @returns {string} Random string
+         */
+        function generateRandomString(length) {
+            let result = "";
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        // Initialize with random string
+        randomString.textContent = generateRandomString(1500);
+
+        /**
+         * Handle mouse move event on the card
+         * Updates the radial gradient mask position and regenerates random string
+         */
+        evervaultCard.addEventListener('mousemove', function(event) {
+            const rect = evervaultCard.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            // Create radial gradient mask following the mouse
+            const maskImage = `radial-gradient(250px at ${x}px ${y}px, white, transparent)`;
+
+            // Apply mask to gradient and text layers
+            patternGradient.style.webkitMaskImage = maskImage;
+            patternGradient.style.maskImage = maskImage;
+
+            patternText.style.webkitMaskImage = maskImage;
+            patternText.style.maskImage = maskImage;
+
+            // Generate new random string on mouse move for dynamic effect
+            randomString.textContent = generateRandomString(1500);
+        });
+
+        /**
+         * Reset effect when mouse leaves the card
+         */
+        evervaultCard.addEventListener('mouseleave', function() {
+            // Optional: Add fade-out effect when mouse leaves
+            // You can customize this behavior based on your needs
+        });
+
+        // ========================= Additional Interactive Features ========================= //
+
+        /**
+         * Add sparkle effect on click (optional enhancement)
+         */
+        evervaultCard.addEventListener('click', function(event) {
+            const rect = evervaultCard.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            // Create sparkle element
+            const sparkle = document.createElement('div');
+            sparkle.style.position = 'absolute';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sparkle.style.width = '4px';
+            sparkle.style.height = '4px';
+            sparkle.style.borderRadius = '50%';
+            sparkle.style.background = 'var(--color-accent)';
+            sparkle.style.boxShadow = '0 0 10px var(--color-accent)';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.animation = 'sparkle 0.6s ease-out forwards';
+            sparkle.style.zIndex = '100';
+
+            evervaultCard.appendChild(sparkle);
+
+            // Remove sparkle after animation
+            setTimeout(() => {
+                sparkle.remove();
+            }, 600);
+        });
+
+        // Add sparkle animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes sparkle {
+                0% {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ========================= Performance Optimization ========================= //
+
+        /**
+         * Throttle function to limit execution rate
+         * Improves performance for frequently fired events
+         */
+        function throttle(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Optional: Use throttled version for better performance
+        // Uncomment the following lines if you experience performance issues
+        /*
+        const throttledMouseMove = throttle(function(event) {
+            // Mouse move logic here
+        }, 16); // Approximately 60fps
+
+        evervaultCard.addEventListener('mousemove', throttledMouseMove);
+        */
+
+        console.log('🎨 DreamyHook Evervault Card loaded successfully!');
+        console.log('💛 Theme: Marigold Yellow (#FCBF49) | Midnight Blue (#0A1128) | Buttercup Yellow (#FFD23F)');
+    </script>
+</body>
+</html>
