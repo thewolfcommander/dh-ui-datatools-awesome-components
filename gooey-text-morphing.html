@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamyHook - Gooey Text Morphing Animation</title>
+
+  <!-- Google Fonts - Inter & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ------------------------- DreamyHook Theme Variables ------------------------- */
+    :root {
+      /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+      --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+      --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+      --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+      --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+      --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+      /* Neutral Colors - Warm Gray Palette for Light Theme */
+      --color-neutral-100: #ffffff;    /* Pure white */
+      --color-neutral-200: #fffef9;    /* Warm white */
+      --color-neutral-300: #fffdf0;    /* Cream white */
+      --color-neutral-400: #fef9e7;    /* Light cream */
+      --color-neutral-500: #78716c;    /* Medium warm gray */
+      --color-neutral-600: #57534e;    /* Dark warm gray */
+      --color-neutral-700: #44403c;    /* Very dark warm gray */
+      --color-neutral-800: #292524;    /* Almost black warm gray */
+      --color-neutral-900: #1c1917;    /* Near black warm */
+
+      /* Theme-Specific Colors */
+      --theme-background: #fffef9;     /* Warm white background */
+
+      /* Shadows */
+      --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+      --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+      --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+      --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+      --shadow-yellow-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+    }
+
+    /* ------------------------- Reset & Base Styles ------------------------- */
+    *,
+    *:after,
+    *:before {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+      color: var(--color-secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    /* Selection - Marigold yellow background with white text */
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    ::-moz-selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    /* ------------------------- Header Styles ------------------------- */
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 2rem;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .header h1 {
+      font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      animation: slideDown 0.8s ease-out forwards;
+    }
+
+    .header p {
+      font-size: clamp(0.875rem, 2vw, 1.125rem);
+      color: var(--color-neutral-600);
+      animation: slideDown 0.9s ease-out forwards;
+    }
+
+    /* ------------------------- Container Styles ------------------------- */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 2rem;
+      box-shadow: var(--shadow-medium);
+      backdrop-filter: blur(10px);
+      animation: scaleIn 0.5s ease-out forwards;
+    }
+
+    /* ------------------------- Gooey Text Component Styles ------------------------- */
+    .gooey-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    .gooey-filter {
+      filter: url(#threshold);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .text-morph {
+      position: absolute;
+      font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 800;
+      text-align: center;
+      user-select: none;
+      /* Gradient text color */
+      background: linear-gradient(135deg, #FCBF49 0%, #FFD23F 50%, #FF6B4A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .text1 {
+      opacity: 0;
+    }
+
+    .text2 {
+      opacity: 1;
+    }
+
+    /* Hidden SVG for filter definition */
+    .svg-filters {
+      position: absolute;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    /* ------------------------- Info Section ------------------------- */
+    .info-section {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 254, 249, 0.8) 0%, rgba(254, 249, 231, 0.9) 100%);
+      border-radius: 1.5rem;
+      border: 2px solid rgba(252, 191, 73, 0.1);
+    }
+
+    .info-section h2 {
+      font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      font-weight: 700;
+      color: var(--color-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .info-section p {
+      font-size: clamp(0.875rem, 2vw, 1rem);
+      color: var(--color-neutral-600);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .info-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .info-section li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(252, 191, 73, 0.1);
+      color: var(--color-neutral-700);
+      font-size: clamp(0.875rem, 2vw, 1rem);
+    }
+
+    .info-section li:last-child {
+      border-bottom: none;
+    }
+
+    .info-section li::before {
+      content: "→";
+      color: var(--color-primary);
+      font-weight: bold;
+      margin-right: 0.75rem;
+    }
+
+    /* ------------------------- Controls Section ------------------------- */
+    .controls {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--color-neutral-100);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .controls h3 {
+      font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .control-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .control-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-neutral-700);
+      margin-bottom: 0.5rem;
+    }
+
+    .control-group input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(to right, var(--color-accent), var(--color-primary));
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .control-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+      box-shadow: var(--shadow-medium);
+      transition: transform 0.2s ease;
+    }
+
+    .control-group input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: var(--shadow-marigold-glow);
+    }
+
+    .control-group input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+      box-shadow: var(--shadow-medium);
+      border: none;
+      transition: transform 0.2s ease;
+    }
+
+    .control-group input[type="range"]::-moz-range-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: var(--shadow-marigold-glow);
+    }
+
+    .control-value {
+      display: inline-block;
+      margin-left: 0.5rem;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .control-group input[type="text"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid rgba(252, 191, 73, 0.2);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .control-group input[type="text"]:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(252, 191, 73, 0.1);
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+      color: var(--color-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: var(--shadow-soft);
+      margin-top: 1rem;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-yellow-glow);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    /* ------------------------- Animations ------------------------- */
+    @keyframes slideDown {
+      0% {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes scaleIn {
+      0% {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* ------------------------- Responsive Design ------------------------- */
+    @media screen and (max-width: 768px) {
+      .header {
+        padding: 1.5rem 1rem;
+      }
+
+      .container {
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+      }
+
+      .gooey-container {
+        height: 200px;
+      }
+
+      .info-section,
+      .controls {
+        padding: 1.25rem;
+      }
+    }
+
+    @media screen and (max-width: 479px) {
+      body {
+        padding: 1rem;
+      }
+
+      .gooey-container {
+        height: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <h1>DreamyHook Gooey Text Morphing</h1>
+    <p>Beautiful text animations with smooth morphing transitions</p>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- SVG Filters (Hidden) -->
+    <svg class="svg-filters" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="threshold">
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="1 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    0 0 0 255 -140"
+          />
+        </filter>
+      </defs>
+    </svg>
+
+    <!-- Gooey Text Animation -->
+    <div class="gooey-container">
+      <div class="gooey-filter">
+        <span class="text-morph text1" id="text1"></span>
+        <span class="text-morph text2" id="text2"></span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <h3>Customize Animation</h3>
+
+      <div class="control-group">
+        <label for="morphTime">
+          Morph Duration: <span class="control-value" id="morphTimeValue">1.0s</span>
+        </label>
+        <input
+          type="range"
+          id="morphTime"
+          min="0.5"
+          max="3"
+          step="0.1"
+          value="1"
+        >
+      </div>
+
+      <div class="control-group">
+        <label for="cooldownTime">
+          Cooldown Duration: <span class="control-value" id="cooldownTimeValue">0.25s</span>
+        </label>
+        <input
+          type="range"
+          id="cooldownTime"
+          min="0.1"
+          max="2"
+          step="0.05"
+          value="0.25"
+        >
+      </div>
+
+      <div class="control-group">
+        <label for="textInput">Custom Words (comma-separated):</label>
+        <input
+          type="text"
+          id="textInput"
+          placeholder="Design, Engineering, Is, Awesome"
+          value="Design, Engineering, Is, Awesome"
+        >
+        <button class="button" onclick="updateTexts()">Update Words</button>
+      </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="info-section">
+      <h2>About This Component</h2>
+      <p>
+        This is a gooey text morphing animation built with vanilla HTML, CSS, and JavaScript.
+        It features smooth transitions between words using SVG filters and custom animations.
+      </p>
+      <h2 style="margin-top: 1.5rem;">Features</h2>
+      <ul>
+        <li>Smooth morphing transitions between multiple text strings</li>
+        <li>Customizable morph and cooldown durations</li>
+        <li>Dynamic text updates - change words on the fly</li>
+        <li>Responsive design that adapts to all screen sizes</li>
+        <li>DreamyHook brand theme with Marigold Yellow and Midnight Blue</li>
+        <li>Pure vanilla JavaScript - no framework dependencies</li>
+        <li>SVG filter effects for the gooey morphing appearance</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Configuration
+    let texts = ["Design", "Engineering", "Is", "Awesome"];
+    let morphTime = 1;
+    let cooldownTime = 0.25;
+
+    // DOM Elements
+    const text1 = document.getElementById('text1');
+    const text2 = document.getElementById('text2');
+    const morphTimeSlider = document.getElementById('morphTime');
+    const cooldownTimeSlider = document.getElementById('cooldownTime');
+    const morphTimeValue = document.getElementById('morphTimeValue');
+    const cooldownTimeValue = document.getElementById('cooldownTimeValue');
+    const textInput = document.getElementById('textInput');
+
+    // Animation state
+    let textIndex = texts.length - 1;
+    let time = new Date();
+    let morph = 0;
+    let cooldown = cooldownTime;
+
+    // Initialize text content
+    text1.textContent = texts[textIndex % texts.length];
+    text2.textContent = texts[(textIndex + 1) % texts.length];
+
+    // Slider event listeners
+    morphTimeSlider.addEventListener('input', (e) => {
+      morphTime = parseFloat(e.target.value);
+      morphTimeValue.textContent = morphTime.toFixed(1) + 's';
+    });
+
+    cooldownTimeSlider.addEventListener('input', (e) => {
+      cooldownTime = parseFloat(e.target.value);
+      cooldownTimeValue.textContent = cooldownTime.toFixed(2) + 's';
+    });
+
+    // Update texts function
+    function updateTexts() {
+      const input = textInput.value.trim();
+      if (input) {
+        texts = input.split(',').map(t => t.trim()).filter(t => t.length > 0);
+        if (texts.length > 0) {
+          textIndex = 0;
+          text1.textContent = texts[0];
+          text2.textContent = texts[1 % texts.length];
+        }
+      }
+    }
+
+    // Allow Enter key to update texts
+    textInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        updateTexts();
+      }
+    });
+
+    // Set morph progress
+    function setMorph(fraction) {
+      // text2 is coming in
+      text2.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
+      text2.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+
+      // text1 is going out
+      fraction = 1 - fraction;
+      text1.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
+      text1.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+    }
+
+    // Reset to cooldown state
+    function doCooldown() {
+      morph = 0;
+      text2.style.filter = '';
+      text2.style.opacity = '100%';
+      text1.style.filter = '';
+      text1.style.opacity = '0%';
+    }
+
+    // Perform morph animation
+    function doMorph() {
+      morph -= cooldown;
+      cooldown = 0;
+      let fraction = morph / morphTime;
+
+      if (fraction > 1) {
+        cooldown = cooldownTime;
+        fraction = 1;
+      }
+
+      setMorph(fraction);
+    }
+
+    // Main animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const newTime = new Date();
+      const shouldIncrementIndex = cooldown > 0;
+      const dt = (newTime.getTime() - time.getTime()) / 1000;
+      time = newTime;
+
+      cooldown -= dt;
+
+      if (cooldown <= 0) {
+        if (shouldIncrementIndex) {
+          textIndex = (textIndex + 1) % texts.length;
+          text1.textContent = texts[textIndex % texts.length];
+          text2.textContent = texts[(textIndex + 1) % texts.length];
+        }
+        doMorph();
+      } else {
+        doCooldown();
+      }
+    }
+
+    // Start animation
+    animate();
+  </script>
+</body>
+</html>
