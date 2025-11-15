@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Reveal Effect - DreamyHook</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Color Assignments */
+            --color-light: var(--color-neutral-200);
+            --color-dark: var(--color-secondary);
+
+            /* Typography */
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+            --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========================= Container & Layout ========================= */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: var(--color-neutral-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ========================= Cards Grid ========================= */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ========================= Card Component ========================= */
+        .card {
+            position: relative;
+            height: 30rem;
+            background: var(--color-neutral-100);
+            border: 2px solid rgba(10, 17, 40, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.1);
+        }
+
+        .card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 8px 30px rgba(252, 191, 73, 0.25);
+            transform: translateY(-5px);
+        }
+
+        /* Corner Icons */
+        .corner-icon {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            color: var(--color-neutral-600);
+            transition: color 0.3s ease;
+        }
+
+        .card:hover .corner-icon {
+            color: var(--color-primary);
+        }
+
+        .corner-icon.top-left { top: -12px; left: -12px; }
+        .corner-icon.top-right { top: -12px; right: -12px; }
+        .corner-icon.bottom-left { bottom: -12px; left: -12px; }
+        .corner-icon.bottom-right { bottom: -12px; right: -12px; }
+
+        /* Canvas Container */
+        .canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .card:hover .canvas-container {
+            opacity: 1;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Card Content */
+        .card-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-dark);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-title {
+            opacity: 1;
+            transform: translateY(0);
+            color: var(--color-neutral-100);
+        }
+
+        /* Gradient Overlay */
+        .gradient-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(10, 17, 40, 0.8) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .card:hover .gradient-overlay {
+            opacity: 1;
+        }
+
+        /* ========================= Icon SVG ========================= */
+        .dreamyhook-icon {
+            stroke: var(--color-dark);
+            transition: stroke 0.3s ease;
+        }
+
+        .card:hover .dreamyhook-icon {
+            stroke: var(--color-neutral-100);
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media (max-width: 768px) {
+            .container {
+                padding: 3rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .card {
+                height: 25rem;
+            }
+        }
+
+        /* ========================= Utility Classes ========================= */
+        .glow-marigold {
+            box-shadow: 0 0 30px rgba(252, 191, 73, 0.4);
+        }
+
+        .glow-buttercup {
+            box-shadow: 0 0 30px rgba(255, 210, 63, 0.4);
+        }
+
+        .glow-sky {
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Canvas Reveal Effect</h1>
+            <p>Hover over the cards to see the animated dot matrix reveal effect with DreamyHook brand colors</p>
+        </div>
+
+        <div class="cards-grid">
+            <!-- Card 1: Marigold Yellow Theme -->
+            <div class="card" data-color-scheme="marigold">
+                <svg class="corner-icon top-left" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+                <svg class="corner-icon top-right" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+                <svg class="corner-icon bottom-left" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+                <svg class="corner-icon bottom-right" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+
+                <div class="canvas-container">
+                    <canvas class="reveal-canvas"></canvas>
+                </div>
+
+                <div class="gradient-overlay"></div>
+
+                <div class="card-content">
+                    <div class="card-icon">
+                        <svg width="80" height="80" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" class="dreamyhook-icon">
+                            <path d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696" stroke-width="8" stroke-miterlimit="3.86874" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h2 class="card-title">Marigold Dream</h2>
+                </div>
+            </div>
+
+            <!-- Card 2: Gradient Theme (Coral to Buttercup) -->
+            <div class="card" data-color-scheme="gradient">
+                <svg class="corner-icon top-left" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+                <svg class="corner-icon top-right" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+                <svg class="corner-icon bottom-left" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+                <svg class="corner-icon bottom-right" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+
+                <div class="canvas-container">
+                    <canvas class="reveal-canvas"></canvas>
+                </div>
+
+                <div class="gradient-overlay"></div>
+
+                <div class="card-content">
+                    <div class="card-icon">
+                        <svg width="80" height="80" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" class="dreamyhook-icon">
+                            <path d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696" stroke-width="8" stroke-miterlimit="3.86874" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h2 class="card-title">Sunrise Gradient</h2>
+                </div>
+            </div>
+
+            <!-- Card 3: Sky Blue Theme -->
+            <div class="card" data-color-scheme="sky">
+                <svg class="corner-icon top-left" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+                <svg class="corner-icon top-right" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+                <svg class="corner-icon bottom-left" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+                <svg class="corner-icon bottom-right" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+
+                <div class="canvas-container">
+                    <canvas class="reveal-canvas"></canvas>
+                </div>
+
+                <div class="gradient-overlay"></div>
+
+                <div class="card-content">
+                    <div class="card-icon">
+                        <svg width="80" height="80" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" class="dreamyhook-icon">
+                            <path d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696" stroke-width="8" stroke-miterlimit="3.86874" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h2 class="card-title">Sky Dreams</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================= Canvas Reveal Effect ========================= //
+
+        // Color schemes based on DreamyHook theme
+        const colorSchemes = {
+            marigold: {
+                colors: [[252, 191, 73], [245, 158, 11], [217, 119, 6]], // Marigold yellows
+                backgroundColor: '#FCBF49'
+            },
+            gradient: {
+                colors: [[255, 107, 74], [255, 210, 63]], // Coral to Buttercup
+                backgroundColor: '#FF6B4A'
+            },
+            sky: {
+                colors: [[14, 165, 233], [125, 211, 252]], // Sky blues
+                backgroundColor: '#0ea5e9'
+            }
+        };
+
+        class CanvasRevealEffect {
+            constructor(canvas, colorScheme) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.colorScheme = colorSchemes[colorScheme];
+                this.totalSize = 4;
+                this.dotSize = 2;
+                this.animationSpeed = 0.4;
+                this.opacities = [0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.8, 0.8, 0.8, 1];
+                this.time = 0;
+                this.isAnimating = false;
+                this.animationFrame = null;
+
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+            }
+
+            resizeCanvas() {
+                const rect = this.canvas.getBoundingClientRect();
+                this.canvas.width = rect.width * 2;
+                this.canvas.height = rect.height * 2;
+                this.ctx.scale(2, 2);
+            }
+
+            random(x, y) {
+                const PHI = 1.61803398874989484820459;
+                const xy = [x, y];
+                const dist = Math.sqrt(
+                    Math.pow((xy[0] * PHI - xy[0]) * 0.5, 2) +
+                    Math.pow((xy[1] * PHI - xy[1]) * 0.5, 2)
+                );
+                return Math.abs(Math.tan(dist * 0.5) * xy[0]) % 1;
+            }
+
+            draw() {
+                const width = this.canvas.width / 2;
+                const height = this.canvas.height / 2;
+
+                // Fill background
+                this.ctx.fillStyle = this.colorScheme.backgroundColor;
+                this.ctx.fillRect(0, 0, width, height);
+
+                // Calculate centering offset
+                const offsetX = Math.floor((width % this.totalSize - this.dotSize) * 0.5);
+                const offsetY = Math.floor((height % this.totalSize - this.dotSize) * 0.5);
+
+                // Draw dots
+                for (let x = offsetX; x < width; x += this.totalSize) {
+                    for (let y = offsetY; y < height; y += this.totalSize) {
+                        const gridX = Math.floor(x / this.totalSize);
+                        const gridY = Math.floor(y / this.totalSize);
+
+                        // Calculate animation parameters
+                        const centerX = width / 2 / this.totalSize;
+                        const centerY = height / 2 / this.totalSize;
+                        const dist = Math.sqrt(
+                            Math.pow(centerX - gridX, 2) +
+                            Math.pow(centerY - gridY, 2)
+                        );
+
+                        const introOffset = dist * 0.01 + (this.random(gridX, gridY) * 0.15);
+                        let opacity = this.time * this.animationSpeed > introOffset ? 1 : 0;
+
+                        if (opacity > 0) {
+                            opacity *= Math.max(0, 1.25 - Math.max(0, (this.time * this.animationSpeed - introOffset - 0.1) * 1.25));
+                            opacity = Math.min(opacity, 1.25);
+                        }
+
+                        // Random opacity variation
+                        const frequency = 5.0;
+                        const showOffset = this.random(gridX, gridY);
+                        const timeOffset = Math.floor((this.time / frequency) + showOffset + frequency);
+                        const rand = this.random(gridX * timeOffset, gridY * timeOffset);
+                        const opacityIndex = Math.floor(rand * 10);
+                        opacity *= this.opacities[opacityIndex];
+
+                        if (opacity > 0.01) {
+                            // Select color
+                            const colorIndex = Math.floor(showOffset * this.colorScheme.colors.length);
+                            const color = this.colorScheme.colors[colorIndex];
+
+                            this.ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${opacity})`;
+                            this.ctx.fillRect(x, y, this.dotSize, this.dotSize);
+                        }
+                    }
+                }
+            }
+
+            animate() {
+                if (!this.isAnimating) return;
+
+                this.time += 0.016; // ~60fps
+                this.draw();
+
+                this.animationFrame = requestAnimationFrame(() => this.animate());
+            }
+
+            start() {
+                this.isAnimating = true;
+                this.time = 0;
+                this.animate();
+            }
+
+            stop() {
+                this.isAnimating = false;
+                if (this.animationFrame) {
+                    cancelAnimationFrame(this.animationFrame);
+                }
+                this.time = 0;
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+        }
+
+        // ========================= Initialize Cards ========================= //
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const canvas = card.querySelector('.reveal-canvas');
+                const colorScheme = card.dataset.colorScheme;
+                const effect = new CanvasRevealEffect(canvas, colorScheme);
+
+                card.addEventListener('mouseenter', () => {
+                    effect.start();
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    effect.stop();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
