@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DreamyHook Floating Dock - A beautiful, interactive dock component with smooth animations">
+  <title>DreamyHook Floating Dock</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* ==================== CSS Variables - DreamyHook Theme ==================== */
+    :root {
+      /* Brand Colors */
+      --color-primary: #FCBF49;        /* Marigold Yellow */
+      --color-secondary: #0A1128;      /* Midnight Blue */
+      --color-accent: #FFD23F;         /* Buttercup Yellow */
+      --color-coral: #FF6B4A;          /* Coral */
+      --color-sky: #0ea5e9;            /* Sky Blue */
+
+      /* Neutral Colors */
+      --color-neutral-100: #ffffff;    /* Pure white */
+      --color-neutral-200: #fffef9;    /* Warm white */
+      --color-neutral-300: #fffdf0;    /* Cream white */
+      --color-neutral-400: #fef9e7;    /* Light cream */
+      --color-neutral-500: #78716c;    /* Medium warm gray */
+      --color-neutral-600: #57534e;    /* Dark warm gray */
+      --color-neutral-700: #44403c;    /* Very dark warm gray */
+      --color-neutral-800: #292524;    /* Almost black */
+      --color-neutral-900: #1c1917;    /* Near black */
+
+      /* Shadows & Glows */
+      --shadow-soft: 0 2px 15px rgba(10, 17, 40, 0.05);
+      --shadow-medium: 0 4px 25px rgba(10, 17, 40, 0.1);
+      --shadow-warm: 0 4px 20px rgba(252, 191, 73, 0.15);
+      --glow-marigold: 0 0 30px rgba(252, 191, 73, 0.5);
+      --glow-buttercup: 0 0 30px rgba(255, 210, 63, 0.5);
+
+      /* Typography */
+      --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+      /* Animation */
+      --duration-default: 0.3s;
+      --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+    }
+
+    /* ==================== Reset & Base Styles ==================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: linear-gradient(135deg, var(--color-neutral-200) 0%, var(--color-neutral-400) 100%);
+      color: var(--color-secondary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    /* Selection Styling */
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    ::-moz-selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    /* ==================== Container Layout ==================== */
+    .dock-container {
+      width: 100%;
+      max-width: 1024px;
+      min-height: 16rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .dock-wrapper {
+      width: 100%;
+      height: 16rem;
+      border-radius: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* ==================== Dock Component ==================== */
+    .dock {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 1.5rem;
+
+      /* Glassmorphism Effect */
+      background: rgba(255, 254, 249, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+
+      /* Border & Shadow */
+      border: 1px solid rgba(254, 249, 231, 0.5);
+      box-shadow: var(--shadow-warm), 0 10px 40px rgba(10, 17, 40, 0.08);
+
+      /* Floating Animation */
+      animation: float 4s ease-in-out infinite;
+
+      /* Transition for hover effects */
+      transition: box-shadow var(--duration-default) var(--cubic-default);
+    }
+
+    .dock:hover {
+      box-shadow: var(--shadow-warm), var(--glow-marigold);
+    }
+
+    /* ==================== Dock Icon Buttons ==================== */
+    .dock-icon-button {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3.5rem;
+      height: 3.5rem;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0.75rem;
+      background: transparent;
+      color: var(--color-secondary);
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: all var(--duration-default) var(--cubic-default);
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .dock-icon-button:hover {
+      background: var(--color-accent);
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: var(--glow-buttercup);
+    }
+
+    .dock-icon-button:active {
+      transform: scale(0.95) translateY(0);
+    }
+
+    .dock-icon-button:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    .dock-icon-button i {
+      pointer-events: none;
+    }
+
+    /* ==================== Tooltip ==================== */
+    .tooltip {
+      position: absolute;
+      top: -2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.5rem;
+      background: var(--color-secondary);
+      color: var(--color-neutral-100);
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease-out;
+      z-index: 10;
+    }
+
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 0.25rem solid transparent;
+      border-top-color: var(--color-secondary);
+    }
+
+    .dock-icon-button:hover .tooltip {
+      opacity: 1;
+    }
+
+    /* ==================== Animations ==================== */
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Fade in animation on page load */
+    .dock-container {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    /* ==================== Header Section ==================== */
+    .header-section {
+      position: fixed;
+      top: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 5;
+    }
+
+    .header-title {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--color-coral) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-subtitle {
+      font-size: 1rem;
+      color: var(--color-neutral-600);
+      font-weight: 500;
+    }
+
+    /* ==================== Responsive Design ==================== */
+
+    /* Tablet */
+    @media screen and (max-width: 991px) {
+      .dock {
+        gap: 0.375rem;
+        padding: 0.625rem 0.875rem;
+      }
+
+      .dock-icon-button {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.125rem;
+      }
+
+      .header-title {
+        font-size: 2rem;
+      }
+    }
+
+    /* Mobile Landscape */
+    @media screen and (max-width: 767px) {
+      .dock {
+        gap: 0.25rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 1.25rem;
+      }
+
+      .dock-icon-button {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1rem;
+      }
+
+      .header-section {
+        top: 1rem;
+      }
+
+      .header-title {
+        font-size: 1.75rem;
+      }
+
+      .header-subtitle {
+        font-size: 0.875rem;
+      }
+    }
+
+    /* Mobile Portrait */
+    @media screen and (max-width: 479px) {
+      body {
+        padding: 1rem;
+      }
+
+      .dock {
+        flex-wrap: wrap;
+        max-width: 280px;
+        gap: 0.375rem;
+        padding: 0.625rem;
+        justify-content: center;
+      }
+
+      .dock-icon-button {
+        width: 3.25rem;
+        height: 3.25rem;
+      }
+
+      .header-title {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      .dock {
+        animation: none;
+      }
+
+      .dock-icon-button:hover {
+        transform: none;
+      }
+
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header Section -->
+  <div class="header-section">
+    <h1 class="header-title">DreamyHook Dock</h1>
+    <p class="header-subtitle">Hover over the icons to see the magic</p>
+  </div>
+
+  <!-- Dock Container -->
+  <div class="dock-container">
+    <div class="dock-wrapper">
+      <div class="dock" role="toolbar" aria-label="Application dock">
+
+        <!-- Home Icon -->
+        <button class="dock-icon-button" data-label="Home" aria-label="Home" role="button" tabindex="0">
+          <i class="fa-solid fa-house"></i>
+          <span class="tooltip">Home</span>
+        </button>
+
+        <!-- Search Icon -->
+        <button class="dock-icon-button" data-label="Search" aria-label="Search" role="button" tabindex="0">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span class="tooltip">Search</span>
+        </button>
+
+        <!-- Music Icon -->
+        <button class="dock-icon-button" data-label="Music" aria-label="Music" role="button" tabindex="0">
+          <i class="fa-solid fa-music"></i>
+          <span class="tooltip">Music</span>
+        </button>
+
+        <!-- Favorites Icon -->
+        <button class="dock-icon-button" data-label="Favorites" aria-label="Favorites" role="button" tabindex="0">
+          <i class="fa-solid fa-heart"></i>
+          <span class="tooltip">Favorites</span>
+        </button>
+
+        <!-- Add New Icon -->
+        <button class="dock-icon-button" data-label="Add New" aria-label="Add New" role="button" tabindex="0">
+          <i class="fa-solid fa-plus"></i>
+          <span class="tooltip">Add New</span>
+        </button>
+
+        <!-- Profile Icon -->
+        <button class="dock-icon-button" data-label="Profile" aria-label="Profile" role="button" tabindex="0">
+          <i class="fa-solid fa-user"></i>
+          <span class="tooltip">Profile</span>
+        </button>
+
+        <!-- Settings Icon -->
+        <button class="dock-icon-button" data-label="Settings" aria-label="Settings" role="button" tabindex="0">
+          <i class="fa-solid fa-gear"></i>
+          <span class="tooltip">Settings</span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for Interactivity -->
+  <script>
+    // Get all dock icon buttons
+    const dockButtons = document.querySelectorAll('.dock-icon-button');
+
+    // Add click event listeners
+    dockButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const label = this.getAttribute('data-label');
+        console.log(`${label} clicked!`);
+
+        // Optional: Add visual feedback
+        const icon = this.querySelector('i');
+        icon.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          icon.style.transform = 'scale(1)';
+        }, 100);
+
+        // You can add your custom functionality here
+        // For example: navigate to different sections, open modals, etc.
+        handleIconClick(label);
+      });
+
+      // Keyboard accessibility
+      button.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.click();
+        }
+      });
+    });
+
+    // Handle icon clicks
+    function handleIconClick(label) {
+      // Example actions based on icon clicked
+      switch(label) {
+        case 'Home':
+          alert('🏠 Home: Navigate to homepage');
+          break;
+        case 'Search':
+          alert('🔍 Search: Open search dialog');
+          break;
+        case 'Music':
+          alert('🎵 Music: Play your favorite tunes');
+          break;
+        case 'Favorites':
+          alert('❤️ Favorites: View your saved items');
+          break;
+        case 'Add New':
+          alert('➕ Add New: Create something amazing');
+          break;
+        case 'Profile':
+          alert('👤 Profile: View your profile');
+          break;
+        case 'Settings':
+          alert('⚙️ Settings: Customize your experience');
+          break;
+        default:
+          console.log('Unknown action');
+      }
+    }
+
+    // Optional: Add keyboard navigation between dock items
+    let currentFocusIndex = 0;
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+
+        if (e.key === 'ArrowRight') {
+          currentFocusIndex = (currentFocusIndex + 1) % dockButtons.length;
+        } else {
+          currentFocusIndex = (currentFocusIndex - 1 + dockButtons.length) % dockButtons.length;
+        }
+
+        dockButtons[currentFocusIndex].focus();
+      }
+    });
+
+    // Log to console on page load
+    console.log('🎨 DreamyHook Floating Dock loaded successfully!');
+    console.log('Brand Colors: Marigold Yellow #FCBF49, Midnight Blue #0A1128, Buttercup Yellow #FFD23F');
+  </script>
+</body>
+</html>
