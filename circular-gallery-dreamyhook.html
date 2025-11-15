@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Circular Gallery Showcase</title>
+
+    <!-- Google Fonts - Inter & Poppins from DreamyHook theme -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================================
+         * DreamyHook Brand Theme Variables
+         * ================================ */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Shadows from DreamyHook theme */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-colored: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+            --shadow-yellow-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+            --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+        }
+
+        /* ================================
+         * Reset & Base Styles
+         * ================================ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, var(--color-neutral-200) 0%, var(--color-neutral-400) 100%);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ================================
+         * Layout & Container
+         * ================================ */
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 2rem 2rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 254, 249, 0.95) 0%, rgba(255, 253, 240, 1) 100%);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--color-neutral-600);
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInSlideUp 1s ease-out forwards;
+        }
+
+        .gallery-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 600px;
+            margin: 2rem auto;
+            max-width: 1400px;
+            padding: 0 2rem;
+        }
+
+        #circular-gallery {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            cursor: grab;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 254, 249, 0.8) 100%);
+            box-shadow: var(--shadow-hard), var(--shadow-warm);
+            transition: box-shadow 0.3s ease;
+        }
+
+        #circular-gallery:active {
+            cursor: grabbing;
+        }
+
+        #circular-gallery:hover {
+            box-shadow: var(--shadow-hard), var(--shadow-marigold-glow);
+        }
+
+        #circular-gallery canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .footer {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 254, 249, 0.95) 0%, rgba(255, 253, 240, 1) 100%);
+            box-shadow: 0 -2px 15px 0 rgba(10, 17, 40, 0.05);
+        }
+
+        .footer p {
+            color: var(--color-neutral-600);
+            font-size: 0.9375rem;
+        }
+
+        .footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--color-accent);
+        }
+
+        .instructions {
+            text-align: center;
+            padding: 1rem 2rem;
+            color: var(--color-neutral-600);
+            font-size: 0.9375rem;
+            background: rgba(255, 210, 63, 0.1);
+            border-radius: 1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .instructions strong {
+            color: var(--color-secondary);
+            font-weight: 600;
+        }
+
+        /* ================================
+         * Animations
+         * ================================ */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: var(--shadow-hard), 0 0 20px rgba(252, 191, 73, 0.3);
+            }
+            50% {
+                box-shadow: var(--shadow-hard), 0 0 40px rgba(252, 191, 73, 0.6);
+            }
+        }
+
+        /* ================================
+         * Responsive Design
+         * ================================ */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 1rem 1rem;
+            }
+
+            .gallery-container {
+                height: 400px;
+                margin: 1rem auto;
+                padding: 0 1rem;
+            }
+
+            .instructions {
+                font-size: 0.875rem;
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .gallery-container {
+                height: 350px;
+            }
+        }
+
+        /* Loading state */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: var(--color-primary);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Header -->
+        <header class="header">
+            <h1>DreamyHook Gallery</h1>
+            <p>Experience our beautiful circular image gallery with smooth interactions</p>
+        </header>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <strong>💡 How to use:</strong> Drag with mouse or touch, or use mouse wheel to scroll through the gallery
+        </div>
+
+        <!-- Gallery Container -->
+        <div class="gallery-container">
+            <div id="circular-gallery">
+                <div class="loading">Loading gallery...</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with <strong>DreamyHook</strong> design system | Powered by <a href="https://github.com/oframe/ogl" target="_blank" rel="noopener">OGL</a></p>
+        </footer>
+    </div>
+
+    <!-- OGL Library -->
+    <script type="module">
+        // Import OGL from CDN
+        import {
+            Camera,
+            Mesh,
+            Plane,
+            Program,
+            Renderer,
+            Texture,
+            Transform,
+        } from 'https://cdn.skypack.dev/ogl@1.0.6';
+
+        /* ================================
+         * Gallery Data
+         * ================================ */
+        const galleryItems = [
+            { image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', text: 'Mountain Vista' },
+            { image: 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=800&h=600&fit=crop', text: 'Modern Workspace' },
+            { image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop', text: 'Nature Paradise' },
+            { image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop', text: 'Peak Adventure' },
+            { image: 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=800&h=600&fit=crop', text: 'Ocean Waves' },
+            { image: 'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=800&h=600&fit=crop', text: 'City Lights' },
+            { image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&h=600&fit=crop', text: 'Seaside Sunset' },
+            { image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&h=600&fit=crop', text: 'Urban Dreams' },
+            { image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop', text: 'Forest Path' },
+            { image: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&h=600&fit=crop', text: 'Desert Escape' },
+            { image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop', text: 'Beach Paradise' },
+            { image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', text: 'Alpine Beauty' },
+        ];
+
+        /* ================================
+         * Helper Utilities
+         * ================================ */
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        function lerp(p1, p2, t) {
+            return p1 + (p2 - p1) * t;
+        }
+
+        function autoBind(instance) {
+            const proto = Object.getPrototypeOf(instance);
+            Object.getOwnPropertyNames(proto).forEach((key) => {
+                if (key !== 'constructor' && typeof instance[key] === 'function') {
+                    instance[key] = instance[key].bind(instance);
+                }
+            });
+        }
+
+        function createTextTexture(gl, text, font, color) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            context.font = font;
+            const metrics = context.measureText(text);
+            const textWidth = Math.ceil(metrics.width);
+            const textHeight = Math.ceil(parseInt(font, 10) * 1.2);
+            canvas.width = textWidth + 20;
+            canvas.height = textHeight + 20;
+            context.font = font;
+            context.fillStyle = color;
+            context.textBaseline = 'middle';
+            context.textAlign = 'center';
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.fillText(text, canvas.width / 2, canvas.height / 2);
+            const texture = new Texture(gl, { generateMipmaps: false });
+            texture.image = canvas;
+            return { texture, width: canvas.width, height: canvas.height };
+        }
+
+        /* ================================
+         * Title Class
+         * ================================ */
+        class Title {
+            constructor({ gl, plane, renderer, text, textColor, font }) {
+                autoBind(this);
+                this.gl = gl;
+                this.plane = plane;
+                this.renderer = renderer;
+                this.text = text;
+                this.textColor = textColor;
+                this.font = font;
+                this.createMesh();
+            }
+
+            createMesh() {
+                const { texture, width, height } = createTextTexture(
+                    this.gl,
+                    this.text,
+                    this.font,
+                    this.textColor
+                );
+                const geometry = new Plane(this.gl);
+                const program = new Program(this.gl, {
+                    vertex: `
+                        attribute vec3 position;
+                        attribute vec2 uv;
+                        uniform mat4 modelViewMatrix;
+                        uniform mat4 projectionMatrix;
+                        varying vec2 vUv;
+                        void main() {
+                            vUv = uv;
+                            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                        }
+                    `,
+                    fragment: `
+                        precision highp float;
+                        uniform sampler2D tMap;
+                        varying vec2 vUv;
+                        void main() {
+                            vec4 color = texture2D(tMap, vUv);
+                            if (color.a < 0.1) discard;
+                            gl_FragColor = color;
+                        }
+                    `,
+                    uniforms: { tMap: { value: texture } },
+                    transparent: true,
+                });
+                this.mesh = new Mesh(this.gl, { geometry, program });
+                const aspect = width / height;
+                const textHeight = this.plane.scale.y * 0.15;
+                const textWidth = textHeight * aspect;
+                this.mesh.scale.set(textWidth, textHeight, 1);
+                this.mesh.position.y = -this.plane.scale.y * 0.5 - textHeight * 0.5 - 0.05;
+                this.mesh.setParent(this.plane);
+            }
+        }
+
+        /* ================================
+         * Media Class
+         * ================================ */
+        class Media {
+            constructor({
+                geometry,
+                gl,
+                image,
+                index,
+                length,
+                renderer,
+                scene,
+                screen,
+                text,
+                viewport,
+                bend,
+                textColor,
+                borderRadius,
+                font,
+            }) {
+                this.geometry = geometry;
+                this.gl = gl;
+                this.image = image;
+                this.index = index;
+                this.length = length;
+                this.renderer = renderer;
+                this.scene = scene;
+                this.screen = screen;
+                this.text = text;
+                this.viewport = viewport;
+                this.bend = bend;
+                this.textColor = textColor;
+                this.borderRadius = borderRadius;
+                this.font = font;
+                this.extra = 0;
+                this.widthTotal = 0;
+                this.width = 0;
+                this.x = 0;
+                this.scale = 1;
+                this.padding = 2;
+                this.speed = 0;
+                this.isBefore = false;
+                this.isAfter = false;
+                this.createShader();
+                this.createMesh();
+                this.createTitle();
+                this.onResize();
+            }
+
+            createShader() {
+                const texture = new Texture(this.gl, {
+                    generateMipmaps: true,
+                });
+                this.program = new Program(this.gl, {
+                    depthTest: false,
+                    depthWrite: false,
+                    vertex: `
+                        precision highp float;
+                        attribute vec3 position;
+                        attribute vec2 uv;
+                        uniform mat4 modelViewMatrix;
+                        uniform mat4 projectionMatrix;
+                        uniform float uTime;
+                        uniform float uSpeed;
+                        varying vec2 vUv;
+                        void main() {
+                            vUv = uv;
+                            vec3 p = position;
+                            p.z = (sin(p.x * 4.0 + uTime) * 1.5 + cos(p.y * 2.0 + uTime) * 1.5) * (0.1 + uSpeed * 0.5);
+                            gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+                        }
+                    `,
+                    fragment: `
+                        precision highp float;
+                        uniform vec2 uImageSizes;
+                        uniform vec2 uPlaneSizes;
+                        uniform sampler2D tMap;
+                        uniform float uBorderRadius;
+                        varying vec2 vUv;
+
+                        float roundedBoxSDF(vec2 p, vec2 b, float r) {
+                            vec2 d = abs(p) - b;
+                            return length(max(d, vec2(0.0))) + min(max(d.x, d.y), 0.0) - r;
+                        }
+
+                        void main() {
+                            vec2 ratio = vec2(
+                                min((uPlaneSizes.x / uPlaneSizes.y) / (uImageSizes.x / uImageSizes.y), 1.0),
+                                min((uPlaneSizes.y / uPlaneSizes.x) / (uImageSizes.y / uImageSizes.x), 1.0)
+                            );
+                            vec2 uv = vec2(
+                                vUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
+                                vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
+                            );
+                            vec4 color = texture2D(tMap, uv);
+
+                            float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
+
+                            // Smooth antialiasing for edges
+                            float edgeSmooth = 0.002;
+                            float alpha = 1.0 - smoothstep(-edgeSmooth, edgeSmooth, d);
+
+                            gl_FragColor = vec4(color.rgb, alpha);
+                        }
+                    `,
+                    uniforms: {
+                        tMap: { value: texture },
+                        uPlaneSizes: { value: [0, 0] },
+                        uImageSizes: { value: [0, 0] },
+                        uSpeed: { value: 0 },
+                        uTime: { value: 100 * Math.random() },
+                        uBorderRadius: { value: this.borderRadius },
+                    },
+                    transparent: true,
+                });
+
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.src = this.image;
+                img.onload = () => {
+                    texture.image = img;
+                    this.program.uniforms.uImageSizes.value = [
+                        img.naturalWidth,
+                        img.naturalHeight,
+                    ];
+                };
+            }
+
+            createMesh() {
+                this.plane = new Mesh(this.gl, {
+                    geometry: this.geometry,
+                    program: this.program,
+                });
+                this.plane.setParent(this.scene);
+            }
+
+            createTitle() {
+                this.title = new Title({
+                    gl: this.gl,
+                    plane: this.plane,
+                    renderer: this.renderer,
+                    text: this.text,
+                    textColor: this.textColor,
+                    font: this.font,
+                });
+            }
+
+            update(scroll, direction) {
+                this.plane.position.x = this.x - scroll.current - this.extra;
+
+                const x = this.plane.position.x;
+                const H = this.viewport.width / 2;
+
+                if (this.bend === 0) {
+                    this.plane.position.y = 0;
+                    this.plane.rotation.z = 0;
+                } else {
+                    const B_abs = Math.abs(this.bend);
+                    const R = (H * H + B_abs * B_abs) / (2 * B_abs);
+                    const effectiveX = Math.min(Math.abs(x), H);
+                    const arc = R - Math.sqrt(R * R - effectiveX * effectiveX);
+
+                    if (this.bend > 0) {
+                        this.plane.position.y = -arc;
+                        this.plane.rotation.z = -Math.sign(x) * Math.asin(effectiveX / R);
+                    } else {
+                        this.plane.position.y = arc;
+                        this.plane.rotation.z = Math.sign(x) * Math.asin(effectiveX / R);
+                    }
+                }
+
+                this.speed = scroll.current - scroll.last;
+                this.program.uniforms.uTime.value += 0.04;
+                this.program.uniforms.uSpeed.value = this.speed;
+
+                const planeOffset = this.plane.scale.x / 2;
+                const viewportOffset = this.viewport.width / 2;
+                this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
+                this.isAfter = this.plane.position.x - planeOffset > viewportOffset;
+
+                if (direction === 'right' && this.isBefore) {
+                    this.extra -= this.widthTotal;
+                    this.isBefore = this.isAfter = false;
+                }
+                if (direction === 'left' && this.isAfter) {
+                    this.extra += this.widthTotal;
+                    this.isBefore = this.isAfter = false;
+                }
+            }
+
+            onResize({ screen, viewport } = {}) {
+                if (screen) this.screen = screen;
+                if (viewport) {
+                    this.viewport = viewport;
+                }
+                this.scale = this.screen.height / 1500;
+                this.plane.scale.y =
+                    (this.viewport.height * (900 * this.scale)) / this.screen.height;
+                this.plane.scale.x =
+                    (this.viewport.width * (700 * this.scale)) / this.screen.width;
+                this.program.uniforms.uPlaneSizes.value = [
+                    this.plane.scale.x,
+                    this.plane.scale.y,
+                ];
+                this.padding = 2;
+                this.width = this.plane.scale.x + this.padding;
+                this.widthTotal = this.width * this.length;
+                this.x = this.width * this.index;
+            }
+        }
+
+        /* ================================
+         * App Class
+         * ================================ */
+        class App {
+            constructor(
+                container,
+                {
+                    items,
+                    bend,
+                    textColor,
+                    borderRadius,
+                    font,
+                    scrollSpeed,
+                    scrollEase,
+                }
+            ) {
+                this.container = container;
+                this.scrollSpeed = scrollSpeed;
+                this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
+                this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
+
+                autoBind(this);
+
+                this.createRenderer();
+                this.createCamera();
+                this.createScene();
+                this.onResize();
+                this.createGeometry();
+                this.createMedias(items, bend, textColor, borderRadius, font);
+                this.update();
+                this.addEventListeners();
+
+                // Remove loading indicator
+                const loadingEl = container.querySelector('.loading');
+                if (loadingEl) {
+                    loadingEl.style.display = 'none';
+                }
+            }
+
+            createRenderer() {
+                this.renderer = new Renderer({
+                    alpha: true,
+                    antialias: true,
+                    dpr: Math.min(window.devicePixelRatio || 1, 2),
+                });
+                this.gl = this.renderer.gl;
+                this.gl.clearColor(0, 0, 0, 0);
+                this.container.appendChild(this.gl.canvas);
+            }
+
+            createCamera() {
+                this.camera = new Camera(this.gl);
+                this.camera.fov = 45;
+                this.camera.position.z = 20;
+            }
+
+            createScene() {
+                this.scene = new Transform();
+            }
+
+            createGeometry() {
+                this.planeGeometry = new Plane(this.gl, {
+                    heightSegments: 50,
+                    widthSegments: 100,
+                });
+            }
+
+            createMedias(items, bend, textColor, borderRadius, font) {
+                // Duplicate items for seamless loop
+                this.mediasImages = [...items, ...items];
+                this.medias = this.mediasImages.map((data, index) => {
+                    return new Media({
+                        geometry: this.planeGeometry,
+                        gl: this.gl,
+                        image: data.image,
+                        index,
+                        length: this.mediasImages.length,
+                        renderer: this.renderer,
+                        scene: this.scene,
+                        screen: this.screen,
+                        text: data.text,
+                        viewport: this.viewport,
+                        bend,
+                        textColor,
+                        borderRadius,
+                        font,
+                    });
+                });
+            }
+
+            onTouchDown(e) {
+                this.isDown = true;
+                this.scroll.position = this.scroll.current;
+                this.start = e.touches ? e.touches[0].clientX : e.clientX;
+            }
+
+            onTouchMove(e) {
+                if (!this.isDown) return;
+                const x = e.touches ? e.touches[0].clientX : e.clientX;
+                const distance = (this.start - x) * (this.scrollSpeed * 0.025);
+                this.scroll.target = this.scroll.position + distance;
+            }
+
+            onTouchUp() {
+                this.isDown = false;
+                this.onCheck();
+            }
+
+            onWheel(e) {
+                const delta = e.deltaY || e.wheelDelta || e.detail;
+                this.scroll.target += (delta > 0 ? this.scrollSpeed : -this.scrollSpeed) * 0.2;
+                this.onCheckDebounce();
+            }
+
+            onCheck() {
+                if (!this.medias || !this.medias[0]) return;
+                const width = this.medias[0].width;
+                const itemIndex = Math.round(Math.abs(this.scroll.target) / width);
+                const item = width * itemIndex;
+                this.scroll.target = this.scroll.target < 0 ? -item : item;
+            }
+
+            onResize() {
+                this.screen = {
+                    width: this.container.clientWidth,
+                    height: this.container.clientHeight,
+                };
+                this.renderer.setSize(this.screen.width, this.screen.height);
+                this.camera.perspective({
+                    aspect: this.screen.width / this.screen.height,
+                });
+                const fov = (this.camera.fov * Math.PI) / 180;
+                const height = 2 * Math.tan(fov / 2) * this.camera.position.z;
+                const width = height * this.camera.aspect;
+                this.viewport = { width, height };
+                if (this.medias) {
+                    this.medias.forEach((media) =>
+                        media.onResize({ screen: this.screen, viewport: this.viewport })
+                    );
+                }
+            }
+
+            update() {
+                this.scroll.current = lerp(
+                    this.scroll.current,
+                    this.scroll.target,
+                    this.scroll.ease
+                );
+                const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
+                if (this.medias) {
+                    this.medias.forEach((media) => media.update(this.scroll, direction));
+                }
+                this.renderer.render({ scene: this.scene, camera: this.camera });
+                this.scroll.last = this.scroll.current;
+                this.raf = window.requestAnimationFrame(this.update);
+            }
+
+            addEventListeners() {
+                this.boundOnResize = this.onResize;
+                this.boundOnWheel = this.onWheel;
+                this.boundOnTouchDown = this.onTouchDown;
+                this.boundOnTouchMove = this.onTouchMove;
+                this.boundOnTouchUp = this.onTouchUp;
+
+                window.addEventListener('resize', this.boundOnResize);
+                window.addEventListener('mousewheel', this.boundOnWheel);
+                window.addEventListener('wheel', this.boundOnWheel);
+                this.container.addEventListener('mousedown', this.boundOnTouchDown);
+                window.addEventListener('mousemove', this.boundOnTouchMove);
+                window.addEventListener('mouseup', this.boundOnTouchUp);
+                this.container.addEventListener('touchstart', this.boundOnTouchDown);
+                window.addEventListener('touchmove', this.boundOnTouchMove);
+                window.addEventListener('touchend', this.boundOnTouchUp);
+            }
+
+            destroy() {
+                window.cancelAnimationFrame(this.raf);
+                window.removeEventListener('resize', this.boundOnResize);
+                window.removeEventListener('mousewheel', this.boundOnWheel);
+                window.removeEventListener('wheel', this.boundOnWheel);
+                this.container.removeEventListener('mousedown', this.boundOnTouchDown);
+                window.removeEventListener('mousemove', this.boundOnTouchMove);
+                window.removeEventListener('mouseup', this.boundOnTouchUp);
+                this.container.removeEventListener('touchstart', this.boundOnTouchDown);
+                window.removeEventListener('touchmove', this.boundOnTouchMove);
+                window.removeEventListener('touchend', this.boundOnTouchUp);
+
+                if (this.renderer && this.renderer.gl && this.renderer.gl.canvas.parentNode) {
+                    this.renderer.gl.canvas.parentNode.removeChild(this.renderer.gl.canvas);
+                }
+            }
+        }
+
+        /* ================================
+         * Initialize Gallery
+         * ================================ */
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('circular-gallery');
+
+            // DreamyHook theme configuration
+            const config = {
+                items: galleryItems,
+                bend: 3,                        // Circular curvature
+                textColor: '#0A1128',           // Midnight Blue for text
+                borderRadius: 0.05,             // Rounded corners
+                font: 'bold 30px Poppins',      // DreamyHook heading font
+                scrollSpeed: 2,                 // Scroll sensitivity
+                scrollEase: 0.05,               // Smooth animation
+            };
+
+            // Initialize the gallery
+            const gallery = new App(container, config);
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                gallery.destroy();
+            });
+        });
+    </script>
+</body>
+</html>
