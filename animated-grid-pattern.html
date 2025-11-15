@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Animated Grid Pattern</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral accent */
+            --color-sky: #0ea5e9;            /* Sky Blue accent */
+
+            /* Neutral Colors - Warm Gray Palette */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Functional Colors */
+            --color-light: var(--color-neutral-200);
+            --color-dark: var(--color-secondary);
+
+            /* Animation Variables */
+            --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+            --duration-default: 0.735s;
+
+            /* Grid Pattern Variables */
+            --grid-size: 40px;
+            --grid-color: rgba(87, 83, 78, 0.15);
+            --square-color: var(--color-primary);
+            --square-glow: rgba(252, 191, 73, 0.4);
+            --max-opacity: 0.5;
+            --animation-duration: 4s;
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *,
+        *:after,
+        *:before {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Selection styles */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ========================= Container Styles ========================= */
+        .demo-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            background: var(--color-neutral-100);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow:
+                0 4px 25px 0 rgba(10, 17, 40, 0.1),
+                0 0 30px 0 rgba(252, 191, 73, 0.15);
+            border: 1px solid rgba(252, 191, 73, 0.2);
+        }
+
+        /* ========================= Grid Pattern Container ========================= */
+        .grid-pattern-wrapper {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .grid-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Grid base pattern */
+        .grid-line {
+            stroke: var(--grid-color);
+            stroke-width: 1;
+            fill: none;
+        }
+
+        /* Animated squares */
+        .animated-square {
+            fill: var(--square-color);
+            opacity: 0;
+            animation: squareFadeInOut var(--animation-duration) ease-in-out;
+            filter: drop-shadow(0 0 8px var(--square-glow));
+        }
+
+        /* Gradient mask for radial focus effect */
+        .gradient-mask {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                500px circle at center,
+                transparent 0%,
+                rgba(255, 254, 249, 0.3) 50%,
+                rgba(255, 254, 249, 0.8) 100%
+            );
+            pointer-events: none;
+        }
+
+        /* ========================= Content Overlay ========================= */
+        .content-overlay {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .main-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            animation: fadeSlideUp 1s ease-out forwards;
+        }
+
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-weight: 400;
+            color: var(--color-neutral-600);
+            max-width: 600px;
+            animation: fadeSlideUp 1s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        /* ========================= Control Panel ========================= */
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.15);
+            border: 1px solid rgba(252, 191, 73, 0.2);
+        }
+
+        .control-btn {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+            color: var(--color-secondary);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s var(--cubic-default);
+            box-shadow: 0 2px 8px rgba(252, 191, 73, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(252, 191, 73, 0.4);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .control-btn.secondary {
+            background: var(--color-neutral-100);
+            color: var(--color-secondary);
+            border: 1px solid rgba(252, 191, 73, 0.3);
+            box-shadow: none;
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes squareFadeInOut {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: var(--max-opacity);
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media screen and (max-width: 768px) {
+            :root {
+                --grid-size: 30px;
+            }
+
+            .demo-container {
+                height: 500px;
+                border-radius: 1rem;
+            }
+
+            .content-overlay {
+                padding: 24px;
+            }
+
+            .controls {
+                bottom: 20px;
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .control-btn {
+                font-size: 0.8rem;
+                padding: 6px 16px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            :root {
+                --grid-size: 25px;
+            }
+
+            .demo-container {
+                height: 400px;
+            }
+
+            .main-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *:before,
+            *:after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ========================= Loading State ========================= */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Inter', sans-serif;
+            color: var(--color-neutral-500);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container" id="demoContainer">
+        <!-- Grid Pattern Background -->
+        <div class="grid-pattern-wrapper">
+            <svg class="grid-svg" id="gridSvg">
+                <defs>
+                    <pattern id="gridPattern" patternUnits="userSpaceOnUse">
+                        <!-- Pattern will be dynamically set by JavaScript -->
+                    </pattern>
+                </defs>
+                <!-- Base grid -->
+                <rect width="100%" height="100%" fill="url(#gridPattern)" />
+                <!-- Animated squares container -->
+                <g id="animatedSquares"></g>
+            </svg>
+            <!-- Gradient mask overlay -->
+            <div class="gradient-mask"></div>
+        </div>
+
+        <!-- Content Overlay -->
+        <div class="content-overlay">
+            <h1 class="main-title">
+                <span class="highlight">Animated</span> Grid Pattern
+            </h1>
+            <p class="subtitle">
+                A beautiful, performant grid animation built with vanilla JavaScript and CSS.
+                Powered by the <strong>DreamyHook</strong> design system.
+            </p>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="controls">
+            <button class="control-btn" id="restartBtn">Restart Animation</button>
+            <button class="control-btn secondary" id="toggleBtn">Pause</button>
+        </div>
+    </div>
+
+    <script>
+        // ========================= Configuration =========================
+        const CONFIG = {
+            gridSize: 40,              // Size of each grid cell
+            numSquares: 40,            // Number of animated squares
+            animationDuration: 4000,   // Duration in milliseconds
+            repeatDelay: 500,          // Delay before restart
+            maxOpacity: 0.5,           // Maximum opacity of squares
+            stagger: 100,              // Stagger delay between squares (ms)
+        };
+
+        // ========================= State Management =========================
+        let animationState = {
+            isRunning: true,
+            squares: [],
+            dimensions: { width: 0, height: 0 },
+            animationTimeouts: [],
+        };
+
+        // ========================= DOM Elements =========================
+        const gridSvg = document.getElementById('gridSvg');
+        const animatedSquaresGroup = document.getElementById('animatedSquares');
+        const gridPattern = document.getElementById('gridPattern');
+        const demoContainer = document.getElementById('demoContainer');
+        const restartBtn = document.getElementById('restartBtn');
+        const toggleBtn = document.getElementById('toggleBtn');
+
+        // ========================= Utility Functions =========================
+        function getRandomPosition(width, height) {
+            const cols = Math.floor(width / CONFIG.gridSize);
+            const rows = Math.floor(height / CONFIG.gridSize);
+            return [
+                Math.floor(Math.random() * cols),
+                Math.floor(Math.random() * rows)
+            ];
+        }
+
+        function generateSquares(count) {
+            const { width, height } = animationState.dimensions;
+            return Array.from({ length: count }, (_, i) => ({
+                id: i,
+                pos: getRandomPosition(width, height)
+            }));
+        }
+
+        // ========================= Grid Pattern Setup =========================
+        function setupGridPattern() {
+            const { gridSize } = CONFIG;
+
+            // Set pattern attributes
+            gridPattern.setAttribute('width', gridSize);
+            gridPattern.setAttribute('height', gridSize);
+            gridPattern.setAttribute('x', '-1');
+            gridPattern.setAttribute('y', '-1');
+
+            // Clear existing pattern content
+            gridPattern.innerHTML = '';
+
+            // Create grid lines
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', `M 0.5 ${gridSize} V 0.5 H ${gridSize}`);
+            path.setAttribute('class', 'grid-line');
+            gridPattern.appendChild(path);
+        }
+
+        // ========================= Animated Squares =========================
+        function createAnimatedSquare(x, y, delay) {
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            const { gridSize } = CONFIG;
+
+            rect.setAttribute('width', gridSize - 1);
+            rect.setAttribute('height', gridSize - 1);
+            rect.setAttribute('x', x * gridSize + 1);
+            rect.setAttribute('y', y * gridSize + 1);
+            rect.setAttribute('class', 'animated-square');
+            rect.style.animationDelay = `${delay}ms`;
+
+            return rect;
+        }
+
+        function renderSquares() {
+            // Clear existing squares
+            animatedSquaresGroup.innerHTML = '';
+
+            // Create new squares
+            animationState.squares.forEach((square, index) => {
+                const [x, y] = square.pos;
+                const delay = index * CONFIG.stagger;
+                const rect = createAnimatedSquare(x, y, delay);
+                animatedSquaresGroup.appendChild(rect);
+
+                // Schedule re-positioning after animation completes
+                if (animationState.isRunning) {
+                    const timeout = setTimeout(() => {
+                        updateSquarePosition(square.id);
+                    }, CONFIG.animationDuration + delay);
+
+                    animationState.animationTimeouts.push(timeout);
+                }
+            });
+        }
+
+        function updateSquarePosition(id) {
+            if (!animationState.isRunning) return;
+
+            const { width, height } = animationState.dimensions;
+            const squareIndex = animationState.squares.findIndex(sq => sq.id === id);
+
+            if (squareIndex !== -1) {
+                animationState.squares[squareIndex].pos = getRandomPosition(width, height);
+
+                // Re-render just this square
+                const [x, y] = animationState.squares[squareIndex].pos;
+                const rect = createAnimatedSquare(x, y, 0);
+
+                // Replace the old square
+                const allSquares = animatedSquaresGroup.children;
+                if (allSquares[squareIndex]) {
+                    animatedSquaresGroup.replaceChild(rect, allSquares[squareIndex]);
+                }
+
+                // Schedule next update
+                const timeout = setTimeout(() => {
+                    updateSquarePosition(id);
+                }, CONFIG.animationDuration);
+
+                animationState.animationTimeouts.push(timeout);
+            }
+        }
+
+        // ========================= Animation Controls =========================
+        function startAnimation() {
+            animationState.isRunning = true;
+            animationState.squares = generateSquares(CONFIG.numSquares);
+            renderSquares();
+            toggleBtn.textContent = 'Pause';
+        }
+
+        function stopAnimation() {
+            animationState.isRunning = false;
+
+            // Clear all pending timeouts
+            animationState.animationTimeouts.forEach(timeout => clearTimeout(timeout));
+            animationState.animationTimeouts = [];
+
+            toggleBtn.textContent = 'Resume';
+        }
+
+        function restartAnimation() {
+            stopAnimation();
+            setTimeout(() => {
+                startAnimation();
+            }, 100);
+        }
+
+        function toggleAnimation() {
+            if (animationState.isRunning) {
+                stopAnimation();
+            } else {
+                startAnimation();
+            }
+        }
+
+        // ========================= Resize Observer =========================
+        function updateDimensions() {
+            const rect = demoContainer.getBoundingClientRect();
+            animationState.dimensions = {
+                width: rect.width,
+                height: rect.height
+            };
+        }
+
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+                animationState.dimensions = {
+                    width: entry.contentRect.width,
+                    height: entry.contentRect.height
+                };
+
+                if (animationState.isRunning) {
+                    restartAnimation();
+                }
+            }
+        });
+
+        // ========================= Event Listeners =========================
+        restartBtn.addEventListener('click', restartAnimation);
+        toggleBtn.addEventListener('click', toggleAnimation);
+
+        // ========================= Initialization =========================
+        function init() {
+            // Setup grid pattern
+            setupGridPattern();
+
+            // Get initial dimensions
+            updateDimensions();
+
+            // Start observing resize
+            resizeObserver.observe(demoContainer);
+
+            // Start animation
+            startAnimation();
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // ========================= Cleanup on Unload =========================
+        window.addEventListener('beforeunload', () => {
+            stopAnimation();
+            resizeObserver.disconnect();
+        });
+    </script>
+</body>
+</html>
