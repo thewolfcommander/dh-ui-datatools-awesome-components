@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook Advanced Filters - Interactive Filter Component</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= CSS RESET & BASE STYLES ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ========================= DREAMYHOOK THEME VARIABLES ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-primary-hover: #f59e0b;  /* Darker golden */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-white: #ffffff;
+            --color-warm-white: #fffef9;
+            --color-cream: #fffdf0;
+            --color-light-cream: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* UI Colors */
+            --color-background: var(--color-warm-white);
+            --color-foreground: var(--color-secondary);
+            --color-muted: #f5f5f4;
+            --color-muted-foreground: #78716c;
+            --color-border: #e7e5e4;
+            --color-input: #e7e5e4;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-colored: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+
+            /* Transitions */
+            --transition-default: 0.2s ease-in-out;
+            --transition-slow: 0.3s ease-in-out;
+        }
+
+        /* ========================= GLOBAL STYLES ========================= */
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, var(--color-white) 0%, var(--color-warm-white) 100%);
+            color: var(--color-foreground);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        /* ========================= CONTAINER & LAYOUT ========================= */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-xl);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-xl) 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header p {
+            color: var(--color-muted-foreground);
+            font-size: 1.1rem;
+        }
+
+        .demo-section {
+            background: var(--color-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-medium);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .demo-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-lg);
+            color: var(--color-secondary);
+        }
+
+        /* ========================= FILTER COMPONENTS ========================= */
+        .filters-container {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-pill {
+            display: flex;
+            gap: 1px;
+            align-items: center;
+            font-size: 0.875rem;
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            animation: slideIn 0.2s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filter-type {
+            display: flex;
+            gap: var(--spacing-xs);
+            align-items: center;
+            background: var(--color-muted);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-weight: 500;
+            color: var(--color-secondary);
+        }
+
+        .filter-operator,
+        .filter-value {
+            background: var(--color-muted);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            color: var(--color-muted-foreground);
+            cursor: pointer;
+            transition: all var(--transition-default);
+            white-space: nowrap;
+        }
+
+        .filter-operator:hover,
+        .filter-value:hover {
+            background: rgba(245, 245, 244, 0.5);
+            color: var(--color-primary);
+        }
+
+        .filter-remove {
+            background: var(--color-muted);
+            border: none;
+            padding: var(--spacing-xs);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-default);
+            color: var(--color-muted-foreground);
+        }
+
+        .filter-remove:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--color-error);
+        }
+
+        /* ========================= BUTTONS ========================= */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-default);
+            font-family: var(--font-sans);
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+            box-shadow: var(--shadow-colored);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--color-muted-foreground);
+            border-color: var(--color-border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--color-muted);
+            color: var(--color-primary);
+        }
+
+        .btn-outline {
+            background: var(--color-white);
+            color: var(--color-foreground);
+            border-color: var(--color-border);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-muted);
+            color: var(--color-primary);
+        }
+
+        .btn-icon {
+            padding: var(--spacing-xs);
+            width: 2rem;
+            height: 2rem;
+        }
+
+        /* ========================= POPOVER / DROPDOWN ========================= */
+        .popover {
+            position: relative;
+            display: inline-block;
+        }
+
+        .popover-content {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-medium);
+            z-index: 1000;
+            min-width: 200px;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-default);
+        }
+
+        .popover-content.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-medium);
+            z-index: 999;
+            min-width: 150px;
+            padding: var(--spacing-xs);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-default);
+        }
+
+        .dropdown-content.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-default);
+            color: var(--color-foreground);
+        }
+
+        .dropdown-item:hover {
+            background: var(--color-muted);
+            color: var(--color-primary);
+        }
+
+        /* ========================= COMMAND MENU ========================= */
+        .command {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .command-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 0.875rem;
+            font-family: var(--font-sans);
+            outline: none;
+        }
+
+        .command-input:focus {
+            border-bottom-color: var(--color-primary);
+        }
+
+        .command-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: var(--spacing-xs);
+        }
+
+        .command-group {
+            padding: var(--spacing-xs) 0;
+        }
+
+        .command-separator {
+            height: 1px;
+            background: var(--color-border);
+            margin: var(--spacing-xs) 0;
+        }
+
+        .command-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-default);
+            color: var(--color-foreground);
+        }
+
+        .command-item:hover,
+        .command-item.selected {
+            background: var(--color-muted);
+            color: var(--color-primary);
+        }
+
+        .command-empty {
+            padding: var(--spacing-lg);
+            text-align: center;
+            color: var(--color-muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        /* ========================= CHECKBOX ========================= */
+        .checkbox {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-default);
+        }
+
+        .checkbox.checked {
+            background: var(--color-primary);
+        }
+
+        .checkbox svg {
+            width: 0.75rem;
+            height: 0.75rem;
+            color: var(--color-white);
+        }
+
+        /* ========================= ICONS ========================= */
+        .icon {
+            width: 0.875rem;
+            height: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .icon-sm {
+            width: 0.75rem;
+            height: 0.75rem;
+        }
+
+        /* Filter Icons */
+        .status-icon { color: var(--color-muted-foreground); }
+        .status-backlog { color: var(--color-muted-foreground); }
+        .status-todo { color: var(--color-primary); }
+        .status-in-progress { color: #fbbf24; }
+        .status-in-review { color: var(--color-success); }
+        .status-done { color: var(--color-sky); }
+        .status-cancelled { color: var(--color-muted-foreground); }
+
+        .priority-urgent { color: var(--color-error); }
+        .priority-high { color: var(--color-coral); }
+        .priority-medium { color: var(--color-warning); }
+        .priority-low { color: var(--color-sky); }
+
+        .label-badge {
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 50%;
+        }
+
+        .label-bug { background: #ef4444; }
+        .label-feature { background: #3b82f6; }
+        .label-hotfix { background: #f59e0b; }
+        .label-release { background: #22c55e; }
+
+        .avatar {
+            width: 0.875rem;
+            height: 0.875rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5rem;
+            font-weight: 600;
+            color: var(--color-white);
+            background: #fb923c;
+        }
+
+        /* ========================= FILTER VALUE DISPLAY ========================= */
+        .filter-icons {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-left: -2px;
+        }
+
+        .filter-icons > * {
+            margin-left: -2px;
+        }
+
+        /* ========================= ANIMATIONS ========================= */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ========================= RESPONSIVE ========================= */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .demo-section {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* ========================= SCROLLBAR ========================= */
+        .command-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .command-list::-webkit-scrollbar-track {
+            background: var(--color-muted);
+        }
+
+        .command-list::-webkit-scrollbar-thumb {
+            background: var(--color-neutral-500);
+            border-radius: 3px;
+        }
+
+        .command-list::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary);
+        }
+
+        /* ========================= UTILITY CLASSES ========================= */
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* ========================= FEATURE SHOWCASE ========================= */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        .feature-card {
+            padding: var(--spacing-lg);
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            transition: all var(--transition-default);
+        }
+
+        .feature-card:hover {
+            box-shadow: var(--shadow-warm);
+            transform: translateY(-2px);
+        }
+
+        .feature-card h3 {
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.1rem;
+        }
+
+        .feature-card p {
+            color: var(--color-muted-foreground);
+            font-size: 0.9rem;
+        }
+
+        .feature-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-white);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>DreamyHook Advanced Filters</h1>
+            <p>Professional filter component with multi-select, operators, and smooth animations</p>
+        </header>
+
+        <!-- Main Demo Section -->
+        <div class="demo-section">
+            <h2>Interactive Filter Demo</h2>
+            <div id="filtersContainer" class="filters-container">
+                <!-- Filter pills will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="demo-section">
+            <h2>Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
+                    </div>
+                    <h3>Multiple Filter Types</h3>
+                    <p>Filter by Status, Assignee, Labels, Priority, and various date fields</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <h3>Multi-Select Support</h3>
+                    <p>Select multiple values with checkboxes for powerful filtering</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3>Smooth Animations</h3>
+                    <p>Beautiful transitions and animations for a polished user experience</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                        </svg>
+                    </div>
+                    <h3>Flexible Operators</h3>
+                    <p>Dynamic operators that adapt based on filter type and selected values</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================= DATA MODELS =========================
+        const FilterType = {
+            STATUS: 'Status',
+            ASSIGNEE: 'Assignee',
+            LABELS: 'Labels',
+            PRIORITY: 'Priority',
+            DUE_DATE: 'Due date',
+            CREATED_DATE: 'Created date',
+            UPDATED_DATE: 'Updated date'
+        };
+
+        const FilterOperator = {
+            IS: 'is',
+            IS_NOT: 'is not',
+            IS_ANY_OF: 'is any of',
+            INCLUDE: 'include',
+            DO_NOT_INCLUDE: 'do not include',
+            INCLUDE_ALL_OF: 'include all of',
+            INCLUDE_ANY_OF: 'include any of',
+            EXCLUDE_ALL_OF: 'exclude all of',
+            EXCLUDE_IF_ANY_OF: 'exclude if any of',
+            BEFORE: 'before',
+            AFTER: 'after'
+        };
+
+        const Status = {
+            BACKLOG: 'Backlog',
+            TODO: 'Todo',
+            IN_PROGRESS: 'In Progress',
+            IN_REVIEW: 'In Review',
+            DONE: 'Done',
+            CANCELLED: 'Cancelled'
+        };
+
+        const Assignee = {
+            ANDREW_LUO: 'Andrew Luo',
+            NO_ASSIGNEE: 'No assignee'
+        };
+
+        const Labels = {
+            BUG: 'Bug',
+            FEATURE: 'Feature',
+            HOTFIX: 'Hotfix',
+            RELEASE: 'Release'
+        };
+
+        const Priority = {
+            URGENT: 'Urgent',
+            HIGH: 'High',
+            MEDIUM: 'Medium',
+            LOW: 'Low'
+        };
+
+        const DueDate = {
+            IN_THE_PAST: 'in the past',
+            IN_24_HOURS: '24 hours from now',
+            IN_3_DAYS: '3 days from now',
+            IN_1_WEEK: '1 week from now',
+            IN_1_MONTH: '1 month from now',
+            IN_3_MONTHS: '3 months from now'
+        };
+
+        // ========================= ICON TEMPLATES =========================
+        const Icons = {
+            Filter: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>`,
+            CircleDashed: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-dasharray="2 2"/></svg>`,
+            Circle: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>`,
+            CircleDot: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>`,
+            CircleEllipsis: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="8" cy="12" r="1" fill="currentColor"/><circle cx="16" cy="12" r="1" fill="currentColor"/></svg>`,
+            CircleCheck: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>`,
+            CircleX: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9l-6 6m0-6l6 6"/></svg>`,
+            UserCircle: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+            Tag: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>`,
+            Signal: (height = '100%') => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 18v-6m4 6V9m4 9V6m4 12v-9"/></svg>`,
+            SignalHigh: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 18h.01M9 18h.01M13 18h.01M17 18h.01M5 14h.01M9 14h.01M13 14h.01M17 14h.01M5 10h.01M9 10h.01M13 10h.01M17 10h.01"/></svg>`,
+            SignalMedium: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 18h.01M9 18h.01M13 18h.01M5 14h.01M9 14h.01M13 14h.01"/></svg>`,
+            SignalLow: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 18h.01M9 18h.01"/></svg>`,
+            CircleAlert: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01"/></svg>`,
+            Calendar: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+            CalendarPlus: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>`,
+            CalendarSync: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M17 15l-3 3m0 0l-3-3m3 3v-6"/></svg>`,
+            X: () => `<svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`,
+            Check: () => `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`,
+            Search: () => `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35"/></svg>`
+        };
+
+        // ========================= FILTER ICON COMPONENT =========================
+        function getFilterIcon(type, value) {
+            // Type icons
+            if (type === FilterType.STATUS) return `<span class="status-icon">${Icons.CircleDashed()}</span>`;
+            if (type === FilterType.ASSIGNEE) return Icons.UserCircle();
+            if (type === FilterType.LABELS) return Icons.Tag();
+            if (type === FilterType.PRIORITY) return Icons.SignalHigh();
+            if (type === FilterType.DUE_DATE) return Icons.Calendar();
+            if (type === FilterType.CREATED_DATE) return Icons.CalendarPlus();
+            if (type === FilterType.UPDATED_DATE) return Icons.CalendarSync();
+
+            // Status icons
+            if (value === Status.BACKLOG) return `<span class="status-backlog">${Icons.CircleDashed()}</span>`;
+            if (value === Status.TODO) return `<span class="status-todo">${Icons.Circle()}</span>`;
+            if (value === Status.IN_PROGRESS) return `<span class="status-in-progress">${Icons.CircleDot()}</span>`;
+            if (value === Status.IN_REVIEW) return `<span class="status-in-review">${Icons.CircleEllipsis()}</span>`;
+            if (value === Status.DONE) return `<span class="status-done">${Icons.CircleCheck()}</span>`;
+            if (value === Status.CANCELLED) return `<span class="status-cancelled">${Icons.CircleX()}</span>`;
+
+            // Priority icons
+            if (value === Priority.URGENT) return `<span class="priority-urgent">${Icons.CircleAlert()}</span>`;
+            if (value === Priority.HIGH) return `<span class="priority-high">${Icons.SignalHigh()}</span>`;
+            if (value === Priority.MEDIUM) return `<span class="priority-medium">${Icons.SignalMedium()}</span>`;
+            if (value === Priority.LOW) return `<span class="priority-low">${Icons.SignalLow()}</span>`;
+
+            // Label badges
+            if (value === Labels.BUG) return `<span class="label-badge label-bug"></span>`;
+            if (value === Labels.FEATURE) return `<span class="label-badge label-feature"></span>`;
+            if (value === Labels.HOTFIX) return `<span class="label-badge label-hotfix"></span>`;
+            if (value === Labels.RELEASE) return `<span class="label-badge label-release"></span>`;
+
+            // Assignee
+            if (value === Assignee.ANDREW_LUO) return `<span class="avatar">AL</span>`;
+            if (value === Assignee.NO_ASSIGNEE) return Icons.UserCircle();
+
+            return '';
+        }
+
+        // ========================= FILTER OPTIONS =========================
+        const filterViewOptions = [
+            [
+                { name: FilterType.STATUS, icon: FilterType.STATUS },
+                { name: FilterType.ASSIGNEE, icon: FilterType.ASSIGNEE },
+                { name: FilterType.LABELS, icon: FilterType.LABELS },
+                { name: FilterType.PRIORITY, icon: FilterType.PRIORITY }
+            ],
+            [
+                { name: FilterType.DUE_DATE, icon: FilterType.DUE_DATE },
+                { name: FilterType.CREATED_DATE, icon: FilterType.CREATED_DATE },
+                { name: FilterType.UPDATED_DATE, icon: FilterType.UPDATED_DATE }
+            ]
+        ];
+
+        const filterViewToFilterOptions = {
+            [FilterType.STATUS]: Object.values(Status).map(s => ({ name: s })),
+            [FilterType.ASSIGNEE]: Object.values(Assignee).map(a => ({ name: a })),
+            [FilterType.LABELS]: Object.values(Labels).map(l => ({ name: l })),
+            [FilterType.PRIORITY]: Object.values(Priority).map(p => ({ name: p })),
+            [FilterType.DUE_DATE]: Object.values(DueDate).map(d => ({ name: d })),
+            [FilterType.CREATED_DATE]: Object.values(DueDate).map(d => ({ name: d })),
+            [FilterType.UPDATED_DATE]: Object.values(DueDate).map(d => ({ name: d }))
+        };
+
+        // ========================= FILTER OPERATORS =========================
+        function getFilterOperators(filterType, filterValues) {
+            switch (filterType) {
+                case FilterType.STATUS:
+                case FilterType.ASSIGNEE:
+                case FilterType.PRIORITY:
+                    return filterValues.length > 1
+                        ? [FilterOperator.IS_ANY_OF, FilterOperator.IS_NOT]
+                        : [FilterOperator.IS, FilterOperator.IS_NOT];
+
+                case FilterType.LABELS:
+                    return filterValues.length > 1
+                        ? [FilterOperator.INCLUDE_ANY_OF, FilterOperator.INCLUDE_ALL_OF, FilterOperator.EXCLUDE_ALL_OF, FilterOperator.EXCLUDE_IF_ANY_OF]
+                        : [FilterOperator.INCLUDE, FilterOperator.DO_NOT_INCLUDE];
+
+                case FilterType.DUE_DATE:
+                case FilterType.CREATED_DATE:
+                case FilterType.UPDATED_DATE:
+                    return filterValues.includes(DueDate.IN_THE_PAST)
+                        ? [FilterOperator.IS, FilterOperator.IS_NOT]
+                        : [FilterOperator.BEFORE, FilterOperator.AFTER];
+
+                default:
+                    return [FilterOperator.IS];
+            }
+        }
+
+        // ========================= STATE MANAGEMENT =========================
+        let filters = [];
+        let nextFilterId = 1;
+
+        // ========================= UTILITY FUNCTIONS =========================
+        function generateId() {
+            return `filter-${nextFilterId++}`;
+        }
+
+        function closeAllPopovers() {
+            document.querySelectorAll('.popover-content, .dropdown-content').forEach(el => {
+                el.classList.remove('open');
+            });
+        }
+
+        // Click outside to close popovers
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.popover') && !e.target.closest('.dropdown-content')) {
+                closeAllPopovers();
+            }
+        });
+
+        // ========================= FILTER MANAGEMENT =========================
+        function addFilter(type, operator, values) {
+            const filter = {
+                id: generateId(),
+                type,
+                operator,
+                value: values
+            };
+            filters.push(filter);
+            renderFilters();
+        }
+
+        function removeFilter(id) {
+            filters = filters.filter(f => f.id !== id);
+            renderFilters();
+        }
+
+        function updateFilterOperator(id, operator) {
+            const filter = filters.find(f => f.id === id);
+            if (filter) {
+                filter.operator = operator;
+                renderFilters();
+            }
+        }
+
+        function updateFilterValues(id, values) {
+            const filter = filters.find(f => f.id === id);
+            if (filter) {
+                filter.value = values;
+                // Update operator if needed based on new values
+                const operators = getFilterOperators(filter.type, values);
+                if (!operators.includes(filter.operator)) {
+                    filter.operator = operators[0];
+                }
+                renderFilters();
+            }
+        }
+
+        function clearAllFilters() {
+            filters = [];
+            renderFilters();
+        }
+
+        // ========================= RENDER FUNCTIONS =========================
+        function renderFilterPill(filter) {
+            const iconsHtml = filter.type !== FilterType.PRIORITY && filter.value.slice(0, 3).map(v =>
+                getFilterIcon(filter.type, v)
+            ).join('');
+
+            const valueText = filter.value.length === 1
+                ? filter.value[0]
+                : `${filter.value.length} selected`;
+
+            return `
+                <div class="filter-pill">
+                    <div class="filter-type">
+                        ${getFilterIcon(filter.type)}
+                        ${filter.type}
+                    </div>
+                    <div class="filter-operator" onclick="toggleOperatorDropdown('${filter.id}', event)">
+                        ${filter.operator}
+                    </div>
+                    <div class="filter-value" onclick="toggleValuePopover('${filter.id}', event)">
+                        ${iconsHtml ? `<span class="filter-icons">${iconsHtml}</span>` : ''}
+                        ${valueText}
+                    </div>
+                    <button class="filter-remove" onclick="removeFilter('${filter.id}')" aria-label="Remove filter">
+                        ${Icons.X()}
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderFilters() {
+            const container = document.getElementById('filtersContainer');
+            const activeFilters = filters.filter(f => f.value.length > 0);
+
+            let html = '';
+
+            // Render active filter pills
+            activeFilters.forEach(filter => {
+                html += renderFilterPill(filter);
+            });
+
+            // Render Clear button if there are active filters
+            if (activeFilters.length > 0) {
+                html += `
+                    <button class="btn btn-outline" onclick="clearAllFilters()">
+                        Clear
+                    </button>
+                `;
+            }
+
+            // Render Filter button
+            html += `
+                <div class="popover">
+                    <button class="btn btn-ghost ${filters.length > 0 ? 'btn-icon' : ''}" onclick="toggleMainFilterPopover(event)">
+                        ${Icons.Filter()}
+                        ${filters.length === 0 ? 'Filter' : ''}
+                    </button>
+                    <div id="mainFilterPopover" class="popover-content">
+                        ${renderMainFilterMenu()}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function renderMainFilterMenu(selectedView = null, searchQuery = '') {
+            if (selectedView) {
+                const options = filterViewToFilterOptions[selectedView];
+                const filteredOptions = searchQuery
+                    ? options.filter(opt => opt.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                    : options;
+
+                return `
+                    <div class="command">
+                        <input
+                            type="text"
+                            class="command-input"
+                            placeholder="${selectedView}"
+                            value="${searchQuery}"
+                            oninput="updateMainFilterSearch(this.value, '${selectedView}')"
+                            autofocus
+                        />
+                        <div class="command-list">
+                            ${filteredOptions.length === 0 ? '<div class="command-empty">No results found.</div>' : ''}
+                            ${filteredOptions.map(opt => `
+                                <div class="command-item" onclick="selectFilterValue('${selectedView}', '${opt.name}')">
+                                    ${getFilterIcon(selectedView, opt.name)}
+                                    <span>${opt.name}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="command">
+                        <input
+                            type="text"
+                            class="command-input"
+                            placeholder="Filter..."
+                            value="${searchQuery}"
+                            oninput="updateMainFilterSearch(this.value)"
+                            autofocus
+                        />
+                        <div class="command-list">
+                            ${filterViewOptions.map((group, groupIdx) => `
+                                <div class="command-group">
+                                    ${group.map(filter => `
+                                        <div class="command-item" onclick="selectFilterType('${filter.name}')">
+                                            ${getFilterIcon(filter.name)}
+                                            <span>${filter.name}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                ${groupIdx < filterViewOptions.length - 1 ? '<div class="command-separator"></div>' : ''}
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderValuePopover(filter, searchQuery = '') {
+            const isDateFilter = [FilterType.DUE_DATE, FilterType.CREATED_DATE, FilterType.UPDATED_DATE].includes(filter.type);
+            const options = filterViewToFilterOptions[filter.type];
+            const filteredOptions = searchQuery
+                ? options.filter(opt => opt.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                : options;
+
+            if (isDateFilter) {
+                return `
+                    <div class="command">
+                        <input
+                            type="text"
+                            class="command-input"
+                            placeholder="${filter.type}"
+                            value="${searchQuery}"
+                            oninput="updateValueSearch('${filter.id}', this.value)"
+                            autofocus
+                        />
+                        <div class="command-list">
+                            ${filteredOptions.length === 0 ? '<div class="command-empty">No results found.</div>' : ''}
+                            ${filteredOptions.map(opt => `
+                                <div class="command-item ${filter.value.includes(opt.name) ? 'selected' : ''}"
+                                     onclick="selectSingleValue('${filter.id}', '${opt.name}')">
+                                    <span>${opt.name}</span>
+                                    ${filter.value.includes(opt.name) ? Icons.Check() : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                const selectedOptions = filter.value;
+                const unselectedOptions = filteredOptions.filter(opt => !selectedOptions.includes(opt.name));
+
+                return `
+                    <div class="command">
+                        <input
+                            type="text"
+                            class="command-input"
+                            placeholder="${filter.type}"
+                            value="${searchQuery}"
+                            oninput="updateValueSearch('${filter.id}', this.value)"
+                            autofocus
+                        />
+                        <div class="command-list">
+                            ${selectedOptions.length === 0 && unselectedOptions.length === 0 ? '<div class="command-empty">No results found.</div>' : ''}
+                            ${selectedOptions.length > 0 ? `
+                                <div class="command-group">
+                                    ${selectedOptions.map(value => `
+                                        <div class="command-item" onclick="toggleFilterValue('${filter.id}', '${value}')">
+                                            <div class="checkbox checked">${Icons.Check()}</div>
+                                            ${getFilterIcon(filter.type, value)}
+                                            <span>${value}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            ${selectedOptions.length > 0 && unselectedOptions.length > 0 ? '<div class="command-separator"></div>' : ''}
+                            ${unselectedOptions.length > 0 ? `
+                                <div class="command-group">
+                                    ${unselectedOptions.map(opt => `
+                                        <div class="command-item" onclick="toggleFilterValue('${filter.id}', '${opt.name}')">
+                                            <div class="checkbox"></div>
+                                            ${getFilterIcon(filter.type, opt.name)}
+                                            <span>${opt.name}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // ========================= EVENT HANDLERS =========================
+        let currentMainFilterView = null;
+        let currentMainFilterSearch = '';
+        let currentValueSearch = {};
+
+        function toggleMainFilterPopover(event) {
+            event.stopPropagation();
+            const popover = document.getElementById('mainFilterPopover');
+            const isOpen = popover.classList.contains('open');
+
+            closeAllPopovers();
+
+            if (!isOpen) {
+                popover.classList.add('open');
+                currentMainFilterView = null;
+                currentMainFilterSearch = '';
+            }
+        }
+
+        function selectFilterType(type) {
+            currentMainFilterView = type;
+            currentMainFilterSearch = '';
+            const popover = document.getElementById('mainFilterPopover');
+            popover.innerHTML = renderMainFilterMenu(type, '');
+        }
+
+        function updateMainFilterSearch(query, selectedView = null) {
+            currentMainFilterSearch = query;
+            const popover = document.getElementById('mainFilterPopover');
+            popover.innerHTML = renderMainFilterMenu(selectedView || currentMainFilterView, query);
+        }
+
+        function selectFilterValue(type, value) {
+            const isDateFilter = [FilterType.DUE_DATE, FilterType.CREATED_DATE, FilterType.UPDATED_DATE].includes(type);
+            const operator = (type === FilterType.DUE_DATE && value !== DueDate.IN_THE_PAST)
+                ? FilterOperator.BEFORE
+                : getFilterOperators(type, [value])[0];
+
+            addFilter(type, operator, [value]);
+            closeAllPopovers();
+            currentMainFilterView = null;
+            currentMainFilterSearch = '';
+        }
+
+        function toggleOperatorDropdown(filterId, event) {
+            event.stopPropagation();
+            const filter = filters.find(f => f.id === filterId);
+            if (!filter) return;
+
+            const operators = getFilterOperators(filter.type, filter.value);
+            const pill = event.target.closest('.filter-pill');
+
+            // Remove existing dropdown if any
+            const existingDropdown = document.querySelector('.dropdown-content');
+            if (existingDropdown) existingDropdown.remove();
+
+            // Create dropdown
+            const dropdown = document.createElement('div');
+            dropdown.className = 'dropdown-content open';
+            dropdown.innerHTML = operators.map(op => `
+                <div class="dropdown-item" onclick="selectOperator('${filterId}', '${op}')">${op}</div>
+            `).join('');
+
+            const rect = event.target.getBoundingClientRect();
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = `${rect.bottom + 4}px`;
+            dropdown.style.left = `${rect.left}px`;
+
+            document.body.appendChild(dropdown);
+
+            // Close on click outside
+            setTimeout(() => {
+                document.addEventListener('click', function closeDropdown(e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.remove();
+                        document.removeEventListener('click', closeDropdown);
+                    }
+                });
+            }, 0);
+        }
+
+        function selectOperator(filterId, operator) {
+            updateFilterOperator(filterId, operator);
+            closeAllPopovers();
+        }
+
+        function toggleValuePopover(filterId, event) {
+            event.stopPropagation();
+            const filter = filters.find(f => f.id === filterId);
+            if (!filter) return;
+
+            // Remove existing popover if any
+            const existingPopover = document.querySelector('.value-popover');
+            if (existingPopover) existingPopover.remove();
+
+            // Create popover
+            const popover = document.createElement('div');
+            popover.className = 'popover-content value-popover open';
+            popover.innerHTML = renderValuePopover(filter, currentValueSearch[filterId] || '');
+
+            const rect = event.target.getBoundingClientRect();
+            popover.style.position = 'fixed';
+            popover.style.top = `${rect.bottom + 4}px`;
+            popover.style.left = `${rect.left}px`;
+
+            document.body.appendChild(popover);
+
+            // Close on click outside
+            setTimeout(() => {
+                document.addEventListener('click', function closePopover(e) {
+                    if (!popover.contains(e.target) && !e.target.closest('.filter-value')) {
+                        popover.remove();
+                        delete currentValueSearch[filterId];
+                        document.removeEventListener('click', closePopover);
+                    }
+                });
+            }, 0);
+        }
+
+        function updateValueSearch(filterId, query) {
+            currentValueSearch[filterId] = query;
+            const filter = filters.find(f => f.id === filterId);
+            const popover = document.querySelector('.value-popover');
+            if (popover && filter) {
+                popover.innerHTML = renderValuePopover(filter, query);
+            }
+        }
+
+        function toggleFilterValue(filterId, value) {
+            const filter = filters.find(f => f.id === filterId);
+            if (!filter) return;
+
+            const newValues = filter.value.includes(value)
+                ? filter.value.filter(v => v !== value)
+                : [...filter.value, value];
+
+            updateFilterValues(filterId, newValues);
+
+            // Update the popover
+            const popover = document.querySelector('.value-popover');
+            if (popover) {
+                popover.innerHTML = renderValuePopover(filter, currentValueSearch[filterId] || '');
+            }
+        }
+
+        function selectSingleValue(filterId, value) {
+            updateFilterValues(filterId, [value]);
+            closeAllPopovers();
+            delete currentValueSearch[filterId];
+        }
+
+        // ========================= INITIALIZATION =========================
+        // Add some sample filters on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderFilters();
+
+            // Add sample filters after a short delay for demonstration
+            setTimeout(() => {
+                addFilter(FilterType.STATUS, FilterOperator.IS_ANY_OF, [Status.TODO, Status.IN_PROGRESS]);
+            }, 500);
+
+            setTimeout(() => {
+                addFilter(FilterType.PRIORITY, FilterOperator.IS, [Priority.HIGH]);
+            }, 800);
+        });
+
+        // Make functions globally accessible
+        window.toggleMainFilterPopover = toggleMainFilterPopover;
+        window.selectFilterType = selectFilterType;
+        window.updateMainFilterSearch = updateMainFilterSearch;
+        window.selectFilterValue = selectFilterValue;
+        window.toggleOperatorDropdown = toggleOperatorDropdown;
+        window.selectOperator = selectOperator;
+        window.toggleValuePopover = toggleValuePopover;
+        window.updateValueSearch = updateValueSearch;
+        window.toggleFilterValue = toggleFilterValue;
+        window.selectSingleValue = selectSingleValue;
+        window.removeFilter = removeFilter;
+        window.clearAllFilters = clearAllFilters;
+    </script>
+</body>
+</html>
