@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook Spotlight Card - Interactive Component</title>
+
+    <!-- Google Fonts - Inter & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== DreamyHook Theme Variables ==================== */
+        :root {
+            /* Brand Colors - DreamyHook Palette */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-white: #ffffff;
+            --color-warm-white: #fffef9;
+            --color-cream: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-error: #ef4444;
+
+            /* Fonts */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Shadows & Effects */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-colored: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+            --glow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --glow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+        }
+
+        /* ==================== Reset & Base Styles ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, var(--color-warm-white) 0%, var(--color-cream) 100%);
+            color: var(--color-secondary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==================== Container ==================== */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--color-neutral-700);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ==================== Spotlight Card Styles ==================== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .spotlight-card {
+            position: relative;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(252, 191, 73, 0.2);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .spotlight-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-colored);
+            border-color: var(--color-primary);
+        }
+
+        /* Spotlight Effect Overlay */
+        .spotlight-overlay {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(
+                circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 210, 63, 0.15),
+                transparent 80%
+            );
+        }
+
+        .spotlight-card:hover .spotlight-overlay {
+            opacity: 1;
+        }
+
+        /* Canvas for Particle Effect */
+        .particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .spotlight-card:hover .particle-canvas {
+            opacity: 1;
+        }
+
+        /* Card Content */
+        .card-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--glow-buttercup);
+        }
+
+        .card-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--color-secondary);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: var(--color-neutral-700);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--color-neutral-800);
+        }
+
+        .check-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            color: var(--color-success);
+            margin-top: 2px;
+        }
+
+        .card-footer {
+            color: var(--color-neutral-500);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* ==================== Accent Variants ==================== */
+        .spotlight-card.coral-accent {
+            border-color: rgba(255, 107, 74, 0.2);
+        }
+
+        .spotlight-card.coral-accent:hover {
+            border-color: var(--color-coral);
+        }
+
+        .spotlight-card.coral-accent .card-icon {
+            background: linear-gradient(135deg, var(--color-coral) 0%, #e65539 100%);
+            box-shadow: 0 0 30px 0 rgba(255, 107, 74, 0.3);
+        }
+
+        .spotlight-card.coral-accent .spotlight-overlay {
+            background: radial-gradient(
+                circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 107, 74, 0.15),
+                transparent 80%
+            );
+        }
+
+        .spotlight-card.sky-accent {
+            border-color: rgba(14, 165, 233, 0.2);
+        }
+
+        .spotlight-card.sky-accent:hover {
+            border-color: var(--color-sky);
+        }
+
+        .spotlight-card.sky-accent .card-icon {
+            background: linear-gradient(135deg, var(--color-sky) 0%, #0284c7 100%);
+            box-shadow: 0 0 30px 0 rgba(14, 165, 233, 0.3);
+        }
+
+        .spotlight-card.sky-accent .spotlight-overlay {
+            background: radial-gradient(
+                circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(14, 165, 233, 0.15),
+                transparent 80%
+            );
+        }
+
+        /* ==================== Responsive Design ==================== */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .spotlight-card {
+                padding: 2rem;
+            }
+        }
+
+        /* ==================== Animations ==================== */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .card-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>DreamyHook Spotlight Cards</h1>
+            <p>Interactive cards with dynamic spotlight effects that follow your cursor. Built with vanilla JavaScript and DreamyHook's signature warm color palette.</p>
+        </div>
+
+        <!-- Card Grid -->
+        <div class="card-grid">
+            <!-- Card 1: Authentication -->
+            <div class="spotlight-card" data-card="1">
+                <canvas class="particle-canvas" data-canvas="1"></canvas>
+                <div class="spotlight-overlay"></div>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Secure Authentication</h3>
+                    <p class="card-description">
+                        Follow these steps to secure your account and protect your personal information:
+                    </p>
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Enter your email address</span>
+                        </li>
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Create a strong password</span>
+                        </li>
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Enable two-factor authentication</span>
+                        </li>
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Verify your identity</span>
+                        </li>
+                    </ul>
+                    <p class="card-footer">
+                        Ensuring your account is properly secured helps protect your personal information and data.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 2: Analytics -->
+            <div class="spotlight-card coral-accent" data-card="2">
+                <canvas class="particle-canvas" data-canvas="2"></canvas>
+                <div class="spotlight-overlay"></div>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Advanced Analytics</h3>
+                    <p class="card-description">
+                        Gain deep insights into your data with our comprehensive analytics platform:
+                    </p>
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Real-time data visualization</span>
+                        </li>
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Custom dashboards and reports</span>
+                        </li>
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Predictive analytics & insights</span>
+                        </li>
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Export data in multiple formats</span>
+                        </li>
+                    </ul>
+                    <p class="card-footer">
+                        Transform raw data into actionable insights that drive your business forward.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 3: Collaboration -->
+            <div class="spotlight-card sky-accent" data-card="3">
+                <canvas class="particle-canvas" data-canvas="3"></canvas>
+                <div class="spotlight-overlay"></div>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Team Collaboration</h3>
+                    <p class="card-description">
+                        Work together seamlessly with powerful collaboration tools:
+                    </p>
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Real-time collaborative editing</span>
+                        </li>
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Share files and resources instantly</span>
+                        </li>
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Built-in messaging and comments</span>
+                        </li>
+                        <li class="feature-item">
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c-.218 0-.432.002-.642.005l-.616.017-.299.013-.579.034-.553.046c-4.785.464-6.732 2.411-7.196 7.196l-.046.553-.034.579c-.005.098-.01.198-.013.299l-.017.616-.004.318-.001.324c0 .218.002.432.005.642l.017.616.013.299.034.579.046.553c.464 4.785 2.411 6.732 7.196 7.196l.553.046.579.034c.098.005.198.01.299.013l.616.017.642.005.642-.005.616-.017.299-.013.579-.034.553-.046c4.785-.464 6.732-2.411 7.196-7.196l.046-.553.034-.579c.005-.098.01-.198.013-.299l.017-.616.005-.642-.005-.642-.017-.616-.013-.299-.034-.579-.046-.553c-.464-4.785-2.411-6.732-7.196-7.196l-.553-.046-.579-.034a28.058 28.058 0 00-.299-.013l-.616-.017-.318-.004-.324-.001zm2.293 7.293a1 1 0 011.497 1.32l-.083.094-4 4a1 1 0 01-1.32.083l-.094-.083-2-2a1 1 0 011.32-1.497l.094.083 1.293 1.292 3.293-3.292z" />
+                            </svg>
+                            <span>Role-based permissions and access</span>
+                        </li>
+                    </ul>
+                    <p class="card-footer">
+                        Bring your team together and achieve more with streamlined collaboration features.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DreamyHook Spotlight Card Effect ====================
+
+        class SpotlightCard {
+            constructor(cardElement) {
+                this.card = cardElement;
+                this.overlay = this.card.querySelector('.spotlight-overlay');
+                this.canvas = this.card.querySelector('.particle-canvas');
+                this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
+                this.particles = [];
+                this.animationId = null;
+                this.isHovering = false;
+
+                this.init();
+            }
+
+            init() {
+                // Mouse move for spotlight effect
+                this.card.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+
+                // Hover states for particle animation
+                this.card.addEventListener('mouseenter', () => this.handleMouseEnter());
+                this.card.addEventListener('mouseleave', () => this.handleMouseLeave());
+
+                // Setup canvas
+                if (this.canvas) {
+                    this.resizeCanvas();
+                    window.addEventListener('resize', () => this.resizeCanvas());
+                }
+            }
+
+            handleMouseMove(e) {
+                const rect = this.card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                // Update CSS custom properties for spotlight position
+                const percentX = (x / rect.width) * 100;
+                const percentY = (y / rect.height) * 100;
+
+                this.card.style.setProperty('--mouse-x', `${percentX}%`);
+                this.card.style.setProperty('--mouse-y', `${percentY}%`);
+            }
+
+            handleMouseEnter() {
+                this.isHovering = true;
+                if (this.canvas) {
+                    this.createParticles();
+                    this.animate();
+                }
+            }
+
+            handleMouseLeave() {
+                this.isHovering = false;
+                this.particles = [];
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                    this.animationId = null;
+                }
+                if (this.ctx) {
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                }
+            }
+
+            resizeCanvas() {
+                if (!this.canvas) return;
+
+                const rect = this.card.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+            }
+
+            createParticles() {
+                this.particles = [];
+                const particleCount = 50;
+
+                // Get card accent color
+                const accentColor = this.getAccentColor();
+
+                for (let i = 0; i < particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 3 + 1,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        speedY: (Math.random() - 0.5) * 0.5,
+                        opacity: Math.random() * 0.5 + 0.3,
+                        color: accentColor
+                    });
+                }
+            }
+
+            getAccentColor() {
+                // Determine accent color based on card class
+                if (this.card.classList.contains('coral-accent')) {
+                    return { r: 255, g: 107, b: 74 };
+                } else if (this.card.classList.contains('sky-accent')) {
+                    return { r: 14, g: 165, b: 233 };
+                } else {
+                    return { r: 255, g: 210, b: 63 }; // Buttercup yellow
+                }
+            }
+
+            animate() {
+                if (!this.isHovering || !this.ctx) return;
+
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Draw and update particles
+                this.particles.forEach(particle => {
+                    // Draw particle
+                    this.ctx.beginPath();
+                    this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, ${particle.opacity})`;
+                    this.ctx.fill();
+
+                    // Update position
+                    particle.x += particle.speedX;
+                    particle.y += particle.speedY;
+
+                    // Wrap around edges
+                    if (particle.x < 0) particle.x = this.canvas.width;
+                    if (particle.x > this.canvas.width) particle.x = 0;
+                    if (particle.y < 0) particle.y = this.canvas.height;
+                    if (particle.y > this.canvas.height) particle.y = 0;
+
+                    // Pulsate opacity
+                    particle.opacity += (Math.random() - 0.5) * 0.02;
+                    particle.opacity = Math.max(0.1, Math.min(0.8, particle.opacity));
+                });
+
+                // Continue animation
+                this.animationId = requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize all spotlight cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.spotlight-card');
+            cards.forEach(card => new SpotlightCard(card));
+        });
+    </script>
+</body>
+</html>
