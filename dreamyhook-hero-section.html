@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DreamyHook - Modern Software Testing Reimagined">
+    <title>DreamyHook - Modern Software Testing Reimagined</title>
+
+    <!-- Google Fonts: Inter, Poppins, JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= CSS RESET & VARIABLES ========================= */
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* DreamyHook Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors - Warm Gray Palette */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-error: #ef4444;
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+            --shadow-glow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-glow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+        }
+
+        /* ========================= BASE STYLES ========================= */
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--color-secondary);
+            background-color: var(--color-neutral-200);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ========================= NAVIGATION ========================= */
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px dashed #e7e5e4;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            gap: 1.5rem;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--color-secondary);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.25rem;
+            z-index: 1001;
+        }
+
+        .logo-svg {
+            height: 32px;
+            width: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-neutral-500);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.15s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            padding-left: 1.5rem;
+            border-left: 1px solid #e7e5e4;
+        }
+
+        /* Hamburger Menu Button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+            position: relative;
+        }
+
+        .menu-icon,
+        .close-icon {
+            width: 24px;
+            height: 24px;
+            stroke: var(--color-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-180deg) scale(0);
+            opacity: 0;
+        }
+
+        .menu-toggle.active .menu-icon {
+            transform: rotate(180deg) scale(0);
+            opacity: 0;
+        }
+
+        .menu-toggle.active .close-icon {
+            transform: translate(-50%, -50%) rotate(0) scale(1);
+            opacity: 1;
+        }
+
+        /* ========================= BUTTONS ========================= */
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.625rem 1.5rem;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-secondary);
+            box-shadow: var(--shadow-warm);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-glow-marigold);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--color-secondary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(252, 191, 73, 0.1);
+            border-color: var(--color-accent);
+        }
+
+        .btn-lg {
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+        }
+
+        /* ========================= HERO SECTION ========================= */
+
+        main {
+            padding-top: 80px; /* Account for fixed header */
+        }
+
+        .hero-section {
+            position: relative;
+            background: var(--color-neutral-100);
+            overflow: hidden;
+        }
+
+        /* Background decoration */
+        .hero-bg-decoration {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .hero-bg-gradient-1 {
+            position: absolute;
+            width: 35rem;
+            height: 80rem;
+            left: 0;
+            top: 0;
+            transform: translateY(-50%) rotate(-45deg);
+            border-radius: 50%;
+            background: radial-gradient(68.54% 68.72% at 55.02% 31.46%, rgba(252, 191, 73, 0.08) 0%, rgba(255, 210, 63, 0.02) 50%, rgba(255, 210, 63, 0) 80%);
+        }
+
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 7rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 768px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 5vw, 3.75rem);
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--color-secondary);
+            margin-bottom: 2rem;
+            text-wrap: balance;
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--color-neutral-600);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            margin-top: 2rem;
+        }
+
+        /* Hero Image Container */
+        .hero-image-container {
+            max-width: 1440px;
+            margin: -4rem auto 0;
+            padding: 0 4rem 0 4rem;
+            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        }
+
+        .hero-image-perspective {
+            perspective: 1200px;
+            mask-image: linear-gradient(to right, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%);
+            margin-right: -4rem;
+            padding-left: 4rem;
+        }
+
+        .hero-image-transform {
+            transform: rotateX(20deg);
+        }
+
+        .hero-image-inner {
+            position: relative;
+            height: 44rem;
+            transform: skewX(0.36rad);
+        }
+
+        .hero-image {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 1rem;
+            border: 1px solid #e7e5e4;
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* ========================= PARTNERS SECTION ========================= */
+
+        .partners-section {
+            position: relative;
+            z-index: 10;
+            background: var(--color-neutral-200);
+            padding: 4rem 2rem;
+        }
+
+        .partners-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .partners-title {
+            text-align: center;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--color-secondary);
+            margin-bottom: 5rem;
+        }
+
+        .partners-grid {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem 4rem;
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
+        .partner-logo {
+            height: 24px;
+            width: auto;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            filter: grayscale(100%);
+        }
+
+        .partner-logo:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        /* ========================= RESPONSIVE DESIGN ========================= */
+
+        /* Tablet */
+        @media screen and (max-width: 991px) {
+            nav {
+                padding: 0 1.5rem;
+            }
+
+            .hero-content-wrapper {
+                padding: 5rem 1.5rem;
+            }
+
+            .hero-image-container {
+                padding: 0 2rem 0 2rem;
+            }
+
+            .hero-image-perspective {
+                padding-left: 2rem;
+                margin-right: -2rem;
+            }
+
+            .hero-image-inner {
+                height: 32rem;
+            }
+        }
+
+        /* Mobile */
+        @media screen and (max-width: 767px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                max-width: 400px;
+                height: 100vh;
+                background: var(--color-neutral-100);
+                flex-direction: column;
+                gap: 2rem;
+                padding: 6rem 2rem 2rem;
+                box-shadow: -4px 0 20px rgba(10, 17, 40, 0.1);
+                transition: right 0.3s ease;
+                align-items: flex-start;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1.5rem;
+                width: 100%;
+            }
+
+            .nav-links a {
+                font-size: 1.125rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+                padding-left: 0;
+                border-left: none;
+                padding-top: 1.5rem;
+                border-top: 1px solid #e7e5e4;
+            }
+
+            .nav-buttons .btn {
+                width: 100%;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-description {
+                font-size: 1.125rem;
+            }
+
+            .hero-image-container {
+                margin-top: -2rem;
+                padding: 0 1rem 0 1rem;
+            }
+
+            .hero-image-perspective {
+                padding-left: 1rem;
+                margin-right: -1rem;
+            }
+
+            .hero-image-inner {
+                height: 24rem;
+            }
+
+            .partners-grid {
+                gap: 2rem;
+            }
+
+            .partner-logo {
+                height: 20px;
+            }
+        }
+
+        /* Very Small Mobile */
+        @media screen and (max-width: 479px) {
+            nav {
+                padding: 0 1rem;
+            }
+
+            .hero-content-wrapper {
+                padding: 4rem 1rem;
+            }
+
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .hero-image-inner {
+                height: 20rem;
+            }
+        }
+
+        /* ========================= ANIMATIONS ========================= */
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .animation-delay-1 {
+            animation-delay: 0.1s;
+            opacity: 0;
+        }
+
+        .animation-delay-2 {
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+
+        .animation-delay-3 {
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================= HEADER / NAVIGATION ========================= -->
+    <header>
+        <nav>
+            <div class="nav-container">
+                <!-- Logo -->
+                <a href="#" class="nav-logo" aria-label="DreamyHook Home">
+                    <svg class="logo-svg" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FFD23F;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#FCBF49;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="20" cy="20" r="18" fill="url(#logo-gradient)"/>
+                        <path d="M15 20 L20 15 L25 20 L20 25 Z" fill="#0A1128"/>
+                        <text x="45" y="27" font-family="Poppins, sans-serif" font-size="22" font-weight="700" fill="#0A1128">DreamyHook</text>
+                    </svg>
+                </a>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="menu-toggle" aria-label="Toggle navigation menu">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                    <svg class="close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <!-- Navigation Menu -->
+                <div class="nav-menu">
+                    <ul class="nav-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#solution">Solution</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+
+                    <div class="nav-buttons">
+                        <a href="#login" class="btn btn-outline">Login</a>
+                        <a href="#signup" class="btn btn-primary">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ========================= MAIN CONTENT ========================= -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <!-- Background Decoration -->
+            <div class="hero-bg-decoration" aria-hidden="true">
+                <div class="hero-bg-gradient-1"></div>
+            </div>
+
+            <!-- Hero Content -->
+            <div class="hero-content-wrapper">
+                <div class="hero-content">
+                    <h1 class="hero-title animate-fadeInUp">Modern Software Testing Reimagined</h1>
+                    <p class="hero-description animate-fadeInUp animation-delay-1">
+                        Transform your development workflow with intelligent testing tools that adapt to your needs.
+                        Build confidence, ship faster, and deliver exceptional quality.
+                    </p>
+                    <div class="hero-cta animate-fadeInUp animation-delay-2">
+                        <a href="#get-started" class="btn btn-primary btn-lg">Start Building</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Image -->
+            <div class="hero-image-container">
+                <div class="hero-image-perspective">
+                    <div class="hero-image-transform">
+                        <div class="hero-image-inner">
+                            <img
+                                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop"
+                                alt="Modern analytics dashboard showing software testing metrics and insights"
+                                class="hero-image"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Partners Section -->
+        <section class="partners-section">
+            <div class="partners-container">
+                <h2 class="partners-title">Trusted by leading companies worldwide</h2>
+
+                <div class="partners-grid">
+                    <!-- Partner Logos -->
+                    <img
+                        src="https://api.iconify.design/simple-icons:nvidia.svg?color=%23000000"
+                        alt="Nvidia"
+                        class="partner-logo"
+                    />
+                    <img
+                        src="https://api.iconify.design/simple-icons:github.svg?color=%23000000"
+                        alt="GitHub"
+                        class="partner-logo"
+                    />
+                    <img
+                        src="https://api.iconify.design/simple-icons:nike.svg?color=%23000000"
+                        alt="Nike"
+                        class="partner-logo"
+                    />
+                    <img
+                        src="https://api.iconify.design/simple-icons:laravel.svg?color=%23000000"
+                        alt="Laravel"
+                        class="partner-logo"
+                    />
+                    <img
+                        src="https://api.iconify.design/simple-icons:openai.svg?color=%23000000"
+                        alt="OpenAI"
+                        class="partner-logo"
+                    />
+                    <img
+                        src="https://api.iconify.design/simple-icons:tailwindcss.svg?color=%23000000"
+                        alt="Tailwind CSS"
+                        class="partner-logo"
+                    />
+                    <img
+                        src="https://api.iconify.design/simple-icons:vercel.svg?color=%23000000"
+                        alt="Vercel"
+                        class="partner-logo"
+                    />
+                    <img
+                        src="https://api.iconify.design/simple-icons:zapier.svg?color=%23000000"
+                        alt="Zapier"
+                        class="partner-logo"
+                    />
+                    <img
+                        src="https://api.iconify.design/simple-icons:stripe.svg?color=%23000000"
+                        alt="Stripe"
+                        class="partner-logo"
+                    />
+                    <img
+                        src="https://api.iconify.design/simple-icons:shopify.svg?color=%23000000"
+                        alt="Shopify"
+                        class="partner-logo"
+                    />
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================= JAVASCRIPT ========================= -->
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        const body = document.body;
+
+        menuToggle.addEventListener('click', function() {
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            body.classList.toggle('menu-open');
+        });
+
+        // Close menu when clicking on a link
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                body.classList.remove('menu-open');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const isClickInsideMenu = navMenu.contains(event.target);
+            const isClickOnToggle = menuToggle.contains(event.target);
+
+            if (!isClickInsideMenu && !isClickOnToggle && navMenu.classList.contains('active')) {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                body.classList.remove('menu-open');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+
+                // Skip if it's just a hash or placeholder
+                if (href === '#' || href === '#login' || href === '#signup' || href === '#get-started') {
+                    e.preventDefault();
+                    return;
+                }
+
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add active state to nav links based on scroll position
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollY = window.pageYOffset;
+
+            sections.forEach(section => {
+                const sectionHeight = section.offsetHeight;
+                const sectionTop = section.offsetTop - 100;
+                const sectionId = section.getAttribute('id');
+                const navLink = document.querySelector(`.nav-links a[href="#${sectionId}"]`);
+
+                if (navLink && scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                    navLink.style.color = 'var(--color-accent)';
+                } else if (navLink) {
+                    navLink.style.color = '';
+                }
+            });
+        });
+
+        // Simple parallax effect for hero image
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const heroImage = document.querySelector('.hero-image-inner');
+
+            if (heroImage && scrolled < 800) {
+                heroImage.style.transform = `skewX(0.36rad) translateY(${scrolled * 0.2}px)`;
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe animated elements
+        document.querySelectorAll('.animate-fadeInUp').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add hover glow effect to buttons
+        const buttons = document.querySelectorAll('.btn-primary');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        console.log('🎨 DreamyHook Hero Section loaded successfully!');
+    </script>
+</body>
+</html>
