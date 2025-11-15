@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook Thumbnail Carousel</title>
+
+    <!-- Google Fonts - Inter & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== DreamyHook Theme Variables ==================== */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral accent */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors - Warm Gray Palette */
+            --color-white: #ffffff;
+            --color-warm-white: #fffef9;
+            --color-cream: #fffdf0;
+            --color-light-cream: #fef9e7;
+            --color-gray-500: #78716c;
+            --color-gray-700: #44403c;
+            --color-gray-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-background: #fffef9;
+            --color-text: #0A1128;
+
+            /* Shadows & Glows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+            --glow-marigold: 0 0 30px rgba(252, 191, 73, 0.25);
+            --glow-buttercup: 0 0 30px rgba(255, 210, 63, 0.3);
+            --glow-marigold-strong: 0 0 40px rgba(252, 191, 73, 0.5);
+
+            /* Spacing & Sizing */
+            --border-radius: 1rem;
+            --border-radius-lg: 1.5rem;
+            --transition: 0.3s ease;
+            --transition-slow: 0.6s ease;
+
+            /* Carousel Specific */
+            --thumbnail-full-width: 120px;
+            --thumbnail-collapsed-width: 35px;
+            --thumbnail-gap: 2px;
+            --thumbnail-margin: 2px;
+        }
+
+        /* ==================== Reset & Base Styles ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--color-warm-white) 0%, var(--color-light-cream) 100%);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Text Selection - Marigold background */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        /* ==================== Carousel Container ==================== */
+        .carousel-wrapper {
+            width: 100%;
+            max-width: 48rem; /* 768px */
+            margin: 0 auto;
+        }
+
+        .carousel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background: var(--color-white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-medium), var(--shadow-warm);
+        }
+
+        /* ==================== Main Carousel ==================== */
+        .main-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            background: var(--color-cream);
+            height: 400px;
+        }
+
+        .carousel-track {
+            display: flex;
+            height: 100%;
+            transition: transform var(--transition-slow) cubic-bezier(0.65, 0.05, 0, 1);
+            cursor: grab;
+            user-select: none;
+        }
+
+        .carousel-track.dragging {
+            transition: none;
+            cursor: grabbing;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* ==================== Navigation Buttons ==================== */
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            border: none;
+            background: var(--color-white);
+            color: var(--color-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.8;
+            box-shadow: var(--shadow-medium);
+            transition: all var(--transition);
+            z-index: 10;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: var(--glow-marigold);
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-white);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-button.prev {
+            left: 1rem;
+        }
+
+        .nav-button.next {
+            right: 1rem;
+        }
+
+        .nav-button svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        /* ==================== Image Counter ==================== */
+        .image-counter {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 17, 40, 0.7);
+            backdrop-filter: blur(8px);
+            color: var(--color-white);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 10;
+        }
+
+        /* ==================== Thumbnails ==================== */
+        .thumbnails-container {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .thumbnails-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .thumbnails-track {
+            display: flex;
+            gap: var(--thumbnail-gap);
+            height: 5rem;
+            padding-bottom: 0.5rem;
+            width: fit-content;
+        }
+
+        .thumbnail-button {
+            position: relative;
+            height: 100%;
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .thumbnail-button.active {
+            width: var(--thumbnail-full-width);
+            margin-left: var(--thumbnail-margin);
+            margin-right: var(--thumbnail-margin);
+            box-shadow: var(--glow-marigold);
+            border: 2px solid var(--color-primary);
+        }
+
+        .thumbnail-button:not(.active) {
+            width: var(--thumbnail-collapsed-width);
+            opacity: 0.7;
+        }
+
+        .thumbnail-button:hover:not(.active) {
+            opacity: 1;
+            box-shadow: var(--shadow-medium);
+            transform: scale(1.05);
+        }
+
+        .thumbnail-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* ==================== Header/Title (Optional) ==================== */
+        .carousel-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .carousel-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .carousel-subtitle {
+            color: var(--color-gray-700);
+            font-size: 1rem;
+        }
+
+        /* ==================== Responsive Design ==================== */
+        @media screen and (max-width: 768px) {
+            .main-carousel {
+                height: 300px;
+            }
+
+            .carousel-container {
+                padding: 1rem;
+            }
+
+            .nav-button {
+                width: 2rem;
+                height: 2rem;
+            }
+
+            .nav-button svg {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+
+            .nav-button.prev {
+                left: 0.5rem;
+            }
+
+            .nav-button.next {
+                right: 0.5rem;
+            }
+
+            .carousel-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+
+            .main-carousel {
+                height: 250px;
+            }
+
+            .thumbnails-track {
+                height: 4rem;
+            }
+
+            :root {
+                --thumbnail-full-width: 100px;
+                --thumbnail-collapsed-width: 30px;
+            }
+        }
+
+        /* ==================== Animations ==================== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .carousel-wrapper {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* ==================== Loading State ==================== */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--color-gray-500);
+        }
+
+        .loading::after {
+            content: '...';
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Carousel Wrapper -->
+    <div class="carousel-wrapper">
+        <!-- Header (Optional) -->
+        <div class="carousel-header">
+            <h1 class="carousel-title">DreamyHook Gallery</h1>
+            <p class="carousel-subtitle">Explore stunning landscapes and abstract art</p>
+        </div>
+
+        <!-- Main Carousel Container -->
+        <div class="carousel-container">
+            <!-- Main Carousel -->
+            <div class="main-carousel" id="mainCarousel">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- Slides will be dynamically inserted here -->
+                </div>
+
+                <!-- Previous Button -->
+                <button class="nav-button prev" id="prevBtn" aria-label="Previous image">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+
+                <!-- Next Button -->
+                <button class="nav-button next" id="nextBtn" aria-label="Next image">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+
+                <!-- Image Counter -->
+                <div class="image-counter" id="imageCounter">1 / 12</div>
+            </div>
+
+            <!-- Thumbnails -->
+            <div class="thumbnails-container" id="thumbnailsContainer">
+                <div class="thumbnails-track" id="thumbnailsTrack">
+                    <!-- Thumbnails will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==================== DreamyHook Thumbnail Carousel ==================== */
+        /* Vanilla JavaScript Implementation with DreamyHook Branding */
+
+        // Image data array - Using Unsplash stock images
+        const items = [
+            {
+                id: 1,
+                url: 'https://plus.unsplash.com/premium_photo-1712685912272-96569030d1d7?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1175',
+                title: 'A large body of water surrounded by mountains',
+            },
+            {
+                id: 2,
+                url: 'https://plus.unsplash.com/premium_photo-1761478617343-12a3dd981cf6?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1175',
+                title: 'Abstract streaks of pink and blue on black',
+            },
+            {
+                id: 3,
+                url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=880&h=600&fit=crop',
+                title: 'Mountain Summit',
+            },
+            {
+                id: 4,
+                url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=880&h=600&fit=crop',
+                title: 'Alpine Landscape',
+            },
+            {
+                id: 5,
+                url: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=880&h=600&fit=crop',
+                title: 'Mountain Range',
+            },
+            {
+                id: 6,
+                url: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=880&h=600&fit=crop',
+                title: 'Mountain Wilderness',
+            },
+            {
+                id: 7,
+                url: 'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=880&h=600&fit=crop',
+                title: 'Mountain Trail',
+            },
+            {
+                id: 8,
+                url: 'https://plus.unsplash.com/premium_photo-1761940415449-c09ef466c698?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=715',
+                title: 'A lone figure stands on a futuristic, reflective surface',
+            },
+            {
+                id: 9,
+                url: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=880&h=600&fit=crop',
+                title: 'Rocky Cliffs',
+            },
+            {
+                id: 10,
+                url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=880&h=600&fit=crop',
+                title: 'Forest Path',
+            },
+            {
+                id: 11,
+                url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=880&h=600&fit=crop',
+                title: 'Green Hills',
+            },
+            {
+                id: 12,
+                url: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=880&h=600&fit=crop',
+                title: 'Sunrise Peak',
+            },
+        ];
+
+        // DOM Elements
+        const carouselTrack = document.getElementById('carouselTrack');
+        const thumbnailsTrack = document.getElementById('thumbnailsTrack');
+        const thumbnailsContainer = document.getElementById('thumbnailsContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const imageCounter = document.getElementById('imageCounter');
+
+        // State
+        let currentIndex = 0;
+        let isDragging = false;
+        let startX = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let animationID = 0;
+
+        // Constants for thumbnail sizing
+        const FULL_WIDTH = 120;
+        const COLLAPSED_WIDTH = 35;
+        const GAP = 2;
+        const MARGIN = 2;
+
+        // ==================== Initialize Carousel ====================
+        function init() {
+            // Generate main carousel slides
+            items.forEach((item, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.innerHTML = `<img src="${item.url}" alt="${item.title}" draggable="false">`;
+                carouselTrack.appendChild(slide);
+            });
+
+            // Generate thumbnails
+            items.forEach((item, index) => {
+                const thumbnail = document.createElement('button');
+                thumbnail.className = `thumbnail-button ${index === 0 ? 'active' : ''}`;
+                thumbnail.setAttribute('aria-label', `Go to image ${index + 1}`);
+                thumbnail.innerHTML = `<img src="${item.url}" alt="${item.title}" draggable="false">`;
+                thumbnail.addEventListener('click', () => goToSlide(index));
+                thumbnailsTrack.appendChild(thumbnail);
+            });
+
+            // Add event listeners
+            prevBtn.addEventListener('click', previousSlide);
+            nextBtn.addEventListener('click', nextSlide);
+
+            // Touch/Mouse drag events for main carousel
+            carouselTrack.addEventListener('mousedown', dragStart);
+            carouselTrack.addEventListener('touchstart', dragStart, { passive: true });
+            carouselTrack.addEventListener('mousemove', drag);
+            carouselTrack.addEventListener('touchmove', drag, { passive: true });
+            carouselTrack.addEventListener('mouseup', dragEnd);
+            carouselTrack.addEventListener('touchend', dragEnd);
+            carouselTrack.addEventListener('mouseleave', dragEnd);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', handleKeyboard);
+
+            // Update UI
+            updateCarousel();
+        }
+
+        // ==================== Navigation Functions ====================
+        function goToSlide(index) {
+            currentIndex = Math.max(0, Math.min(index, items.length - 1));
+            updateCarousel();
+        }
+
+        function previousSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        }
+
+        function nextSlide() {
+            if (currentIndex < items.length - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        }
+
+        function handleKeyboard(e) {
+            if (e.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        }
+
+        // ==================== Drag Functionality ====================
+        function dragStart(e) {
+            isDragging = true;
+            startX = getPositionX(e);
+            carouselTrack.classList.add('dragging');
+            animationID = requestAnimationFrame(animation);
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            const currentPosition = getPositionX(e);
+            currentTranslate = prevTranslate + currentPosition - startX;
+        }
+
+        function dragEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            cancelAnimationFrame(animationID);
+            carouselTrack.classList.remove('dragging');
+
+            const movedBy = currentTranslate - prevTranslate;
+            const containerWidth = carouselTrack.parentElement.offsetWidth;
+
+            // Determine if we should move to next/prev slide
+            // Threshold: 30% of container width or velocity check
+            if (Math.abs(movedBy) > containerWidth * 0.3) {
+                if (movedBy > 0 && currentIndex > 0) {
+                    currentIndex--;
+                } else if (movedBy < 0 && currentIndex < items.length - 1) {
+                    currentIndex++;
+                }
+            }
+
+            updateCarousel();
+        }
+
+        function getPositionX(e) {
+            return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        }
+
+        function animation() {
+            if (!isDragging) return;
+            const containerWidth = carouselTrack.parentElement.offsetWidth;
+            const maxTranslate = -(items.length - 1) * containerWidth;
+            const clampedTranslate = Math.max(maxTranslate, Math.min(0, currentTranslate));
+            carouselTrack.style.transform = `translateX(${clampedTranslate}px)`;
+            animationID = requestAnimationFrame(animation);
+        }
+
+        // ==================== Update UI ====================
+        function updateCarousel() {
+            // Update main carousel position
+            const containerWidth = carouselTrack.parentElement.offsetWidth;
+            const offset = -currentIndex * containerWidth;
+            currentTranslate = offset;
+            prevTranslate = offset;
+            carouselTrack.style.transform = `translateX(${offset}px)`;
+
+            // Update thumbnails
+            updateThumbnails();
+
+            // Update navigation buttons
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === items.length - 1;
+
+            // Update counter
+            imageCounter.textContent = `${currentIndex + 1} / ${items.length}`;
+
+            // Scroll thumbnails to center active item
+            scrollThumbnailsToCenter();
+        }
+
+        function updateThumbnails() {
+            const thumbnails = thumbnailsTrack.querySelectorAll('.thumbnail-button');
+            thumbnails.forEach((thumb, index) => {
+                if (index === currentIndex) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+
+        function scrollThumbnailsToCenter() {
+            // Calculate scroll position to center active thumbnail
+            let scrollPosition = 0;
+            for (let i = 0; i < currentIndex; i++) {
+                scrollPosition += COLLAPSED_WIDTH + GAP;
+            }
+            scrollPosition += MARGIN;
+
+            // Center the active thumbnail
+            const containerWidth = thumbnailsContainer.offsetWidth;
+            const centerOffset = containerWidth / 2 - FULL_WIDTH / 2;
+            scrollPosition -= centerOffset;
+
+            // Smooth scroll to position
+            thumbnailsContainer.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+        }
+
+        // ==================== Handle Window Resize ====================
+        window.addEventListener('resize', () => {
+            updateCarousel();
+        });
+
+        // ==================== Initialize on DOM Load ====================
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
