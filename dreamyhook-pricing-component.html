@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Pricing Plans</title>
+    <meta name="description" content="Simple, transparent pricing for DreamyHook. Choose the plan that works for you.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Typography */
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+            --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-yellow-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+
+            /* Transitions */
+            --transition-default: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--color-secondary);
+            background: linear-gradient(135deg, var(--color-neutral-200) 0%, var(--color-neutral-400) 100%);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ========================= Typography ========================= */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* ========================= Pricing Section ========================= */
+        .pricing-section {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .pricing-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, #243b53 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pricing-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-neutral-600);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* ========================= Toggle Switch ========================= */
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 60px;
+        }
+
+        .toggle-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+            background-color: var(--color-neutral-300);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background-color var(--transition-default);
+            border: 2px solid transparent;
+        }
+
+        .toggle-switch.active {
+            background-color: var(--color-primary);
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--color-neutral-100);
+            border-radius: 50%;
+            transition: transform var(--transition-default);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active .toggle-thumb {
+            transform: translateX(28px);
+        }
+
+        .savings-badge {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        /* ========================= Pricing Grid ========================= */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        @media (min-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ========================= Pricing Cards ========================= */
+        .pricing-card {
+            background: var(--color-neutral-100);
+            border-radius: 24px;
+            padding: 48px 32px;
+            position: relative;
+            box-shadow: var(--shadow-warm);
+            transition: all var(--transition-slow);
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .pricing-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .pricing-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .pricing-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 0 40px rgba(252, 191, 73, 0.4);
+        }
+
+        .pricing-card.popular {
+            border-color: var(--color-primary);
+            border-width: 3px;
+            box-shadow: 0 10px 50px rgba(252, 191, 73, 0.25);
+        }
+
+        @media (min-width: 768px) {
+            .pricing-card.popular {
+                transform: scale(1.05) translateY(-10px);
+            }
+
+            .pricing-card.popular:hover {
+                transform: scale(1.05) translateY(-20px);
+            }
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-neutral-100);
+            padding: 8px 20px;
+            border-radius: 0 22px 0 22px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(255, 210, 63, 0.4);
+        }
+
+        .star-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .plan-name {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-neutral-600);
+            margin-bottom: 24px;
+        }
+
+        .price-container {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .price {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            font-family: var(--font-heading);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .price.updating {
+            transform: scale(1.1);
+        }
+
+        .period {
+            font-size: 1rem;
+            color: var(--color-neutral-500);
+            font-weight: 600;
+        }
+
+        .billing-period {
+            font-size: 0.875rem;
+            color: var(--color-neutral-500);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 32px;
+            flex-grow: 1;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 1rem;
+            color: var(--color-neutral-700);
+        }
+
+        .check-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-neutral-100);
+            font-weight: 700;
+            font-size: 0.75rem;
+            margin-top: 2px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--color-neutral-300) 50%, transparent 100%);
+            margin: 24px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            width: 100%;
+            padding: 16px 32px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all var(--transition-default);
+            cursor: pointer;
+            border: 2px solid var(--color-primary);
+            background: var(--color-neutral-100);
+            color: var(--color-secondary);
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-neutral-100);
+            box-shadow: 0 8px 25px rgba(252, 191, 73, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .pricing-card.popular .cta-button {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-neutral-100);
+            border-color: var(--color-primary);
+        }
+
+        .pricing-card.popular .cta-button:hover {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
+            box-shadow: 0 8px 30px rgba(252, 191, 73, 0.5);
+        }
+
+        .plan-description {
+            font-size: 0.875rem;
+            color: var(--color-neutral-500);
+            text-align: center;
+            margin-top: 16px;
+            line-height: 1.6;
+        }
+
+        /* ========================= Confetti Canvas ========================= */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media (max-width: 767px) {
+            .pricing-section {
+                padding: 40px 16px;
+            }
+
+            .pricing-header {
+                margin-bottom: 40px;
+            }
+
+            .pricing-card {
+                padding: 32px 24px;
+            }
+
+            .price {
+                font-size: 2.5rem;
+            }
+
+            .pricing-grid {
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 479px) {
+            .toggle-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .pricing-title {
+                font-size: 1.75rem;
+            }
+
+            .pricing-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <!-- Header -->
+        <div class="pricing-header">
+            <h1 class="pricing-title">Simple, Transparent Pricing</h1>
+            <p class="pricing-subtitle">
+                Choose the plan that works for you.<br>
+                All plans include access to our platform, lead generation tools, and dedicated support.
+            </p>
+        </div>
+
+        <!-- Toggle Switch -->
+        <div class="toggle-container">
+            <span class="toggle-label">Monthly</span>
+            <div class="toggle-switch" id="billing-toggle" role="switch" aria-checked="false" tabindex="0">
+                <div class="toggle-thumb"></div>
+            </div>
+            <span class="toggle-label">
+                Annual <span class="savings-badge">(Save 20%)</span>
+            </span>
+        </div>
+
+        <!-- Pricing Cards Grid -->
+        <div class="pricing-grid" id="pricing-grid">
+            <!-- Cards will be generated by JavaScript -->
+        </div>
+    </section>
+
+    <script>
+        // ========================= Pricing Data =========================
+        const pricingPlans = [
+            {
+                name: "STARTER",
+                monthlyPrice: 50,
+                yearlyPrice: 40,
+                features: [
+                    "Up to 10 projects",
+                    "Basic analytics",
+                    "48-hour support response time",
+                    "Limited API access",
+                    "Community support"
+                ],
+                description: "Perfect for individuals and small projects",
+                buttonText: "Start Free Trial",
+                href: "#starter",
+                isPopular: false
+            },
+            {
+                name: "PROFESSIONAL",
+                monthlyPrice: 99,
+                yearlyPrice: 79,
+                features: [
+                    "Unlimited projects",
+                    "Advanced analytics",
+                    "24-hour support response time",
+                    "Full API access",
+                    "Priority support",
+                    "Team collaboration",
+                    "Custom integrations"
+                ],
+                description: "Ideal for growing teams and businesses",
+                buttonText: "Get Started",
+                href: "#professional",
+                isPopular: true
+            },
+            {
+                name: "ENTERPRISE",
+                monthlyPrice: 299,
+                yearlyPrice: 239,
+                features: [
+                    "Everything in Professional",
+                    "Custom solutions",
+                    "Dedicated account manager",
+                    "1-hour support response time",
+                    "SSO Authentication",
+                    "Advanced security",
+                    "Custom contracts",
+                    "SLA agreement"
+                ],
+                description: "For large organizations with specific needs",
+                buttonText: "Contact Sales",
+                href: "#enterprise",
+                isPopular: false
+            }
+        ];
+
+        // ========================= State Management =========================
+        let isAnnual = false;
+
+        // ========================= DOM Elements =========================
+        const toggle = document.getElementById('billing-toggle');
+        const pricingGrid = document.getElementById('pricing-grid');
+
+        // ========================= Render Pricing Cards =========================
+        function renderPricingCards() {
+            pricingGrid.innerHTML = pricingPlans.map(plan => `
+                <div class="pricing-card ${plan.isPopular ? 'popular' : ''}">
+                    ${plan.isPopular ? `
+                        <div class="popular-badge">
+                            <svg class="star-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            Popular
+                        </div>
+                    ` : ''}
+
+                    <div class="plan-name">${plan.name}</div>
+
+                    <div class="price-container">
+                        <span class="price" data-monthly="${plan.monthlyPrice}" data-yearly="${plan.yearlyPrice}">
+                            $${isAnnual ? plan.yearlyPrice : plan.monthlyPrice}
+                        </span>
+                        <span class="period">/ month</span>
+                    </div>
+
+                    <div class="billing-period">
+                        ${isAnnual ? 'billed annually' : 'billed monthly'}
+                    </div>
+
+                    <ul class="features-list">
+                        ${plan.features.map(feature => `
+                            <li class="feature-item">
+                                <span class="check-icon">✓</span>
+                                <span>${feature}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+
+                    <div class="divider"></div>
+
+                    <a href="${plan.href}" class="cta-button">
+                        ${plan.buttonText}
+                    </a>
+
+                    <p class="plan-description">${plan.description}</p>
+                </div>
+            `).join('');
+        }
+
+        // ========================= Update Prices with Animation =========================
+        function updatePrices() {
+            const priceElements = document.querySelectorAll('.price');
+            const billingPeriods = document.querySelectorAll('.billing-period');
+
+            priceElements.forEach(priceEl => {
+                const monthlyPrice = parseInt(priceEl.dataset.monthly);
+                const yearlyPrice = parseInt(priceEl.dataset.yearly);
+                const targetPrice = isAnnual ? yearlyPrice : monthlyPrice;
+                const currentPrice = parseInt(priceEl.textContent.replace('$', ''));
+
+                // Add updating class for animation
+                priceEl.classList.add('updating');
+
+                // Animate the price change
+                animateValue(priceEl, currentPrice, targetPrice, 500);
+
+                // Remove updating class after animation
+                setTimeout(() => {
+                    priceEl.classList.remove('updating');
+                }, 500);
+            });
+
+            billingPeriods.forEach(period => {
+                period.textContent = isAnnual ? 'billed annually' : 'billed monthly';
+            });
+        }
+
+        // ========================= Number Animation =========================
+        function animateValue(element, start, end, duration) {
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Easing function (ease-out cubic)
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.round(start + (end - start) * easeOut);
+
+                element.textContent = `$${current}`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // ========================= Toggle Switch Handler =========================
+        function handleToggle() {
+            isAnnual = !isAnnual;
+            toggle.classList.toggle('active');
+            toggle.setAttribute('aria-checked', isAnnual);
+            updatePrices();
+
+            if (isAnnual) {
+                triggerConfetti();
+            }
+        }
+
+        toggle.addEventListener('click', handleToggle);
+        toggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleToggle();
+            }
+        });
+
+        // ========================= Confetti Effect =========================
+        function triggerConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const particleCount = 80;
+            const colors = ['#FCBF49', '#FFD23F', '#f59e0b', '#FF6B4A', '#fbbf24'];
+
+            // Get toggle position
+            const toggleRect = toggle.getBoundingClientRect();
+            const originX = toggleRect.left + toggleRect.width / 2;
+            const originY = toggleRect.top + toggleRect.height / 2;
+
+            class Particle {
+                constructor() {
+                    this.x = originX;
+                    this.y = originY;
+                    this.size = Math.random() * 8 + 4;
+                    this.speedX = (Math.random() - 0.5) * 12;
+                    this.speedY = (Math.random() - 0.5) * 12 - 5;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                    this.gravity = 0.3;
+                    this.friction = 0.98;
+                    this.opacity = 1;
+                }
+
+                update() {
+                    this.speedY += this.gravity;
+                    this.speedX *= this.friction;
+                    this.speedY *= this.friction;
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.opacity -= 0.01;
+                }
+
+                draw() {
+                    ctx.globalAlpha = this.opacity;
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach((particle, index) => {
+                    particle.update();
+                    particle.draw();
+
+                    if (particle.opacity <= 0) {
+                        particles.splice(index, 1);
+                    }
+                });
+
+                if (particles.length > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            animate();
+        }
+
+        // ========================= Resize Handler =========================
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('confetti-canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // ========================= Initialize =========================
+        renderPricingCards();
+
+        // ========================= Scroll Animation (Intersection Observer) =========================
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.pricing-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
