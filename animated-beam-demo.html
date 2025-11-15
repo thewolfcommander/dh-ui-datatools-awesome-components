@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Animated Beam Component</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* DreamyHook Theme Variables */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-light: var(--color-neutral-200);
+            --color-dark: var(--color-secondary);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--color-neutral-600);
+        }
+
+        .demo-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 1.5rem;
+            border: 2px solid rgba(252, 191, 73, 0.2);
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            overflow: hidden;
+            padding: 2.5rem;
+        }
+
+        .grid-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 32rem;
+            max-height: 200px;
+            justify-content: space-between;
+            gap: 2.5rem;
+        }
+
+        .grid-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .circle {
+            z-index: 10;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 2px solid var(--color-primary);
+            background: #ffffff;
+            padding: 0.75rem;
+            box-shadow: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .circle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px 0 rgba(252, 191, 73, 0.5);
+        }
+
+        .circle.center {
+            width: 4rem;
+            height: 4rem;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 20px rgba(255, 210, 63, 0.3);
+        }
+
+        .circle svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .animated-beam-svg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        .beam-path {
+            fill: none;
+            stroke: rgba(10, 17, 40, 0.2);
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        .beam-gradient-path {
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            opacity: 1;
+        }
+
+        @keyframes beam-animate {
+            0% {
+                stroke-dashoffset: 1000;
+            }
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .demo-container {
+                height: 400px;
+                padding: 1.5rem;
+            }
+
+            .circle {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+
+            .circle.center {
+                width: 3.5rem;
+                height: 3.5rem;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: var(--color-neutral-600);
+            font-size: 0.875rem;
+        }
+
+        .footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Animated Beam Component</h1>
+            <p>DreamyHook - Connecting your digital ecosystem</p>
+        </div>
+
+        <div class="demo-container" id="demoContainer">
+            <div class="grid-container">
+                <div class="grid-row">
+                    <div class="circle" id="circle1">
+                        <svg width="100" height="100" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+                            <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/>
+                            <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/>
+                            <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+                            <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+                            <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+                        </svg>
+                    </div>
+                    <div class="circle" id="circle5">
+                        <svg width="47px" height="65px" viewBox="0 0 47 65" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient x1="50.0053945%" y1="8.58610612%" x2="50.0053945%" y2="100.013939%" id="linearGradient-5">
+                                    <stop stop-color="#1A237E" stop-opacity="0.2" offset="0%"/>
+                                    <stop stop-color="#1A237E" stop-opacity="0.02" offset="100%"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M29.375,0 L4.40625,0 C1.9828125,0 0,1.99431818 0,4.43181818 L0,60.5681818 C0,63.0056818 1.9828125,65 4.40625,65 L42.59375,65 C45.0171875,65 47,63.0056818 47,60.5681818 L47,17.7272727 L29.375,0 Z" fill="#4285F4"/>
+                            <path d="M11.75,47.2727273 L35.25,47.2727273 L35.25,44.3181818 L11.75,44.3181818 L11.75,47.2727273 Z M11.75,53.1818182 L29.375,53.1818182 L29.375,50.2272727 L11.75,50.2272727 L11.75,53.1818182 Z M11.75,32.5 L11.75,35.4545455 L35.25,35.4545455 L35.25,32.5 L11.75,32.5 Z M11.75,41.3636364 L35.25,41.3636364 L35.25,38.4090909 L11.75,38.4090909 L11.75,41.3636364 Z" fill="#F1F1F1"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="grid-row">
+                    <div class="circle" id="circle2">
+                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.017 4.313l55.333 -4.087c6.797 -0.583 8.543 -0.19 12.817 2.917l17.663 12.443c2.913 2.14 3.883 2.723 3.883 5.053v68.243c0 4.277 -1.553 6.807 -6.99 7.193L24.467 99.967c-4.08 0.193 -6.023 -0.39 -8.16 -3.113L3.3 79.94c-2.333 -3.113 -3.3 -5.443 -3.3 -8.167V11.113c0 -3.497 1.553 -6.413 6.017 -6.8z" fill="#ffffff"/>
+                            <path d="M61.35 0.227l-55.333 4.087C1.553 4.7 0 7.617 0 11.113v60.66c0 2.723 0.967 5.053 3.3 8.167l13.007 16.913c2.137 2.723 4.08 3.307 8.16 3.113l64.257 -3.89c5.433 -0.387 6.99 -2.917 6.99 -7.193V20.64c0 -2.21 -0.873 -2.847 -3.443 -4.733L74.167 3.143c-4.273 -3.107 -6.02 -3.5 -12.817 -2.917z" fill="#000000"/>
+                        </svg>
+                    </div>
+                    <div class="circle center" id="circle4">
+                        <svg width="100" height="100" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>
+                        </svg>
+                    </div>
+                    <div class="circle" id="circle6">
+                        <svg width="105" height="28" viewBox="0 0 244 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M57.1877 45.2253L57.1534 45.1166L78.809 25.2914V15.7391H44.0663V25.2914H64.8181L64.8524 25.3829L43.4084 45.2253V54.7775H79.1579V45.2253H57.1877Z" fill="#201515"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="grid-row">
+                    <div class="circle" id="circle3">
+                        <svg width="100" height="100" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m54.532 138.45 2.235 1.324c9.387 5.571 20.15 8.518 31.126 8.523h.023c33.707 0 61.139-27.426 61.153-61.135.006-16.335-6.349-31.696-17.895-43.251A60.75 60.75 0 0 0 87.94 25.983c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.312-6.179 22.558zm-40.811 23.544L24.16 123.88c-6.438-11.154-9.825-23.808-9.821-36.772.017-40.556 33.021-73.55 73.578-73.55 19.681.01 38.154 7.669 52.047 21.572s21.537 32.383 21.53 52.037c-.018 40.553-33.027 73.553-73.578 73.553h-.032c-12.313-.005-24.412-3.094-35.159-8.954zm0 0" fill="#25D366"/>
+                        </svg>
+                    </div>
+                    <div class="circle" id="circle7">
+                        <svg width="100" height="100" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <radialGradient id="8O3wK6b5ASW2Wn6hRCB5xa" cx="11.087" cy="7.022" r="47.612">
+                                <stop offset="0" stop-color="#1292ff"/>
+                                <stop offset=".079" stop-color="#2982ff"/>
+                                <stop offset=".754" stop-color="#df47aa"/>
+                                <stop offset=".946" stop-color="#ff6257"/>
+                            </radialGradient>
+                            <path fill="url(#8O3wK6b5ASW2Wn6hRCB5xa)" d="M44,23.5C44,34.27,35.05,43,24,43c-1.651,0-3.25-0.194-4.784-0.564 c-0.465-0.112-0.951-0.069-1.379,0.145L13.46,44.77C12.33,45.335,11,44.513,11,43.249v-4.025c0-0.575-0.257-1.111-0.681-1.499 C6.425,34.165,4,29.11,4,23.5C4,12.73,12.95,4,24,4S44,12.73,44,23.5z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <svg class="animated-beam-svg" id="beamsSvg"></svg>
+        </div>
+
+        <div class="footer">
+            <p>Built with ❤️ for <a href="https://dreamyhook.com" target="_blank">DreamyHook</a></p>
+            <p>Animated Beam Component - Vanilla HTML/CSS/JavaScript</p>
+        </div>
+    </div>
+
+    <script>
+        class AnimatedBeam {
+            constructor(options) {
+                this.containerRef = options.containerRef;
+                this.fromRef = options.fromRef;
+                this.toRef = options.toRef;
+                this.curvature = options.curvature || 0;
+                this.reverse = options.reverse || false;
+                this.duration = options.duration || (Math.random() * 3 + 4);
+                this.delay = options.delay || 0;
+                this.pathColor = options.pathColor || 'rgba(10, 17, 40, 0.2)';
+                this.pathWidth = options.pathWidth || 2;
+                this.gradientStartColor = options.gradientStartColor || '#FCBF49';
+                this.gradientStopColor = options.gradientStopColor || '#FFD23F';
+                this.startXOffset = options.startXOffset || 0;
+                this.startYOffset = options.startYOffset || 0;
+                this.endXOffset = options.endXOffset || 0;
+                this.endYOffset = options.endYOffset || 0;
+                this.svgElement = options.svgElement;
+
+                this.id = 'gradient-' + Math.random().toString(36).substr(2, 9);
+                this.init();
+            }
+
+            init() {
+                this.updatePath();
+                this.setupResizeObserver();
+                this.startAnimation();
+            }
+
+            updatePath() {
+                if (!this.containerRef || !this.fromRef || !this.toRef) return;
+
+                const containerRect = this.containerRef.getBoundingClientRect();
+                const rectA = this.fromRef.getBoundingClientRect();
+                const rectB = this.toRef.getBoundingClientRect();
+
+                const startX = rectA.left - containerRect.left + rectA.width / 2 + this.startXOffset;
+                const startY = rectA.top - containerRect.top + rectA.height / 2 + this.startYOffset;
+                const endX = rectB.left - containerRect.left + rectB.width / 2 + this.endXOffset;
+                const endY = rectB.top - containerRect.top + rectB.height / 2 + this.endYOffset;
+
+                const controlY = startY - this.curvature;
+                this.pathD = `M ${startX},${startY} Q ${(startX + endX) / 2},${controlY} ${endX},${endY}`;
+
+                this.renderSVG();
+            }
+
+            renderSVG() {
+                const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+                // Base path
+                const basePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                basePath.setAttribute('d', this.pathD);
+                basePath.setAttribute('stroke', this.pathColor);
+                basePath.setAttribute('stroke-width', this.pathWidth);
+                basePath.setAttribute('fill', 'none');
+                basePath.setAttribute('stroke-linecap', 'round');
+
+                // Gradient path
+                const gradientPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                gradientPath.setAttribute('d', this.pathD);
+                gradientPath.setAttribute('stroke', `url(#${this.id})`);
+                gradientPath.setAttribute('stroke-width', this.pathWidth);
+                gradientPath.setAttribute('fill', 'none');
+                gradientPath.setAttribute('stroke-linecap', 'round');
+                gradientPath.classList.add('beam-gradient-path');
+
+                // Create gradient
+                const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+                gradient.setAttribute('id', this.id);
+                gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
+
+                const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                stop1.setAttribute('stop-color', this.gradientStartColor);
+                stop1.setAttribute('stop-opacity', '0');
+                stop1.setAttribute('offset', '0%');
+
+                const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                stop2.setAttribute('stop-color', this.gradientStartColor);
+                stop2.setAttribute('offset', '10%');
+
+                const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                stop3.setAttribute('stop-color', this.gradientStopColor);
+                stop3.setAttribute('offset', '32.5%');
+
+                const stop4 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                stop4.setAttribute('stop-color', this.gradientStopColor);
+                stop4.setAttribute('stop-opacity', '0');
+                stop4.setAttribute('offset', '100%');
+
+                gradient.appendChild(stop1);
+                gradient.appendChild(stop2);
+                gradient.appendChild(stop3);
+                gradient.appendChild(stop4);
+                defs.appendChild(gradient);
+
+                group.appendChild(defs);
+                group.appendChild(basePath);
+                group.appendChild(gradientPath);
+
+                this.svgElement.appendChild(group);
+                this.gradientElement = gradient;
+                this.gradientPathElement = gradientPath;
+            }
+
+            startAnimation() {
+                if (!this.gradientElement) return;
+
+                const x1Start = this.reverse ? '90%' : '10%';
+                const x1End = this.reverse ? '-10%' : '110%';
+                const x2Start = this.reverse ? '100%' : '0%';
+                const x2End = this.reverse ? '0%' : '100%';
+
+                let startTime = null;
+                const animate = (timestamp) => {
+                    if (!startTime) startTime = timestamp - (this.delay * 1000);
+                    const elapsed = timestamp - startTime;
+                    const progress = (elapsed % (this.duration * 1000)) / (this.duration * 1000);
+
+                    // Easing function (easeOutExpo)
+                    const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+                    const currentX1 = this.interpolate(parseFloat(x1Start), parseFloat(x1End), eased);
+                    const currentX2 = this.interpolate(parseFloat(x2Start), parseFloat(x2End), eased);
+
+                    this.gradientElement.setAttribute('x1', currentX1 + '%');
+                    this.gradientElement.setAttribute('x2', currentX2 + '%');
+                    this.gradientElement.setAttribute('y1', '0%');
+                    this.gradientElement.setAttribute('y2', '0%');
+
+                    requestAnimationFrame(animate);
+                };
+
+                requestAnimationFrame(animate);
+            }
+
+            interpolate(start, end, progress) {
+                return start + (end - start) * progress;
+            }
+
+            setupResizeObserver() {
+                const resizeObserver = new ResizeObserver(() => {
+                    this.updatePath();
+                });
+
+                if (this.containerRef) {
+                    resizeObserver.observe(this.containerRef);
+                }
+            }
+        }
+
+        // Initialize the demo
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('demoContainer');
+            const svgElement = document.getElementById('beamsSvg');
+            const circle1 = document.getElementById('circle1');
+            const circle2 = document.getElementById('circle2');
+            const circle3 = document.getElementById('circle3');
+            const circle4 = document.getElementById('circle4');
+            const circle5 = document.getElementById('circle5');
+            const circle6 = document.getElementById('circle6');
+            const circle7 = document.getElementById('circle7');
+
+            // Create animated beams
+            new AnimatedBeam({
+                containerRef: container,
+                fromRef: circle1,
+                toRef: circle4,
+                curvature: -75,
+                endYOffset: -10,
+                svgElement: svgElement,
+                gradientStartColor: '#FCBF49',
+                gradientStopColor: '#FFD23F'
+            });
+
+            new AnimatedBeam({
+                containerRef: container,
+                fromRef: circle2,
+                toRef: circle4,
+                svgElement: svgElement,
+                gradientStartColor: '#FCBF49',
+                gradientStopColor: '#FF6B4A'
+            });
+
+            new AnimatedBeam({
+                containerRef: container,
+                fromRef: circle3,
+                toRef: circle4,
+                curvature: 75,
+                endYOffset: 10,
+                svgElement: svgElement,
+                gradientStartColor: '#FFD23F',
+                gradientStopColor: '#0ea5e9'
+            });
+
+            new AnimatedBeam({
+                containerRef: container,
+                fromRef: circle5,
+                toRef: circle4,
+                curvature: -75,
+                endYOffset: -10,
+                reverse: true,
+                svgElement: svgElement,
+                gradientStartColor: '#FF6B4A',
+                gradientStopColor: '#FCBF49'
+            });
+
+            new AnimatedBeam({
+                containerRef: container,
+                fromRef: circle6,
+                toRef: circle4,
+                reverse: true,
+                svgElement: svgElement,
+                gradientStartColor: '#0ea5e9',
+                gradientStopColor: '#FFD23F'
+            });
+
+            new AnimatedBeam({
+                containerRef: container,
+                fromRef: circle7,
+                toRef: circle4,
+                curvature: 75,
+                endYOffset: 10,
+                reverse: true,
+                svgElement: svgElement,
+                gradientStartColor: '#FFD23F',
+                gradientStopColor: '#FCBF49',
+                duration: 5
+            });
+        });
+    </script>
+</body>
+</html>
