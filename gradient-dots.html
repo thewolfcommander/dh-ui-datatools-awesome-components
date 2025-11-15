@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Dots - DreamyHook</title>
+
+    <!-- DreamyHook Brand Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* DreamyHook Theme Variables */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-700: #44403c;
+
+            /* Background */
+            --bg-warm: #fffef9;
+
+            /* Typography */
+            --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Selection - Marigold yellow background */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Gradient Dots Background */
+        .gradient-dots {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-warm);
+            animation:
+                moveGradient 30s linear infinite,
+                colorCycle 6s linear infinite;
+        }
+
+        /* DreamyHook Branded Color Gradients */
+        .gradient-dots::before,
+        .gradient-dots::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .gradient-dots::before {
+            background-image:
+                radial-gradient(circle at 50% 50%, transparent 1.5px, var(--bg-warm) 0 8px, transparent 8px),
+                radial-gradient(circle at 50% 50%, transparent 1.5px, var(--bg-warm) 0 8px, transparent 8px);
+            background-size:
+                10px 17.32px,
+                10px 17.32px;
+            background-position:
+                0px 0px,
+                5px 8.66px;
+            z-index: 2;
+        }
+
+        .gradient-dots::after {
+            background-image:
+                radial-gradient(circle at 50% 50%, var(--color-primary), transparent 60%),
+                radial-gradient(circle at 50% 50%, var(--color-accent), transparent 60%),
+                radial-gradient(circle at 50% 50%, var(--color-coral), transparent 60%),
+                radial-gradient(ellipse at 50% 50%, var(--color-sky), transparent 60%);
+            background-size:
+                200% 200%,
+                200% 200%,
+                200% 200%,
+                200% 17.32px;
+            background-position:
+                0% 0%,
+                0% 0%,
+                0% 0%,
+                0% 0px;
+            animation: moveGradient 30s linear infinite;
+            z-index: 1;
+        }
+
+        /* Keyframe Animations */
+        @keyframes moveGradient {
+            0% {
+                background-position:
+                    800% 400%,
+                    1000% -400%,
+                    -1200% -600%,
+                    400% 17.32px;
+            }
+            100% {
+                background-position:
+                    0% 0%,
+                    0% 0%,
+                    0% 0%,
+                    0% 0%;
+            }
+        }
+
+        @keyframes colorCycle {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        /* Title Styling */
+        .title {
+            position: relative;
+            z-index: 10;
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 8vw, 6rem);
+            font-weight: 800;
+            text-align: center;
+            color: var(--color-secondary);
+            padding: 2rem;
+            max-width: 90%;
+
+            /* Text gradient effect */
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 50%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+
+            /* Glow effect */
+            filter: drop-shadow(0 0 20px rgba(252, 191, 73, 0.3));
+
+            animation: fadeInScale 1s ease-out forwards;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Controls Panel */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            max-width: 90%;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 150px;
+        }
+
+        .control-label {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .control-input {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, var(--color-accent), var(--color-primary), var(--color-coral));
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .control-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-secondary);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(10, 17, 40, 0.3);
+        }
+
+        .control-input::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-secondary);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(10, 17, 40, 0.3);
+        }
+
+        .control-value {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            color: var(--color-neutral-700);
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .title {
+                font-size: clamp(1.5rem, 10vw, 3rem);
+                padding: 1rem;
+            }
+
+            .controls {
+                bottom: 1rem;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .control-group {
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .controls {
+                flex-direction: column;
+                width: 90%;
+            }
+
+            .control-group {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <!-- Gradient Dots Background -->
+        <div class="gradient-dots" id="gradientDots"></div>
+
+        <!-- Title -->
+        <h1 class="title">Gradient Dots</h1>
+
+        <!-- Interactive Controls -->
+        <div class="controls">
+            <div class="control-group">
+                <label class="control-label" for="dotSize">
+                    Dot Size
+                    <span class="control-value" id="dotSizeValue">8px</span>
+                </label>
+                <input
+                    type="range"
+                    id="dotSize"
+                    class="control-input"
+                    min="4"
+                    max="16"
+                    value="8"
+                    step="1"
+                >
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="spacing">
+                    Spacing
+                    <span class="control-value" id="spacingValue">10px</span>
+                </label>
+                <input
+                    type="range"
+                    id="spacing"
+                    class="control-input"
+                    min="5"
+                    max="30"
+                    value="10"
+                    step="1"
+                >
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="duration">
+                    Animation Speed
+                    <span class="control-value" id="durationValue">30s</span>
+                </label>
+                <input
+                    type="range"
+                    id="duration"
+                    class="control-input"
+                    min="10"
+                    max="60"
+                    value="30"
+                    step="5"
+                >
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="colorCycle">
+                    Color Cycle
+                    <span class="control-value" id="colorCycleValue">6s</span>
+                </label>
+                <input
+                    type="range"
+                    id="colorCycle"
+                    class="control-input"
+                    min="2"
+                    max="20"
+                    value="6"
+                    step="1"
+                >
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DreamyHook Gradient Dots Controller
+        class GradientDotsController {
+            constructor() {
+                this.dotElement = document.getElementById('gradientDots');
+                this.dotElementBefore = this.dotElement;
+                this.dotElementAfter = this.dotElement;
+
+                // Control elements
+                this.dotSizeInput = document.getElementById('dotSize');
+                this.spacingInput = document.getElementById('spacing');
+                this.durationInput = document.getElementById('duration');
+                this.colorCycleInput = document.getElementById('colorCycle');
+
+                // Value displays
+                this.dotSizeValue = document.getElementById('dotSizeValue');
+                this.spacingValue = document.getElementById('spacingValue');
+                this.durationValue = document.getElementById('durationValue');
+                this.colorCycleValue = document.getElementById('colorCycleValue');
+
+                this.init();
+            }
+
+            init() {
+                // Add event listeners
+                this.dotSizeInput.addEventListener('input', () => this.updateDotSize());
+                this.spacingInput.addEventListener('input', () => this.updateSpacing());
+                this.durationInput.addEventListener('input', () => this.updateDuration());
+                this.colorCycleInput.addEventListener('input', () => this.updateColorCycle());
+            }
+
+            updateDotSize() {
+                const size = parseInt(this.dotSizeInput.value);
+                this.dotSizeValue.textContent = `${size}px`;
+
+                // Update CSS custom property
+                document.documentElement.style.setProperty('--dot-size', `${size}px`);
+
+                // Update background image for dots
+                const spacing = parseInt(this.spacingInput.value);
+                const hexSpacing = spacing * 1.732;
+                const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-warm').trim();
+
+                this.updateDotsPattern(size, spacing, hexSpacing, bgColor);
+            }
+
+            updateSpacing() {
+                const spacing = parseInt(this.spacingInput.value);
+                const hexSpacing = spacing * 1.732;
+                this.spacingValue.textContent = `${spacing}px`;
+
+                const size = parseInt(this.dotSizeInput.value);
+                const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-warm').trim();
+
+                this.updateDotsPattern(size, spacing, hexSpacing, bgColor);
+            }
+
+            updateDotsPattern(size, spacing, hexSpacing, bgColor) {
+                // Create dynamic style for ::before pseudo-element
+                const styleId = 'dynamic-dots-style';
+                let styleElement = document.getElementById(styleId);
+
+                if (!styleElement) {
+                    styleElement = document.createElement('style');
+                    styleElement.id = styleId;
+                    document.head.appendChild(styleElement);
+                }
+
+                styleElement.textContent = `
+                    .gradient-dots::before {
+                        background-image:
+                            radial-gradient(circle at 50% 50%, transparent 1.5px, ${bgColor} 0 ${size}px, transparent ${size}px),
+                            radial-gradient(circle at 50% 50%, transparent 1.5px, ${bgColor} 0 ${size}px, transparent ${size}px);
+                        background-size:
+                            ${spacing}px ${hexSpacing}px,
+                            ${spacing}px ${hexSpacing}px;
+                        background-position:
+                            0px 0px,
+                            ${spacing / 2}px ${hexSpacing / 2}px;
+                    }
+                `;
+            }
+
+            updateDuration() {
+                const duration = parseInt(this.durationInput.value);
+                this.durationValue.textContent = `${duration}s`;
+
+                // Update animation duration
+                this.dotElement.style.animationDuration = `${duration}s, ${parseInt(this.colorCycleInput.value)}s`;
+
+                // Update ::after animation
+                const styleId = 'dynamic-animation-style';
+                let styleElement = document.getElementById(styleId);
+
+                if (!styleElement) {
+                    styleElement = document.createElement('style');
+                    styleElement.id = styleId;
+                    document.head.appendChild(styleElement);
+                }
+
+                styleElement.textContent = `
+                    .gradient-dots::after {
+                        animation: moveGradient ${duration}s linear infinite;
+                    }
+                `;
+            }
+
+            updateColorCycle() {
+                const colorCycle = parseInt(this.colorCycleInput.value);
+                this.colorCycleValue.textContent = `${colorCycle}s`;
+
+                // Update animation duration
+                this.dotElement.style.animationDuration = `${parseInt(this.durationInput.value)}s, ${colorCycle}s`;
+            }
+        }
+
+        // Initialize controller when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                new GradientDotsController();
+            });
+        } else {
+            new GradientDotsController();
+        }
+    </script>
+</body>
+</html>
