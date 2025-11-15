@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Feature Section with Hover Effects</title>
+
+    <!-- Google Fonts - Inter & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Border Colors */
+            --color-border: #e7e5e4;         /* Light warm gray for borders */
+            --color-border-hover: var(--color-primary);
+
+            /* Typography */
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+            --shadow-glow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+
+            /* Transitions */
+            --transition-default: 0.3s ease;
+            --transition-smooth: 0.4s cubic-bezier(0.65, 0.05, 0, 1);
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ========================= Container ========================= */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ========================= Section Header ========================= */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-neutral-700) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--color-neutral-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ========================= Features Grid ========================= */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            position: relative;
+            z-index: 10;
+            background: var(--color-neutral-100);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* ========================= Feature Card ========================= */
+        .feature-card {
+            position: relative;
+            padding: 2.5rem;
+            border-right: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            transition: all var(--transition-smooth);
+            background: var(--color-neutral-100);
+            overflow: hidden;
+        }
+
+        /* Border styling for first column */
+        .feature-card:nth-child(1),
+        .feature-card:nth-child(5) {
+            border-left: 1px solid var(--color-border);
+        }
+
+        /* Remove bottom border for last row */
+        .feature-card:nth-child(n+5) {
+            border-bottom: none;
+        }
+
+        /* Remove right border for last column */
+        .feature-card:nth-child(4n) {
+            border-right: none;
+        }
+
+        /* ========================= Gradient Overlay ========================= */
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Top gradient for first row */
+        .feature-card:nth-child(-n+4)::before {
+            background: linear-gradient(to top, var(--color-neutral-400) 0%, transparent 100%);
+        }
+
+        /* Bottom gradient for second row */
+        .feature-card:nth-child(n+5)::before {
+            background: linear-gradient(to bottom, var(--color-neutral-400) 0%, transparent 100%);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        /* ========================= Icon ========================= */
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 10;
+            color: var(--color-neutral-500);
+            transition: all var(--transition-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .feature-card:hover .feature-icon {
+            color: var(--color-primary);
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ========================= Title ========================= */
+        .feature-title-wrapper {
+            position: relative;
+            margin-bottom: 0.75rem;
+            z-index: 10;
+        }
+
+        .feature-accent-bar {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: var(--color-border);
+            border-radius: 0 4px 4px 0;
+            transition: all var(--transition-smooth);
+        }
+
+        .feature-card:hover .feature-accent-bar {
+            height: 32px;
+            background: var(--color-primary);
+            box-shadow: var(--shadow-glow-marigold);
+        }
+
+        .feature-title {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            padding-left: 1.5rem;
+            transition: transform var(--transition-default);
+            display: inline-block;
+        }
+
+        .feature-card:hover .feature-title {
+            transform: translateX(0.5rem);
+        }
+
+        /* ========================= Description ========================= */
+        .feature-description {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--color-neutral-600);
+            max-width: 300px;
+            position: relative;
+            z-index: 10;
+            padding-left: 1.5rem;
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .feature-card {
+            animation: fadeIn 0.6s ease-out backwards;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        .feature-card:nth-child(5) { animation-delay: 0.5s; }
+        .feature-card:nth-child(6) { animation-delay: 0.6s; }
+        .feature-card:nth-child(7) { animation-delay: 0.7s; }
+        .feature-card:nth-child(8) { animation-delay: 0.8s; }
+
+        /* ========================= Responsive Design ========================= */
+
+        /* Tablet (768px - 991px) */
+        @media screen and (max-width: 991px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feature-card {
+                padding: 2rem;
+            }
+
+            /* Reset borders for 2-column layout */
+            .feature-card:nth-child(4n) {
+                border-right: 1px solid var(--color-border);
+            }
+
+            .feature-card:nth-child(2n) {
+                border-right: none;
+            }
+
+            .feature-card:nth-child(1),
+            .feature-card:nth-child(3),
+            .feature-card:nth-child(5),
+            .feature-card:nth-child(7) {
+                border-left: 1px solid var(--color-border);
+            }
+
+            .feature-card:nth-child(2),
+            .feature-card:nth-child(4),
+            .feature-card:nth-child(6),
+            .feature-card:nth-child(8) {
+                border-left: none;
+            }
+
+            .feature-card:nth-child(n+7) {
+                border-bottom: none;
+            }
+
+            .feature-card:nth-child(-n+6) {
+                border-bottom: 1px solid var(--color-border);
+            }
+        }
+
+        /* Mobile (below 768px) */
+        @media screen and (max-width: 767px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+
+            .section-header {
+                margin-bottom: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                border-radius: 1rem;
+            }
+
+            .feature-card {
+                padding: 1.75rem 1.5rem;
+                border-right: none !important;
+                border-left: 1px solid var(--color-border) !important;
+            }
+
+            .feature-card:not(:last-child) {
+                border-bottom: 1px solid var(--color-border) !important;
+            }
+
+            .feature-card:last-child {
+                border-bottom: none !important;
+            }
+
+            .feature-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .feature-title {
+                font-size: 1rem;
+            }
+
+            .feature-description {
+                font-size: 0.8125rem;
+                max-width: 100%;
+            }
+        }
+
+        /* ========================= Print Styles ========================= */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .feature-card {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Section Header -->
+        <div class="section-header">
+            <h1 class="section-title">Powerful Features for Modern Developers</h1>
+            <p class="section-subtitle">Everything you need to build, deploy, and scale your webhook infrastructure with confidence.</p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid" id="featuresGrid">
+            <!-- Features will be injected here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Feature data
+        const features = [
+            {
+                title: "Built for Developers",
+                description: "Built for engineers, developers, dreamers, thinkers and doers. Intuitive APIs and comprehensive documentation.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 17 10 11 4 5"></polyline>
+                    <line x1="12" y1="19" x2="20" y2="19"></line>
+                </svg>`
+            },
+            {
+                title: "Ease of Use",
+                description: "Intuitive design that makes complex webhooks simple and accessible. Get started in minutes, not hours.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                </svg>`
+            },
+            {
+                title: "Flexible Pricing",
+                description: "Transparent pricing that scales with your needs. No hidden fees, no surprises. Start free, upgrade anytime.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>`
+            },
+            {
+                title: "99.9% Uptime",
+                description: "Reliable infrastructure that keeps your webhooks running smoothly. Enterprise-grade performance you can trust.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                </svg>`
+            },
+            {
+                title: "Advanced Routing",
+                description: "Intelligent routing and filtering for your webhook payloads. Route data exactly where it needs to go.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="18" r="3"></circle>
+                    <circle cx="6" cy="6" r="3"></circle>
+                    <path d="M13 6h3a2 2 0 0 1 2 2v7"></path>
+                    <line x1="6" y1="9" x2="6" y2="21"></line>
+                </svg>`
+            },
+            {
+                title: "24/7 Support",
+                description: "Expert support team available whenever you need assistance. Real humans, real help, real fast.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>`
+            },
+            {
+                title: "Real-time Monitoring",
+                description: "Track and monitor all your webhooks in real-time with detailed analytics. Insights that drive better decisions.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                </svg>`
+            },
+            {
+                title: "Secure & Compliant",
+                description: "Enterprise-grade security with SOC 2 compliance and end-to-end encryption. Your data stays safe, always.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>`
+            }
+        ];
+
+        // Render features
+        function renderFeatures() {
+            const grid = document.getElementById('featuresGrid');
+
+            features.forEach((feature, index) => {
+                const card = document.createElement('div');
+                card.className = 'feature-card';
+
+                card.innerHTML = `
+                    <div class="feature-icon">${feature.icon}</div>
+                    <div class="feature-title-wrapper">
+                        <div class="feature-accent-bar"></div>
+                        <h3 class="feature-title">${feature.title}</h3>
+                    </div>
+                    <p class="feature-description">${feature.description}</p>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFeatures();
+
+            // Optional: Add intersection observer for scroll animations
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, {
+                    threshold: 0.1
+                });
+
+                document.querySelectorAll('.feature-card').forEach(card => {
+                    observer.observe(card);
+                });
+            }
+        });
+
+        // Optional: Log feature interactions for analytics
+        document.addEventListener('click', (e) => {
+            const card = e.target.closest('.feature-card');
+            if (card) {
+                const title = card.querySelector('.feature-title').textContent;
+                console.log(`Feature clicked: ${title}`);
+                // Here you could send analytics data to your tracking service
+            }
+        });
+    </script>
+</body>
+</html>
