@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook Interactive Highlighter Component</title>
+
+    <!-- Google Fonts - Inter for body, Poppins for headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           DreamyHook Brand Theme - CSS Variables
+           ============================================ */
+        :root {
+            /* Primary Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Grays (Warm Tones) */
+            --color-white: #ffffff;
+            --color-warm-white: #fffef9;
+            --color-cream: #fffdf0;
+            --color-light-cream: #fef9e7;
+            --color-gray-dark: #57534e;
+            --color-gray-medium: #78716c;
+            --color-gray-light: #d6d3d1;
+            --color-near-black: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-golden: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+            --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.3);
+            --shadow-yellow-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+
+            /* Typography */
+            --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-2xl: 2rem;
+
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-base: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        /* ============================================
+           Global Reset & Base Styles
+           ============================================ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--color-warm-white) 0%, var(--color-light-cream) 100%);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           Container & Layout
+           ============================================ */
+        .container {
+            width: 100%;
+            max-width: 80rem;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           Highlighter Group Container
+           ============================================ */
+        .highlighter-group {
+            position: relative;
+            width: 100%;
+        }
+
+        /* ============================================
+           Highlighter Item (Card with Mouse Effect)
+           ============================================ */
+        .highlighter-item {
+            position: relative;
+            overflow: hidden;
+            padding: 1px;
+            border-radius: var(--radius-2xl);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 254, 249, 0.95));
+            box-shadow: var(--shadow-medium);
+            transition: box-shadow var(--transition-base);
+        }
+
+        .highlighter-item:hover {
+            box-shadow: var(--shadow-hard);
+        }
+
+        /* Mouse-following gradient effect */
+        .highlighter-item::before {
+            content: '';
+            position: absolute;
+            left: -12rem;
+            top: -12rem;
+            width: 24rem;
+            height: 24rem;
+            background: radial-gradient(circle, rgba(252, 191, 73, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity var(--transition-slow);
+            pointer-events: none;
+            z-index: 30;
+            filter: blur(40px);
+            transform: translate(var(--mouse-x, 0), var(--mouse-y, 0));
+        }
+
+        .highlighter-item:hover::before {
+            opacity: 1;
+        }
+
+        /* Inner border highlight on hover */
+        .highlighter-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-2xl);
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.3), rgba(255, 210, 63, 0.3)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity var(--transition-slow);
+            z-index: 10;
+        }
+
+        .highlighter-item:hover::after {
+            opacity: 1;
+        }
+
+        /* ============================================
+           Card Content
+           ============================================ */
+        .card-inner {
+            position: relative;
+            z-index: 20;
+            overflow: hidden;
+            border-radius: var(--radius-2xl);
+            border: 1px solid var(--color-gray-light);
+            background: var(--color-white);
+            min-height: 300px;
+        }
+
+        /* ============================================
+           Particles Canvas Container
+           ============================================ */
+        .particles-container {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.1;
+            transition: opacity var(--transition-slow);
+            pointer-events: none;
+        }
+
+        .highlighter-item:hover .particles-container {
+            opacity: 1;
+        }
+
+        .particles-container canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ============================================
+           Content Layout
+           ============================================ */
+        .content-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-2xl);
+            padding: var(--spacing-lg);
+            min-height: 300px;
+        }
+
+        /* ============================================
+           Animation Demo Section
+           ============================================ */
+        .animation-demo {
+            position: relative;
+            width: 300px;
+            height: 270px;
+            flex-shrink: 0;
+        }
+
+        /* Center Icon */
+        .center-icon {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            z-index: 10;
+            filter: drop-shadow(var(--shadow-golden));
+        }
+
+        /* Floating Labels */
+        .floating-label {
+            position: absolute;
+            padding: 0.375rem 0.75rem;
+            background: var(--color-warm-white);
+            border: 1px solid var(--color-gray-light);
+            border-radius: var(--radius-2xl);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--color-secondary);
+            opacity: 0.5;
+            transition: all var(--transition-base);
+            white-space: nowrap;
+        }
+
+        .floating-label.active {
+            opacity: 1;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+            color: var(--color-white);
+            box-shadow: var(--shadow-yellow-glow);
+            transform: scale(1.05);
+        }
+
+        .label-1 { top: 10px; right: 12px; }
+        .label-2 { top: 102px; left: 2px; }
+        .label-3 { bottom: 80px; right: 1px; }
+        .label-4 { bottom: 48px; left: 56px; }
+
+        /* Animated Cursor Pointer */
+        .cursor-pointer {
+            position: absolute;
+            pointer-events: none;
+            z-index: 20;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cursor-pointer svg {
+            width: 16.8px;
+            height: 18.2px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .cursor-label {
+            position: relative;
+            left: 12px;
+            top: -4px;
+            display: inline-block;
+            background: var(--color-coral);
+            color: var(--color-white);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-2xl);
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* ============================================
+           Text Content Section
+           ============================================ */
+        .text-content {
+            flex: 1;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .text-content h3 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .text-content p {
+            color: var(--color-gray-medium);
+            font-size: 1rem;
+        }
+
+        /* ============================================
+           Buttons
+           ============================================ */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            padding: 0.625rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+            color: var(--color-white);
+            box-shadow: var(--shadow-golden);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-marigold-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline {
+            background: var(--color-white);
+            color: var(--color-secondary);
+            border: 1px solid var(--color-gray-light);
+            padding: 0.625rem;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .btn-outline:hover {
+            background: var(--color-light-cream);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        /* ============================================
+           Responsive Design
+           ============================================ */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: var(--spacing-md);
+            }
+
+            .content-wrapper {
+                flex-direction: column;
+                gap: var(--spacing-lg);
+                padding: var(--spacing-md);
+            }
+
+            .animation-demo {
+                width: 280px;
+                height: 250px;
+            }
+
+            .text-content {
+                text-align: center;
+                align-items: center;
+                max-width: 100%;
+            }
+
+            .text-content h3 {
+                font-size: 1.5rem;
+            }
+
+            .button-group {
+                justify-content: center;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .text-content h3 {
+                font-size: 1.25rem;
+            }
+
+            .animation-demo {
+                width: 240px;
+                height: 220px;
+                transform: scale(0.9);
+            }
+
+            .label-1 { font-size: 0.65rem; }
+            .label-2 { font-size: 0.65rem; }
+            .label-3 { font-size: 0.65rem; }
+            .label-4 { font-size: 0.65rem; }
+        }
+
+        /* ============================================
+           Animations
+           ============================================ */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .center-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* ============================================
+           Accessibility
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles for keyboard navigation */
+        .btn:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="highlighter-group" id="highlighterGroup">
+            <div class="highlighter-item" id="highlighterItem">
+                <!-- Particles Canvas -->
+                <div class="particles-container">
+                    <canvas id="particlesCanvas"></canvas>
+                </div>
+
+                <!-- Card Inner Content -->
+                <div class="card-inner">
+                    <div class="content-wrapper">
+                        <!-- Animation Demo Section -->
+                        <div class="animation-demo" id="animationDemo">
+                            <!-- Center Icon -->
+                            <div class="center-icon" aria-hidden="true">✨</div>
+
+                            <!-- Floating Labels -->
+                            <div class="floating-label label-1" id="label1">Branding</div>
+                            <div class="floating-label label-2" id="label2">Graphic Design</div>
+                            <div class="floating-label label-3" id="label3">Web Application</div>
+                            <div class="floating-label label-4" id="label4">UI-UX Design</div>
+
+                            <!-- Animated Cursor Pointer -->
+                            <div class="cursor-pointer" id="cursorPointer">
+                                <svg viewBox="0 0 12 13" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        fill="#ef4444"
+                                        stroke="white"
+                                        stroke-width="1"
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M12 5.50676L0 0L2.83818 13L6.30623 7.86537L12 5.50676V5.50676Z"
+                                    />
+                                </svg>
+                                <span class="cursor-label">You</span>
+                            </div>
+                        </div>
+
+                        <!-- Text Content Section -->
+                        <div class="text-content">
+                            <div>
+                                <h3>Any questions about Design?</h3>
+                                <p>Feel free to reach out to me!</p>
+                            </div>
+
+                            <div class="button-group">
+                                <a href="https://calendly.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                                    Book a Call
+                                </a>
+                                <a href="mailto:contact@dreamyhook.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline" aria-label="Send Email">
+                                    <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </a>
+                                <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" class="btn btn-outline" aria-label="Contact on WhatsApp">
+                                    <svg class="btn-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ============================================
+        // Mouse Position Tracking
+        // ============================================
+        let mousePosition = { x: 0, y: 0 };
+
+        window.addEventListener('mousemove', (event) => {
+            mousePosition.x = event.clientX;
+            mousePosition.y = event.clientY;
+        });
+
+        // ============================================
+        // Highlighter Item Mouse Effect
+        // ============================================
+        const highlighterItem = document.getElementById('highlighterItem');
+
+        highlighterItem.addEventListener('mousemove', (event) => {
+            const rect = highlighterItem.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            highlighterItem.style.setProperty('--mouse-x', `${x}px`);
+            highlighterItem.style.setProperty('--mouse-y', `${y}px`);
+        });
+
+        // ============================================
+        // Particles Animation System
+        // ============================================
+        class ParticlesAnimation {
+            constructor(canvasId, options = {}) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.mouse = { x: 0, y: 0 };
+                this.canvasSize = { w: 0, h: 0 };
+                this.dpr = window.devicePixelRatio || 1;
+
+                // Options
+                this.quantity = options.quantity || 200;
+                this.staticity = options.staticity || 50;
+                this.ease = options.ease || 50;
+                this.color = options.color || '#FCBF49';
+                this.vx = options.vx || 0;
+                this.vy = options.vy || -0.2;
+
+                this.init();
+            }
+
+            init() {
+                this.resizeCanvas();
+                this.createParticles();
+                this.animate();
+
+                window.addEventListener('resize', () => this.resizeCanvas());
+                this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+            }
+
+            resizeCanvas() {
+                const container = this.canvas.parentElement;
+                this.canvasSize.w = container.offsetWidth;
+                this.canvasSize.h = container.offsetHeight;
+
+                this.canvas.width = this.canvasSize.w * this.dpr;
+                this.canvas.height = this.canvasSize.h * this.dpr;
+                this.canvas.style.width = `${this.canvasSize.w}px`;
+                this.canvas.style.height = `${this.canvasSize.h}px`;
+
+                this.ctx.scale(this.dpr, this.dpr);
+
+                this.particles = [];
+                this.createParticles();
+            }
+
+            onMouseMove(event) {
+                const rect = this.canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left - this.canvasSize.w / 2;
+                const y = event.clientY - rect.top - this.canvasSize.h / 2;
+
+                const inside = x < this.canvasSize.w / 2 && x > -this.canvasSize.w / 2 &&
+                              y < this.canvasSize.h / 2 && y > -this.canvasSize.h / 2;
+
+                if (inside) {
+                    this.mouse.x = x;
+                    this.mouse.y = y;
+                }
+            }
+
+            hexToRgb(hex) {
+                hex = hex.replace('#', '');
+                const hexInt = parseInt(hex, 16);
+                return [
+                    (hexInt >> 16) & 255,
+                    (hexInt >> 8) & 255,
+                    hexInt & 255
+                ];
+            }
+
+            createParticle() {
+                return {
+                    x: Math.random() * this.canvasSize.w,
+                    y: Math.random() * this.canvasSize.h,
+                    translateX: 0,
+                    translateY: 0,
+                    size: Math.random() * 2 + 1,
+                    alpha: 0,
+                    targetAlpha: parseFloat((Math.random() * 0.3 + 0.1).toFixed(1)),
+                    dx: (Math.random() - 0.5) * 0.2,
+                    dy: (Math.random() - 0.5) * 0.2,
+                    magnetism: 0.1 + Math.random() * 4
+                };
+            }
+
+            createParticles() {
+                for (let i = 0; i < this.quantity; i++) {
+                    this.particles.push(this.createParticle());
+                }
+            }
+
+            remapValue(value, start1, end1, start2, end2) {
+                const remapped = ((value - start1) * (end2 - start2)) / (end1 - start1) + start2;
+                return remapped > 0 ? remapped : 0;
+            }
+
+            drawParticle(particle) {
+                const { x, y, translateX, translateY, size, alpha } = particle;
+                const rgb = this.hexToRgb(this.color);
+
+                this.ctx.translate(translateX, translateY);
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+                this.ctx.fillStyle = `rgba(${rgb.join(', ')}, ${alpha})`;
+                this.ctx.fill();
+                this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h);
+
+                this.particles.forEach((particle, i) => {
+                    // Handle alpha based on distance from edges
+                    const edge = [
+                        particle.x + particle.translateX - particle.size,
+                        this.canvasSize.w - particle.x - particle.translateX - particle.size,
+                        particle.y + particle.translateY - particle.size,
+                        this.canvasSize.h - particle.y - particle.translateY - particle.size
+                    ];
+                    const closestEdge = Math.min(...edge);
+                    const remapClosestEdge = parseFloat(this.remapValue(closestEdge, 0, 20, 0, 1).toFixed(2));
+
+                    if (remapClosestEdge > 1) {
+                        particle.alpha += 0.02;
+                        if (particle.alpha > particle.targetAlpha) {
+                            particle.alpha = particle.targetAlpha;
+                        }
+                    } else {
+                        particle.alpha = particle.targetAlpha * remapClosestEdge;
+                    }
+
+                    // Update position
+                    particle.x += particle.dx + this.vx;
+                    particle.y += particle.dy + this.vy;
+
+                    // Magnetism effect toward mouse
+                    particle.translateX += (this.mouse.x / (this.staticity / particle.magnetism) - particle.translateX) / this.ease;
+                    particle.translateY += (this.mouse.y / (this.staticity / particle.magnetism) - particle.translateY) / this.ease;
+
+                    // Reset particle if out of bounds
+                    if (particle.x < -particle.size || particle.x > this.canvasSize.w + particle.size ||
+                        particle.y < -particle.size || particle.y > this.canvasSize.h + particle.size) {
+                        this.particles[i] = this.createParticle();
+                    }
+
+                    this.drawParticle(particle);
+                });
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize particles
+        new ParticlesAnimation('particlesCanvas', {
+            quantity: 200,
+            staticity: 50,
+            ease: 50,
+            color: '#FCBF49',
+            vx: 0,
+            vy: -0.2
+        });
+
+        // ============================================
+        // Animated Cursor Pointer
+        // ============================================
+        const cursorPointer = document.getElementById('cursorPointer');
+        const labels = [
+            { id: 'label1', x: 200, y: 60 },
+            { id: 'label2', x: 50, y: 102 },
+            { id: 'label3', x: 224, y: 170 },
+            { id: 'label4', x: 88, y: 198 }
+        ];
+
+        let currentLabelIndex = 0;
+
+        function animateCursor() {
+            // Remove active class from all labels
+            document.querySelectorAll('.floating-label').forEach(label => {
+                label.classList.remove('active');
+            });
+
+            // Get current label
+            const currentLabel = labels[currentLabelIndex];
+
+            // Move cursor to label
+            cursorPointer.style.left = `${currentLabel.x}px`;
+            cursorPointer.style.top = `${currentLabel.y}px`;
+
+            // Activate label after cursor arrives
+            setTimeout(() => {
+                document.getElementById(currentLabel.id).classList.add('active');
+            }, 300);
+
+            // Move to next label
+            currentLabelIndex = (currentLabelIndex + 1) % labels.length;
+        }
+
+        // Start animation
+        animateCursor();
+        setInterval(animateCursor, 2000);
+    </script>
+</body>
+</html>
