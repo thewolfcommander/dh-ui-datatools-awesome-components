@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Liquid Glass Buttons</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Primary Color Shades */
+            --primary-50: #fffbeb;
+            --primary-100: #fef3c7;
+            --primary-200: #fde68a;
+            --primary-300: #fcd34d;
+            --primary-400: #fbbf24;
+            --primary-500: #FCBF49;
+            --primary-600: #f59e0b;
+            --primary-700: #d97706;
+            --primary-800: #b45309;
+            --primary-900: #78350f;
+
+            /* Secondary Color Shades */
+            --secondary-50: #f0f4f8;
+            --secondary-100: #d9e2ec;
+            --secondary-200: #bcccdc;
+            --secondary-300: #9fb3c8;
+            --secondary-400: #829ab1;
+            --secondary-500: #627d98;
+            --secondary-600: #486581;
+            --secondary-700: #334e68;
+            --secondary-800: #243b53;
+            --secondary-900: #0A1128;
+
+            /* Accent Color Shades */
+            --accent-50: #fffef0;
+            --accent-100: #fffbd1;
+            --accent-200: #fff7a3;
+            --accent-300: #fff275;
+            --accent-400: #ffed47;
+            --accent-500: #FFD23F;
+            --accent-600: #e6b800;
+            --accent-700: #b89000;
+            --accent-800: #8a6b00;
+            --accent-900: #5c4700;
+
+            /* Neutral Colors - Warm Gray Palette */
+            --neutral-50: #fafaf9;
+            --neutral-100: #f5f5f4;
+            --neutral-200: #e7e5e4;
+            --neutral-300: #d6d3d1;
+            --neutral-400: #a8a29e;
+            --neutral-500: #78716c;
+            --neutral-600: #57534e;
+            --neutral-700: #44403c;
+            --neutral-800: #292524;
+            --neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-error: #ef4444;
+            --color-warning: #f59e0b;
+
+            /* Background Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #fffef9;
+            --bg-cream: #fffdf0;
+            --bg-light-cream: #fef9e7;
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-marigold: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+            --shadow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-light-cream) 100%);
+            color: var(--secondary-900);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--neutral-50);
+        }
+
+        /* ========================= Container & Layout ========================= */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 254, 249, 0.95) 0%, rgba(255, 253, 240, 1) 100%);
+            border-bottom: 2px solid var(--primary-200);
+            box-shadow: var(--shadow-soft);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--primary-600) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--secondary-700);
+            font-weight: 500;
+        }
+
+        .brand-tag {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: var(--color-primary);
+            color: var(--neutral-50);
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-marigold);
+        }
+
+        /* ========================= Demo Section ========================= */
+        .demo-section {
+            margin: 4rem auto;
+            padding: 3rem;
+            background: var(--bg-primary);
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .demo-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--secondary-900);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .demo-description {
+            text-align: center;
+            color: var(--neutral-600);
+            margin-bottom: 2rem;
+            font-size: 1.125rem;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .button-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .button-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--neutral-600);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ========================= Liquid Glass Button ========================= */
+        .liquid-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            color: var(--secondary-900);
+            background: transparent;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.65, 0.05, 0, 1);
+            white-space: nowrap;
+        }
+
+        .liquid-button:hover {
+            transform: scale(1.05);
+        }
+
+        .liquid-button:active {
+            transform: scale(0.98);
+        }
+
+        .liquid-button:focus-visible {
+            outline: 3px solid var(--primary-500);
+            outline-offset: 2px;
+        }
+
+        /* Glass effect layers */
+        .liquid-button-glass {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            z-index: 0;
+            filter: url(#container-glass);
+        }
+
+        .liquid-button-shadow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.75rem;
+            box-shadow:
+                0 0 6px rgba(0,0,0,0.03),
+                0 2px 6px rgba(0,0,0,0.08),
+                inset 3px 3px 0.5px -3px rgba(0,0,0,0.9),
+                inset -3px -3px 0.5px -3px rgba(0,0,0,0.85),
+                inset 1px 1px 1px -0.5px rgba(0,0,0,0.6),
+                inset -1px -1px 1px -0.5px rgba(0,0,0,0.6),
+                inset 0 0 6px 6px rgba(0,0,0,0.12),
+                inset 0 0 2px 2px rgba(0,0,0,0.06),
+                0 0 12px rgba(255,255,255,0.15);
+            z-index: 0;
+            transition: all 0.3s ease;
+        }
+
+        .liquid-button-content {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Color Variants */
+        .liquid-button.default {
+            color: var(--secondary-900);
+        }
+
+        .liquid-button.primary {
+            color: var(--neutral-50);
+        }
+
+        .liquid-button.primary .liquid-button-shadow {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--primary-600) 100%);
+            box-shadow:
+                0 0 6px rgba(252, 191, 73, 0.2),
+                0 2px 6px rgba(252, 191, 73, 0.3),
+                inset 3px 3px 0.5px -3px rgba(255,255,255,0.3),
+                inset -3px -3px 0.5px -3px rgba(0,0,0,0.3),
+                0 0 20px rgba(252, 191, 73, 0.4);
+        }
+
+        .liquid-button.primary:hover .liquid-button-shadow {
+            box-shadow:
+                0 0 8px rgba(252, 191, 73, 0.3),
+                0 4px 12px rgba(252, 191, 73, 0.4),
+                inset 3px 3px 0.5px -3px rgba(255,255,255,0.4),
+                inset -3px -3px 0.5px -3px rgba(0,0,0,0.3),
+                0 0 30px rgba(252, 191, 73, 0.5);
+        }
+
+        .liquid-button.accent {
+            color: var(--secondary-900);
+        }
+
+        .liquid-button.accent .liquid-button-shadow {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--accent-600) 100%);
+            box-shadow:
+                0 0 6px rgba(255, 210, 63, 0.2),
+                0 2px 6px rgba(255, 210, 63, 0.3),
+                inset 3px 3px 0.5px -3px rgba(255,255,255,0.3),
+                inset -3px -3px 0.5px -3px rgba(0,0,0,0.2),
+                0 0 20px rgba(255, 210, 63, 0.3);
+        }
+
+        .liquid-button.coral {
+            color: var(--neutral-50);
+        }
+
+        .liquid-button.coral .liquid-button-shadow {
+            background: linear-gradient(135deg, var(--color-coral) 0%, #e65539 100%);
+            box-shadow:
+                0 0 6px rgba(255, 107, 74, 0.2),
+                0 2px 6px rgba(255, 107, 74, 0.3),
+                inset 3px 3px 0.5px -3px rgba(255,255,255,0.3),
+                inset -3px -3px 0.5px -3px rgba(0,0,0,0.3),
+                0 0 20px rgba(255, 107, 74, 0.4);
+        }
+
+        .liquid-button.success {
+            color: var(--neutral-50);
+        }
+
+        .liquid-button.success .liquid-button-shadow {
+            background: linear-gradient(135deg, var(--color-success) 0%, #16a34a 100%);
+            box-shadow:
+                0 0 6px rgba(34, 197, 94, 0.2),
+                0 2px 6px rgba(34, 197, 94, 0.3),
+                inset 3px 3px 0.5px -3px rgba(255,255,255,0.3),
+                inset -3px -3px 0.5px -3px rgba(0,0,0,0.3),
+                0 0 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .liquid-button.error {
+            color: var(--neutral-50);
+        }
+
+        .liquid-button.error .liquid-button-shadow {
+            background: linear-gradient(135deg, var(--color-error) 0%, #dc2626 100%);
+            box-shadow:
+                0 0 6px rgba(239, 68, 68, 0.2),
+                0 2px 6px rgba(239, 68, 68, 0.3),
+                inset 3px 3px 0.5px -3px rgba(255,255,255,0.3),
+                inset -3px -3px 0.5px -3px rgba(0,0,0,0.3),
+                0 0 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* ========================= Metal Button ========================= */
+        .metal-button-wrapper {
+            position: relative;
+            display: inline-flex;
+            border-radius: 0.5rem;
+            padding: 1.25px;
+            background: linear-gradient(to bottom, #000 0%, #A0A0A0 100%);
+            transition: all 250ms cubic-bezier(0.1, 0.4, 0.2, 1);
+            transform: translateY(0) scale(1);
+        }
+
+        .metal-button-wrapper:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .metal-button-wrapper:active {
+            transform: translateY(2.5px) scale(0.99);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        .metal-button-wrapper.pressed {
+            transform: translateY(2.5px) scale(0.99);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        .metal-button-inner {
+            position: absolute;
+            inset: 1px;
+            border-radius: 0.5rem;
+            background: linear-gradient(to bottom, #FAFAFA 0%, #3E3E3E 50%, #E5E5E5 100%);
+            transition: all 250ms cubic-bezier(0.1, 0.4, 0.2, 1);
+        }
+
+        .metal-button-wrapper:hover .metal-button-inner {
+            filter: brightness(1.05);
+        }
+
+        .metal-button-wrapper.pressed .metal-button-inner {
+            filter: brightness(1);
+        }
+
+        .metal-button {
+            position: relative;
+            z-index: 10;
+            margin: 1px;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: linear-gradient(to bottom, #B9B9B9 0%, #969696 100%);
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            text-shadow: 0 -1px 0 rgb(80 80 80 / 100%);
+            cursor: pointer;
+            overflow: hidden;
+            outline: none;
+            transition: all 250ms cubic-bezier(0.1, 0.4, 0.2, 1);
+            transform: scale(1);
+        }
+
+        .metal-button-wrapper:hover .metal-button {
+            filter: brightness(1.02);
+        }
+
+        .metal-button-wrapper.pressed .metal-button {
+            transform: scale(0.97);
+            filter: brightness(1);
+        }
+
+        .metal-button:focus-visible {
+            outline: 3px solid var(--primary-500);
+            outline-offset: 2px;
+        }
+
+        /* Metal Button Variants - DreamyHook Colors */
+        .metal-button-wrapper.dreamyhook-primary .metal-button-inner {
+            background: linear-gradient(to bottom, var(--primary-50) 0%, var(--secondary-900) 50%, var(--primary-100) 100%);
+        }
+
+        .metal-button-wrapper.dreamyhook-primary .metal-button {
+            background: linear-gradient(to bottom, var(--color-primary) 0%, var(--primary-700) 100%);
+            text-shadow: 0 -1px 0 rgb(185 132 0 / 100%);
+        }
+
+        .metal-button-wrapper.dreamyhook-accent .metal-button-inner {
+            background: linear-gradient(to bottom, var(--accent-50) 0%, var(--accent-900) 50%, var(--accent-100) 100%);
+        }
+
+        .metal-button-wrapper.dreamyhook-accent .metal-button {
+            background: linear-gradient(to bottom, var(--color-accent) 0%, var(--accent-600) 100%);
+            color: var(--secondary-900);
+            text-shadow: 0 -1px 0 rgb(230 184 0 / 100%);
+        }
+
+        .metal-button-wrapper.dreamyhook-coral .metal-button-inner {
+            background: linear-gradient(to bottom, #fff5f3 0%, #661d14 50%, #ffe8e3 100%);
+        }
+
+        .metal-button-wrapper.dreamyhook-coral .metal-button {
+            background: linear-gradient(to bottom, var(--color-coral) 0%, #e65539 100%);
+            text-shadow: 0 -1px 0 rgb(153 46 30 / 100%);
+        }
+
+        /* Shine effect */
+        .metal-button-shine {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            opacity: 0;
+            transition: opacity 300ms;
+        }
+
+        .metal-button-wrapper.pressed .metal-button-shine {
+            opacity: 0.2;
+        }
+
+        .metal-button-shine::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent, var(--neutral-50), transparent);
+            border-radius: 0.5rem;
+        }
+
+        /* Hover overlay */
+        .metal-button-hover {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(to top, transparent, rgba(255,255,255,0.05));
+            border-radius: 0.5rem;
+            opacity: 0;
+            transition: opacity 250ms;
+        }
+
+        .metal-button-wrapper:hover .metal-button-hover {
+            opacity: 1;
+        }
+
+        .metal-button-wrapper.pressed .metal-button-hover {
+            opacity: 0;
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .demo-section {
+                padding: 2rem 1rem;
+            }
+
+            .button-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .liquid-button {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.875rem;
+            }
+
+            .metal-button {
+                padding: 0.625rem 1.25rem;
+                font-size: 0.8125rem;
+            }
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .demo-section {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .brand-tag {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* ========================= Footer ========================= */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            color: var(--neutral-600);
+            font-size: 0.875rem;
+        }
+
+        .footer-brand {
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Filters (hidden) -->
+    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+        <defs>
+            <filter
+                id="container-glass"
+                x="0%"
+                y="0%"
+                width="100%"
+                height="100%"
+                colorInterpolationFilters="sRGB"
+            >
+                <!-- Generate turbulent noise for distortion -->
+                <feTurbulence
+                    type="fractalNoise"
+                    baseFrequency="0.05 0.05"
+                    numOctaves="1"
+                    seed="1"
+                    result="turbulence"
+                />
+
+                <!-- Blur the turbulence pattern slightly -->
+                <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise" />
+
+                <!-- Displace the source graphic with the noise -->
+                <feDisplacementMap
+                    in="SourceGraphic"
+                    in2="blurredNoise"
+                    scale="70"
+                    xChannelSelector="R"
+                    yChannelSelector="B"
+                    result="displaced"
+                />
+
+                <!-- Apply overall blur on the final result -->
+                <feGaussianBlur in="displaced" stdDeviation="4" result="finalBlur" />
+
+                <!-- Output the result -->
+                <feComposite in="finalBlur" in2="finalBlur" operator="over" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Header -->
+    <header>
+        <h1>DreamyHook</h1>
+        <p class="subtitle">Liquid Glass & Metal Buttons</p>
+        <span class="brand-tag">Premium UI Components</span>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Liquid Glass Buttons Demo -->
+        <section class="demo-section">
+            <h2 class="demo-title">Liquid Glass Buttons</h2>
+            <p class="demo-description">
+                Elegant glass-morphism buttons with smooth animations and the signature DreamyHook color palette
+            </p>
+
+            <div class="button-grid">
+                <div class="button-wrapper">
+                    <span class="button-label">Default</span>
+                    <button class="liquid-button default" data-variant="default">
+                        <div class="liquid-button-glass"></div>
+                        <div class="liquid-button-shadow"></div>
+                        <span class="liquid-button-content">Liquid Glass</span>
+                    </button>
+                </div>
+
+                <div class="button-wrapper">
+                    <span class="button-label">Marigold Yellow</span>
+                    <button class="liquid-button primary" data-variant="primary">
+                        <div class="liquid-button-glass"></div>
+                        <div class="liquid-button-shadow"></div>
+                        <span class="liquid-button-content">Primary</span>
+                    </button>
+                </div>
+
+                <div class="button-wrapper">
+                    <span class="button-label">Buttercup Yellow</span>
+                    <button class="liquid-button accent" data-variant="accent">
+                        <div class="liquid-button-glass"></div>
+                        <div class="liquid-button-shadow"></div>
+                        <span class="liquid-button-content">Accent</span>
+                    </button>
+                </div>
+
+                <div class="button-wrapper">
+                    <span class="button-label">Coral</span>
+                    <button class="liquid-button coral" data-variant="coral">
+                        <div class="liquid-button-glass"></div>
+                        <div class="liquid-button-shadow"></div>
+                        <span class="liquid-button-content">Coral</span>
+                    </button>
+                </div>
+
+                <div class="button-wrapper">
+                    <span class="button-label">Success</span>
+                    <button class="liquid-button success" data-variant="success">
+                        <div class="liquid-button-glass"></div>
+                        <div class="liquid-button-shadow"></div>
+                        <span class="liquid-button-content">Success</span>
+                    </button>
+                </div>
+
+                <div class="button-wrapper">
+                    <span class="button-label">Error</span>
+                    <button class="liquid-button error" data-variant="error">
+                        <div class="liquid-button-glass"></div>
+                        <div class="liquid-button-shadow"></div>
+                        <span class="liquid-button-content">Error</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metal Buttons Demo -->
+        <section class="demo-section">
+            <h2 class="demo-title">Metal Buttons</h2>
+            <p class="demo-description">
+                Premium metallic finish buttons with realistic depth and DreamyHook branding
+            </p>
+
+            <div class="button-grid">
+                <div class="button-wrapper">
+                    <span class="button-label">Default Metal</span>
+                    <div class="metal-button-wrapper" data-metal-variant="default">
+                        <div class="metal-button-inner"></div>
+                        <button class="metal-button">
+                            <div class="metal-button-shine"></div>
+                            <div class="metal-button-hover"></div>
+                            Metal Button
+                        </button>
+                    </div>
+                </div>
+
+                <div class="button-wrapper">
+                    <span class="button-label">Marigold Gold</span>
+                    <div class="metal-button-wrapper dreamyhook-primary" data-metal-variant="dreamyhook-primary">
+                        <div class="metal-button-inner"></div>
+                        <button class="metal-button">
+                            <div class="metal-button-shine"></div>
+                            <div class="metal-button-hover"></div>
+                            Golden
+                        </button>
+                    </div>
+                </div>
+
+                <div class="button-wrapper">
+                    <span class="button-label">Buttercup</span>
+                    <div class="metal-button-wrapper dreamyhook-accent" data-metal-variant="dreamyhook-accent">
+                        <div class="metal-button-inner"></div>
+                        <button class="metal-button">
+                            <div class="metal-button-shine"></div>
+                            <div class="metal-button-hover"></div>
+                            Bright
+                        </button>
+                    </div>
+                </div>
+
+                <div class="button-wrapper">
+                    <span class="button-label">Coral</span>
+                    <div class="metal-button-wrapper dreamyhook-coral" data-metal-variant="dreamyhook-coral">
+                        <div class="metal-button-inner"></div>
+                        <button class="metal-button">
+                            <div class="metal-button-shine"></div>
+                            <div class="metal-button-hover"></div>
+                            Warm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Demo Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">Interactive Demo</h2>
+            <p class="demo-description">
+                Click the buttons below to see animations and state changes
+            </p>
+
+            <div class="button-grid">
+                <div class="button-wrapper">
+                    <button class="liquid-button primary" id="demo-btn-1">
+                        <div class="liquid-button-glass"></div>
+                        <div class="liquid-button-shadow"></div>
+                        <span class="liquid-button-content">Click Me!</span>
+                    </button>
+                    <span class="button-label" id="demo-label-1">Not Clicked</span>
+                </div>
+
+                <div class="button-wrapper">
+                    <button class="liquid-button accent" id="demo-btn-2">
+                        <div class="liquid-button-glass"></div>
+                        <div class="liquid-button-shadow"></div>
+                        <span class="liquid-button-content">Hover Me!</span>
+                    </button>
+                    <span class="button-label" id="demo-label-2">Waiting...</span>
+                </div>
+
+                <div class="button-wrapper">
+                    <div class="metal-button-wrapper dreamyhook-primary" id="demo-metal-wrapper">
+                        <div class="metal-button-inner"></div>
+                        <button class="metal-button" id="demo-btn-3">
+                            <div class="metal-button-shine"></div>
+                            <div class="metal-button-hover"></div>
+                            Press Me!
+                        </button>
+                    </div>
+                    <span class="button-label" id="demo-label-3">Not Pressed</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Made with <span class="footer-brand">DreamyHook</span> Design System</p>
+        <p>Featuring Marigold Yellow (#FCBF49) • Midnight Blue (#0A1128) • Buttercup Yellow (#FFD23F)</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // ========================= Liquid Glass Button Functionality =========================
+
+        // Add click handlers to all liquid buttons
+        document.querySelectorAll('.liquid-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const content = this.querySelector('.liquid-button-content');
+                const originalText = content.textContent;
+
+                // Animate feedback
+                content.textContent = 'Clicked!';
+
+                setTimeout(() => {
+                    content.textContent = originalText;
+                }, 600);
+            });
+        });
+
+        // ========================= Metal Button Functionality =========================
+
+        // Handle metal button press states
+        document.querySelectorAll('.metal-button-wrapper').forEach(wrapper => {
+            const button = wrapper.querySelector('.metal-button');
+            let isTouchDevice = false;
+
+            // Detect touch device
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                isTouchDevice = true;
+            }
+
+            // Mouse events
+            button.addEventListener('mousedown', () => {
+                wrapper.classList.add('pressed');
+            });
+
+            button.addEventListener('mouseup', () => {
+                wrapper.classList.remove('pressed');
+            });
+
+            button.addEventListener('mouseleave', () => {
+                wrapper.classList.remove('pressed');
+            });
+
+            // Touch events
+            button.addEventListener('touchstart', () => {
+                wrapper.classList.add('pressed');
+            });
+
+            button.addEventListener('touchend', () => {
+                wrapper.classList.remove('pressed');
+            });
+
+            button.addEventListener('touchcancel', () => {
+                wrapper.classList.remove('pressed');
+            });
+
+            // Click event
+            button.addEventListener('click', function() {
+                const originalText = this.textContent.trim();
+                this.textContent = 'Pressed!';
+
+                setTimeout(() => {
+                    this.textContent = originalText;
+                }, 600);
+            });
+        });
+
+        // ========================= Interactive Demo Functionality =========================
+
+        // Demo Button 1 - Click Counter
+        const demoBtn1 = document.getElementById('demo-btn-1');
+        const demoLabel1 = document.getElementById('demo-label-1');
+        let clickCount1 = 0;
+
+        demoBtn1.addEventListener('click', function() {
+            clickCount1++;
+            demoLabel1.textContent = `Clicked ${clickCount1} time${clickCount1 !== 1 ? 's' : ''}!`;
+            demoLabel1.style.color = 'var(--color-primary)';
+            demoLabel1.style.fontWeight = '700';
+        });
+
+        // Demo Button 2 - Hover Counter
+        const demoBtn2 = document.getElementById('demo-btn-2');
+        const demoLabel2 = document.getElementById('demo-label-2');
+        let hoverCount = 0;
+
+        demoBtn2.addEventListener('mouseenter', function() {
+            hoverCount++;
+            demoLabel2.textContent = `Hovered ${hoverCount} time${hoverCount !== 1 ? 's' : ''}!`;
+            demoLabel2.style.color = 'var(--color-accent)';
+            demoLabel2.style.fontWeight = '700';
+        });
+
+        demoBtn2.addEventListener('click', function() {
+            demoLabel2.textContent = 'Click count reset!';
+            hoverCount = 0;
+            setTimeout(() => {
+                demoLabel2.textContent = 'Waiting...';
+                demoLabel2.style.color = 'var(--neutral-600)';
+                demoLabel2.style.fontWeight = '600';
+            }, 1500);
+        });
+
+        // Demo Button 3 - Metal Button Press
+        const demoBtn3 = document.getElementById('demo-btn-3');
+        const demoLabel3 = document.getElementById('demo-label-3');
+        const demoMetalWrapper = document.getElementById('demo-metal-wrapper');
+        let pressCount = 0;
+
+        demoBtn3.addEventListener('click', function() {
+            pressCount++;
+            demoLabel3.textContent = `Pressed ${pressCount} time${pressCount !== 1 ? 's' : ''}!`;
+            demoLabel3.style.color = 'var(--color-primary)';
+            demoLabel3.style.fontWeight = '700';
+        });
+
+        // ========================= Accessibility Enhancements =========================
+
+        // Add keyboard navigation support
+        document.querySelectorAll('.liquid-button, .metal-button').forEach(button => {
+            button.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+
+        // ========================= Console Log for Developer Info =========================
+
+        console.log('%c🎨 DreamyHook Design System',
+            'color: #FCBF49; font-size: 20px; font-weight: bold; font-family: Poppins, sans-serif;');
+        console.log('%cBrand Colors:',
+            'color: #0A1128; font-size: 14px; font-weight: bold;');
+        console.log('%c• Primary: Marigold Yellow (#FCBF49)',
+            'color: #FCBF49; font-size: 12px;');
+        console.log('%c• Secondary: Midnight Blue (#0A1128)',
+            'color: #0A1128; font-size: 12px;');
+        console.log('%c• Accent: Buttercup Yellow (#FFD23F)',
+            'color: #FFD23F; font-size: 12px;');
+        console.log('%c• Coral: #FF6B4A',
+            'color: #FF6B4A; font-size: 12px;');
+
+        // ========================= Performance Monitoring =========================
+
+        // Log page load time
+        window.addEventListener('load', function() {
+            const loadTime = window.performance.timing.domContentLoadedEventEnd -
+                           window.performance.timing.navigationStart;
+            console.log(`%c⚡ Page loaded in ${loadTime}ms`,
+                'color: #22c55e; font-size: 12px; font-weight: bold;');
+        });
+
+        // ========================= Animation Frame Optimization =========================
+
+        // Debounce hover effects for better performance
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Apply debounced hover effects
+        document.querySelectorAll('.liquid-button, .metal-button-wrapper').forEach(element => {
+            const debouncedHover = debounce(() => {
+                // Hover animation logic here if needed
+            }, 50);
+
+            element.addEventListener('mouseenter', debouncedHover);
+        });
+    </script>
+</body>
+</html>
