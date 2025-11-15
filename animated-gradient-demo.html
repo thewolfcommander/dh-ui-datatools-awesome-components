@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamyHook - Animated Gradient Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* DreamyHook - Professional Light Theme CSS */
+    /* Built with performance and accessibility in mind */
+
+    /* ------------------------- Reset & Base ------------------------- */
+    *,
+    *:after,
+    *:before {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ------------------------- DreamyHook Theme Variables ------------------------- */
+    :root {
+      /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+      --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+      --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+      --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+      --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+      --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+      /* Neutral Colors - Warm Gray Palette for Light Theme */
+      --color-neutral-100: #ffffff;    /* Pure white */
+      --color-neutral-200: #fffef9;    /* Warm white */
+      --color-neutral-300: #fffdf0;    /* Cream white */
+      --color-neutral-400: #fef9e7;    /* Light cream */
+      --color-neutral-500: #78716c;    /* Medium warm gray */
+      --color-neutral-600: #57534e;    /* Dark warm gray */
+      --color-neutral-700: #44403c;    /* Very dark warm gray */
+      --color-neutral-800: #292524;    /* Almost black warm gray */
+      --color-neutral-900: #1c1917;    /* Near black warm */
+
+      /* Semantic Color Assignments */
+      --color-light: var(--color-neutral-200);   /* Light background */
+      --color-dark: var(--color-secondary);      /* Dark text (midnight blue) */
+
+      /* Animation & Timing */
+      --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+      --duration-default: 0.735s;
+
+      /* Fonts */
+      --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+      --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-neutral-200);
+      color: var(--color-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Selection - Marigold yellow background with white text */
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    ::-moz-selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    /* ------------------------- Container & Layout ------------------------- */
+    .container {
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .dashboard-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-subtitle {
+      color: var(--color-neutral-600);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 400;
+    }
+
+    /* ------------------------- Bento Grid ------------------------- */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .bento-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--color-neutral-100);
+      border-radius: 1.5rem;
+      min-height: 250px;
+      padding: 2rem;
+      box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.08);
+      transition: transform 0.3s var(--cubic-default), box-shadow 0.3s ease;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 35px 0 rgba(252, 191, 73, 0.2);
+    }
+
+    .bento-card.span-2 {
+      grid-column: span 2;
+    }
+
+    .bento-card.span-3 {
+      grid-column: span 3;
+    }
+
+    /* Animation delays for stagger effect */
+    .bento-card:nth-child(1) { animation-delay: 0.1s; }
+    .bento-card:nth-child(2) { animation-delay: 0.2s; }
+    .bento-card:nth-child(3) { animation-delay: 0.3s; }
+    .bento-card:nth-child(4) { animation-delay: 0.4s; }
+    .bento-card:nth-child(5) { animation-delay: 0.5s; }
+
+    /* ------------------------- Card Content ------------------------- */
+    .card-content {
+      position: relative;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+      font-weight: 500;
+      color: var(--color-dark);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fadeIn 0.6s ease-out 0.3s forwards;
+    }
+
+    .card-value {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 600;
+      color: var(--color-dark);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+      opacity: 0;
+      animation: fadeIn 0.6s ease-out 0.5s forwards;
+    }
+
+    .card-subtitle {
+      font-size: clamp(0.813rem, 1.2vw, 0.938rem);
+      color: var(--color-neutral-600);
+      line-height: 1.5;
+      opacity: 0;
+      animation: fadeIn 0.6s ease-out 0.7s forwards;
+    }
+
+    /* ------------------------- Animated Gradient Background ------------------------- */
+    .gradient-container {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .gradient-blur {
+      position: absolute;
+      inset: 0;
+      filter: blur(60px);
+    }
+
+    .gradient-circle {
+      position: absolute;
+      opacity: 0.2;
+      will-change: transform;
+      animation: backgroundGradient 20s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite;
+    }
+
+    /* Different animation variations for organic movement */
+    .gradient-circle:nth-child(1) {
+      animation-duration: 18s;
+      animation-delay: 0s;
+    }
+
+    .gradient-circle:nth-child(2) {
+      animation-duration: 22s;
+      animation-delay: -5s;
+    }
+
+    .gradient-circle:nth-child(3) {
+      animation-duration: 20s;
+      animation-delay: -10s;
+    }
+
+    /* ------------------------- Animations ------------------------- */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes backgroundGradient {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      20% {
+        transform: translate(var(--tx-1, 50%), var(--ty-1, 50%)) scale(1.1);
+      }
+      40% {
+        transform: translate(var(--tx-2, -30%), var(--ty-2, 30%)) scale(0.95);
+      }
+      60% {
+        transform: translate(var(--tx-3, 40%), var(--ty-3, -40%)) scale(1.05);
+      }
+      80% {
+        transform: translate(var(--tx-4, -40%), var(--ty-4, -20%)) scale(1);
+      }
+    }
+
+    /* ------------------------- Responsive Design ------------------------- */
+    @media screen and (max-width: 991px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      .bento-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+
+      .bento-card.span-2,
+      .bento-card.span-3 {
+        grid-column: span 1;
+      }
+
+      .bento-card {
+        min-height: 200px;
+        padding: 1.5rem;
+      }
+    }
+
+    @media screen and (max-width: 479px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .dashboard-header {
+        margin-bottom: 2rem;
+      }
+
+      .bento-card {
+        min-height: 180px;
+        padding: 1.25rem;
+      }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <h1 class="dashboard-title">DreamyHook Analytics</h1>
+      <p class="dashboard-subtitle">Real-time performance metrics at a glance</p>
+    </header>
+
+    <div class="bento-grid">
+      <!-- Card 1: Revenue - Marigold Gradient -->
+      <div class="bento-card span-2" data-colors='["#FCBF49", "#f59e0b", "#d97706"]' data-delay="0.2">
+        <div class="gradient-container">
+          <div class="gradient-blur" id="gradient-1"></div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Total Revenue</h3>
+          <p class="card-value">$1,234,567</p>
+          <p class="card-subtitle">15% increase from last month</p>
+        </div>
+      </div>
+
+      <!-- Card 2: New Users - Buttercup & Sky Gradient -->
+      <div class="bento-card" data-colors='["#FFD23F", "#0ea5e9", "#93C5FD"]' data-delay="0.4">
+        <div class="gradient-container">
+          <div class="gradient-blur" id="gradient-2"></div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">New Users</h3>
+          <p class="card-value">1,234</p>
+          <p class="card-subtitle">Daily signups</p>
+        </div>
+      </div>
+
+      <!-- Card 3: Conversion Rate - Warm Sunset Gradient -->
+      <div class="bento-card" data-colors='["#FFD23F", "#FCBF49", "#FF6B4A"]' data-delay="0.6">
+        <div class="gradient-container">
+          <div class="gradient-blur" id="gradient-3"></div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Conversion Rate</h3>
+          <p class="card-value">3.45%</p>
+          <p class="card-subtitle">0.5% increase from last week</p>
+        </div>
+      </div>
+
+      <!-- Card 4: Active Projects - Sky & Marigold Blend -->
+      <div class="bento-card span-2" data-colors='["#0ea5e9", "#FCBF49", "#FFD23F"]' data-delay="0.8">
+        <div class="gradient-container">
+          <div class="gradient-blur" id="gradient-4"></div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Active Projects</h3>
+          <p class="card-value">42</p>
+          <p class="card-subtitle">8 completed this month</p>
+        </div>
+      </div>
+
+      <!-- Card 5: Customer Satisfaction - Coral & Buttercup -->
+      <div class="bento-card span-3" data-colors='["#FF6B4A", "#FFD23F", "#FCBF49"]' data-delay="1.0">
+        <div class="gradient-container">
+          <div class="gradient-blur" id="gradient-5"></div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Customer Satisfaction</h3>
+          <p class="card-value">4.8/5</p>
+          <p class="card-subtitle">Based on 1,000+ reviews from verified customers across all product categories</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DreamyHook Animated Gradient System
+    // Vanilla JavaScript implementation for performance
+
+    class AnimatedGradient {
+      constructor(container, colors, options = {}) {
+        this.container = container;
+        this.colors = colors;
+        this.speed = options.speed || 20; // Animation duration in seconds
+        this.blur = options.blur || 60; // Blur intensity
+        this.numCircles = colors.length;
+        this.circles = [];
+
+        this.init();
+        this.setupResizeHandler();
+      }
+
+      init() {
+        this.container.innerHTML = ''; // Clear existing content
+        this.dimensions = this.getDimensions();
+
+        this.colors.forEach((color, index) => {
+          const circle = this.createCircle(color, index);
+          this.circles.push(circle);
+          this.container.appendChild(circle);
+        });
+      }
+
+      getDimensions() {
+        const rect = this.container.parentElement.getBoundingClientRect();
+        return {
+          width: rect.width,
+          height: rect.height,
+          maxSize: Math.max(rect.width, rect.height)
+        };
+      }
+
+      createCircle(color, index) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
+        // Random size between 0.5x and 1.5x of max dimension
+        const size = this.dimensions.maxSize * (0.5 + Math.random());
+
+        // Random starting position
+        const startX = Math.random() * 50;
+        const startY = Math.random() * 50;
+
+        // Random transform values for animation
+        const tx1 = (Math.random() - 0.5) * 100;
+        const ty1 = (Math.random() - 0.5) * 100;
+        const tx2 = (Math.random() - 0.5) * 100;
+        const ty2 = (Math.random() - 0.5) * 100;
+        const tx3 = (Math.random() - 0.5) * 100;
+        const ty3 = (Math.random() - 0.5) * 100;
+        const tx4 = (Math.random() - 0.5) * 100;
+        const ty4 = (Math.random() - 0.5) * 100;
+
+        svg.setAttribute("class", "gradient-circle");
+        svg.setAttribute("width", size);
+        svg.setAttribute("height", size);
+        svg.setAttribute("viewBox", "0 0 100 100");
+        svg.style.top = `${startY}%`;
+        svg.style.left = `${startX}%`;
+        svg.style.setProperty('--tx-1', `${tx1}%`);
+        svg.style.setProperty('--ty-1', `${ty1}%`);
+        svg.style.setProperty('--tx-2', `${tx2}%`);
+        svg.style.setProperty('--ty-2', `${ty2}%`);
+        svg.style.setProperty('--tx-3', `${tx3}%`);
+        svg.style.setProperty('--ty-3', `${ty3}%`);
+        svg.style.setProperty('--tx-4', `${tx4}%`);
+        svg.style.setProperty('--ty-4', `${ty4}%`);
+
+        circle.setAttribute("cx", "50");
+        circle.setAttribute("cy", "50");
+        circle.setAttribute("r", "50");
+        circle.setAttribute("fill", color);
+
+        svg.appendChild(circle);
+        return svg;
+      }
+
+      setupResizeHandler() {
+        let resizeTimeout;
+        const handleResize = () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            this.init(); // Reinitialize on resize
+          }, 250);
+        };
+
+        window.addEventListener('resize', handleResize);
+      }
+    }
+
+    // Initialize animated gradients for all cards
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.bento-card');
+
+      cards.forEach((card, index) => {
+        const gradientContainer = card.querySelector('.gradient-blur');
+        const colorsAttr = card.getAttribute('data-colors');
+
+        if (gradientContainer && colorsAttr) {
+          try {
+            const colors = JSON.parse(colorsAttr);
+            new AnimatedGradient(gradientContainer, colors, {
+              speed: 20,
+              blur: 60
+            });
+          } catch (e) {
+            console.error('Error parsing colors for card', index, e);
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
