@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Golden Beams Background</title>
+    <style>
+        /* DreamyHook Brand Theme - Light Mode with Animated Beams */
+
+        /* Import fonts */
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap");
+
+        /* Reset and base styles */
+        *, *:after, *:before {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        /* DreamyHook Brand Color Variables */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic colors */
+            --color-text-primary: #0A1128;   /* Midnight Blue for text */
+            --color-text-secondary: #44403c; /* Dark warm gray */
+            --color-text-muted: #78716c;     /* Medium warm gray */
+        }
+
+        /* Main container */
+        .beams-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+        }
+
+        /* Canvas for beams */
+        #beamsCanvas {
+            position: absolute;
+            inset: 0;
+            filter: blur(15px);
+        }
+
+        /* Overlay for subtle depth */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 254, 249, 0.1);
+            backdrop-filter: blur(50px);
+            pointer-events: none;
+            animation: pulse-overlay 10s ease-in-out infinite;
+        }
+
+        @keyframes pulse-overlay {
+            0%, 100% { opacity: 0.05; }
+            50% { opacity: 0.15; }
+        }
+
+        /* Content container */
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100vh;
+            gap: 1.5rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            color: var(--color-secondary);
+            letter-spacing: -0.05em;
+            line-height: 1.1;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fade-in-up 0.8s ease-out 0.2s forwards;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p {
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            font-size: clamp(1.125rem, 2.5vw, 1.875rem);
+            color: var(--color-text-muted);
+            letter-spacing: -0.025em;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fade-in-up 0.8s ease-out 0.4s forwards;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-neutral-100);
+            background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px 0 rgba(252, 191, 73, 0.25);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fade-in-up 0.8s ease-out 0.6s forwards;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px 0 rgba(252, 191, 73, 0.4);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* Badge/Pill */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-secondary);
+            background: rgba(252, 191, 73, 0.2);
+            border: 1px solid rgba(252, 191, 73, 0.3);
+            border-radius: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fade-in-up 0.8s ease-out 0s forwards;
+        }
+
+        /* Fade in up animation */
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .content {
+                gap: 1rem;
+            }
+
+            .cta-button {
+                padding: 0.875rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Selection color */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="beams-container">
+        <canvas id="beamsCanvas"></canvas>
+        <div class="overlay"></div>
+
+        <div class="content">
+            <span class="badge">✨ Powered by DreamyHook</span>
+
+            <h1>
+                <span class="gradient-text">Golden</span> Beams<br>
+                Background
+            </h1>
+
+            <p>
+                Experience the warmth of animated light beams in beautiful golden hues,
+                designed with the DreamyHook brand theme.
+            </p>
+
+            <button class="cta-button" onclick="handleCTAClick()">
+                <span>Get Started</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // DreamyHook Golden Beams Animation
+        // Vanilla JavaScript implementation
+
+        const canvas = document.getElementById('beamsCanvas');
+        const ctx = canvas.getContext('2d');
+        let beams = [];
+        let animationFrameId;
+        const MINIMUM_BEAMS = 20;
+
+        // Intensity setting
+        const intensity = 'strong'; // Options: 'subtle', 'medium', 'strong'
+        const opacityMap = {
+            subtle: 0.7,
+            medium: 0.85,
+            strong: 1
+        };
+
+        // DreamyHook color palette (HSL format for easier manipulation)
+        // Marigold Yellow: hsl(42, 96%, 64%) - #FCBF49
+        // Buttercup Yellow: hsl(47, 100%, 62%) - #FFD23F
+        // Coral: hsl(12, 100%, 65%) - #FF6B4A
+        // Sky Blue: hsl(199, 89%, 48%) - #0ea5e9
+
+        const colorPalette = [
+            { hue: 42, saturation: 96, lightness: 64 },   // Marigold
+            { hue: 47, saturation: 100, lightness: 62 },  // Buttercup
+            { hue: 37, saturation: 95, lightness: 58 },   // Golden
+            { hue: 12, saturation: 100, lightness: 65 },  // Coral
+            { hue: 199, saturation: 89, lightness: 48 }   // Sky (accent)
+        ];
+
+        class Beam {
+            constructor(canvasWidth, canvasHeight, index, totalBeams) {
+                this.canvasWidth = canvasWidth;
+                this.canvasHeight = canvasHeight;
+                this.angle = -35 + Math.random() * 10;
+
+                const colorIndex = index % colorPalette.length;
+                const color = colorPalette[colorIndex];
+                this.hue = color.hue;
+                this.saturation = color.saturation;
+                this.lightness = color.lightness;
+
+                this.x = Math.random() * canvasWidth * 1.5 - canvasWidth * 0.25;
+                this.y = Math.random() * canvasHeight * 1.5 - canvasHeight * 0.25;
+                this.width = 30 + Math.random() * 60;
+                this.length = canvasHeight * 2.5;
+                this.speed = 0.6 + Math.random() * 1.2;
+                this.opacity = 0.12 + Math.random() * 0.16;
+                this.pulse = Math.random() * Math.PI * 2;
+                this.pulseSpeed = 0.02 + Math.random() * 0.03;
+            }
+
+            reset(index, totalBeams) {
+                const column = index % 3;
+                const spacing = this.canvasWidth / 3;
+
+                this.y = this.canvasHeight + 100;
+                this.x = column * spacing + spacing / 2 + (Math.random() - 0.5) * spacing * 0.5;
+                this.width = 100 + Math.random() * 100;
+                this.speed = 0.5 + Math.random() * 0.4;
+
+                const colorIndex = index % colorPalette.length;
+                const color = colorPalette[colorIndex];
+                this.hue = color.hue;
+                this.saturation = color.saturation;
+                this.lightness = color.lightness;
+
+                this.opacity = 0.2 + Math.random() * 0.1;
+            }
+
+            update() {
+                this.y -= this.speed;
+                this.pulse += this.pulseSpeed;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.angle * Math.PI) / 180);
+
+                // Calculate pulsing opacity
+                const pulsingOpacity = this.opacity *
+                    (0.8 + Math.sin(this.pulse) * 0.2) *
+                    opacityMap[intensity];
+
+                // Create gradient
+                const gradient = ctx.createLinearGradient(0, 0, 0, this.length);
+
+                // Enhanced gradient with multiple color stops
+                gradient.addColorStop(0, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, 0)`);
+                gradient.addColorStop(0.1, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${pulsingOpacity * 0.5})`);
+                gradient.addColorStop(0.4, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${pulsingOpacity})`);
+                gradient.addColorStop(0.6, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${pulsingOpacity})`);
+                gradient.addColorStop(0.9, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${pulsingOpacity * 0.5})`);
+                gradient.addColorStop(1, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, 0)`);
+
+                ctx.fillStyle = gradient;
+                ctx.fillRect(-this.width / 2, 0, this.width, this.length);
+                ctx.restore();
+            }
+
+            isOffScreen() {
+                return this.y + this.length < -100;
+            }
+        }
+
+        function updateCanvasSize() {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            canvas.style.width = `${window.innerWidth}px`;
+            canvas.style.height = `${window.innerHeight}px`;
+            ctx.scale(dpr, dpr);
+
+            // Initialize beams
+            const totalBeams = Math.floor(MINIMUM_BEAMS * 1.5);
+            beams = [];
+            for (let i = 0; i < totalBeams; i++) {
+                beams.push(new Beam(canvas.width, canvas.height, i, totalBeams));
+            }
+        }
+
+        function animate() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.filter = 'blur(35px)';
+
+            // Update and draw beams
+            beams.forEach((beam, index) => {
+                beam.update();
+
+                // Reset beam when it goes off screen
+                if (beam.isOffScreen()) {
+                    beam.reset(index, beams.length);
+                }
+
+                beam.draw();
+            });
+
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        updateCanvasSize();
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            cancelAnimationFrame(animationFrameId);
+            updateCanvasSize();
+            animate();
+        });
+
+        // CTA button handler
+        function handleCTAClick() {
+            alert('Welcome to DreamyHook! This is where your journey begins.');
+            // You can replace this with your own functionality:
+            // window.location.href = '/your-page';
+            // or trigger any other action
+        }
+
+        // Log to console
+        console.log('%c🌟 DreamyHook Golden Beams Background', 'color: #FCBF49; font-size: 16px; font-weight: bold;');
+        console.log('%cBuilt with vanilla JavaScript - No dependencies required!', 'color: #0A1128; font-size: 12px;');
+    </script>
+</body>
+</html>
