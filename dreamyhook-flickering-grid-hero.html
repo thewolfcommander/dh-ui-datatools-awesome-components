@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DreamyHook - Stunning Flickering Grid Hero Animation">
+  <title>DreamyHook - Flickering Grid Hero</title>
+
+  <!-- Google Fonts - Inter and Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ====================== CSS Reset & Base Styles ====================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ====================== DreamyHook Theme Variables ====================== */
+    :root {
+      /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+      --color-primary: #FCBF49;        /* Marigold Yellow */
+      --color-secondary: #0A1128;      /* Midnight Blue */
+      --color-accent: #FFD23F;         /* Buttercup Yellow */
+      --color-coral: #FF6B4A;          /* Coral */
+      --color-sky: #0ea5e9;            /* Sky Blue */
+
+      /* Neutral Colors - Warm Gray Palette */
+      --color-neutral-100: #ffffff;
+      --color-neutral-200: #fffef9;
+      --color-neutral-300: #fffdf0;
+      --color-neutral-400: #fef9e7;
+      --color-neutral-500: #78716c;
+      --color-neutral-600: #57534e;
+      --color-neutral-700: #44403c;
+      --color-neutral-800: #292524;
+      --color-neutral-900: #1c1917;
+
+      /* Semantic Colors */
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+
+      /* Typography */
+      --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+      /* Shadows */
+      --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+      --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+      --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+      --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+      --shadow-buttercup-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+      --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+    }
+
+    /* ====================== Body & HTML ====================== */
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: linear-gradient(135deg, var(--color-neutral-200) 0%, var(--color-neutral-400) 100%);
+      color: var(--color-secondary);
+      overflow-x: hidden;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ====================== Selection ====================== */
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    ::-moz-selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    /* ====================== Container ====================== */
+    .hero-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+    }
+
+    /* ====================== Canvas Styles ====================== */
+    .flickering-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .canvas-background {
+      z-index: 1;
+      opacity: 0.8;
+    }
+
+    .canvas-logo {
+      z-index: 2;
+      opacity: 0.9;
+    }
+
+    /* ====================== Content Overlay ====================== */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 2rem;
+      max-width: 1200px;
+      animation: fadeInUp 1.2s ease-out forwards;
+    }
+
+    .hero-logo {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 2rem;
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .logo-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(var(--shadow-marigold-glow));
+    }
+
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--color-coral) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-sans);
+      font-size: clamp(1.125rem, 3vw, 1.5rem);
+      font-weight: 500;
+      color: var(--color-neutral-600);
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2.5rem;
+      font-family: var(--font-heading);
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-neutral-100);
+      background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.65, 0.05, 0, 1);
+      box-shadow: var(--shadow-warm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--color-coral) 0%, var(--color-accent) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: var(--shadow-buttercup-glow);
+    }
+
+    .hero-cta:hover::before {
+      opacity: 1;
+    }
+
+    .hero-cta:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* ====================== Animations ====================== */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.8;
+      }
+    }
+
+    /* ====================== Radial Gradient Mask ====================== */
+    .radial-mask {
+      mask-image: radial-gradient(circle at center, white, transparent);
+      -webkit-mask-image: radial-gradient(1000px circle at center, white, transparent);
+      animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* ====================== Responsive Design ====================== */
+    @media (max-width: 768px) {
+      .hero-content {
+        padding: 1.5rem;
+      }
+
+      .hero-logo {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-subtitle {
+        margin-bottom: 2rem;
+      }
+
+      .hero-cta {
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-logo {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 1rem;
+      }
+
+      .hero-cta {
+        padding: 0.75rem 1.75rem;
+        font-size: 0.9375rem;
+      }
+    }
+
+    /* ====================== Accessibility ====================== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Focus styles for accessibility */
+    .hero-cta:focus-visible {
+      outline: 3px solid var(--color-accent);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Container -->
+  <div class="hero-container">
+    <!-- Background Flickering Grid -->
+    <canvas id="backgroundGrid" class="flickering-canvas canvas-background radial-mask"></canvas>
+
+    <!-- Logo Flickering Grid -->
+    <canvas id="logoGrid" class="flickering-canvas canvas-logo"></canvas>
+
+    <!-- Hero Content -->
+    <div class="hero-content">
+      <!-- Logo -->
+      <div class="hero-logo" role="img" aria-label="DreamyHook Logo">
+        <svg class="logo-svg" width="200" height="200" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 32C13 20.9543 21.9543 12 33 12C44.0457 12 53 20.9543 53 32C53 43.0457 44.5 47.5 33 52H53C53 63.0457 44.0457 72 33 72C21.9543 72 13 63.0457 13 52C13 40.9543 22.5 34 33 32H13Z" fill="#FCBF49"/>
+          <path d="M53 72C64.7324 67.0977 73 55.5117 73 42C73 28.4883 64.7324 16.9023 53 12V72Z" fill="#FFD23F"/>
+        </svg>
+      </div>
+
+      <!-- Title -->
+      <h1 class="hero-title">Welcome to DreamyHook</h1>
+
+      <!-- Subtitle -->
+      <p class="hero-subtitle">
+        Experience the perfect blend of elegance and innovation with our stunning visual components. Built with passion, designed for excellence.
+      </p>
+
+      <!-- CTA Button -->
+      <a href="#get-started" class="hero-cta" role="button">
+        <span>Get Started</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- JavaScript for Flickering Grid Animation -->
+  <script>
+    // ====================== FlickeringGrid Class ======================
+    class FlickeringGrid {
+      constructor(canvas, options = {}) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+
+        // Configuration with DreamyHook brand colors
+        this.config = {
+          squareSize: options.squareSize || 4,
+          gridGap: options.gridGap || 6,
+          flickerChance: options.flickerChance || 0.3,
+          color: options.color || 'rgba(252, 191, 73', // Marigold Yellow RGB
+          maxOpacity: options.maxOpacity || 0.3,
+          ...options
+        };
+
+        this.isInView = false;
+        this.animationFrameId = null;
+        this.lastTime = 0;
+        this.gridParams = null;
+
+        this.init();
+      }
+
+      // Initialize the grid
+      init() {
+        this.setupCanvas();
+        this.setupObservers();
+      }
+
+      // Setup canvas with proper dimensions and DPI
+      setupCanvas() {
+        const container = this.canvas.parentElement;
+        const dpr = window.devicePixelRatio || 1;
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        this.canvas.width = width * dpr;
+        this.canvas.height = height * dpr;
+        this.canvas.style.width = `${width}px`;
+        this.canvas.style.height = `${height}px`;
+
+        const cols = Math.floor(width / (this.config.squareSize + this.config.gridGap));
+        const rows = Math.floor(height / (this.config.squareSize + this.config.gridGap));
+
+        const squares = new Float32Array(cols * rows);
+        for (let i = 0; i < squares.length; i++) {
+          squares[i] = Math.random() * this.config.maxOpacity;
+        }
+
+        this.gridParams = { cols, rows, squares, dpr, width, height };
+      }
+
+      // Setup Intersection and Resize Observers
+      setupObservers() {
+        // Intersection Observer for performance (pause when not visible)
+        const intersectionObserver = new IntersectionObserver(
+          ([entry]) => {
+            this.isInView = entry.isIntersecting;
+            if (this.isInView) {
+              this.start();
+            } else {
+              this.stop();
+            }
+          },
+          { threshold: 0 }
+        );
+
+        intersectionObserver.observe(this.canvas);
+
+        // Resize Observer for responsive behavior
+        const resizeObserver = new ResizeObserver(() => {
+          this.setupCanvas();
+        });
+
+        resizeObserver.observe(this.canvas.parentElement);
+
+        // Store observers for cleanup
+        this.observers = { intersectionObserver, resizeObserver };
+      }
+
+      // Update squares with random flickering
+      updateSquares(deltaTime) {
+        const { squares } = this.gridParams;
+        const { flickerChance, maxOpacity } = this.config;
+
+        for (let i = 0; i < squares.length; i++) {
+          if (Math.random() < flickerChance * deltaTime) {
+            squares[i] = Math.random() * maxOpacity;
+          }
+        }
+      }
+
+      // Draw the grid
+      drawGrid() {
+        const { cols, rows, squares, dpr } = this.gridParams;
+        const { squareSize, gridGap, color } = this.config;
+
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for (let i = 0; i < cols; i++) {
+          for (let j = 0; j < rows; j++) {
+            const opacity = squares[i * rows + j];
+            this.ctx.fillStyle = `${color}, ${opacity})`;
+            this.ctx.fillRect(
+              i * (squareSize + gridGap) * dpr,
+              j * (squareSize + gridGap) * dpr,
+              squareSize * dpr,
+              squareSize * dpr
+            );
+          }
+        }
+      }
+
+      // Animation loop
+      animate(time) {
+        if (!this.isInView) return;
+
+        const deltaTime = (time - this.lastTime) / 1000;
+        this.lastTime = time;
+
+        this.updateSquares(deltaTime);
+        this.drawGrid();
+
+        this.animationFrameId = requestAnimationFrame((t) => this.animate(t));
+      }
+
+      // Start animation
+      start() {
+        if (!this.animationFrameId) {
+          this.lastTime = performance.now();
+          this.animationFrameId = requestAnimationFrame((t) => this.animate(t));
+        }
+      }
+
+      // Stop animation
+      stop() {
+        if (this.animationFrameId) {
+          cancelAnimationFrame(this.animationFrameId);
+          this.animationFrameId = null;
+        }
+      }
+
+      // Cleanup
+      destroy() {
+        this.stop();
+        if (this.observers) {
+          this.observers.intersectionObserver.disconnect();
+          this.observers.resizeObserver.disconnect();
+        }
+      }
+    }
+
+    // ====================== Initialize Grids ======================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Background Grid Configuration (Marigold Yellow)
+      const backgroundCanvas = document.getElementById('backgroundGrid');
+      const backgroundGrid = new FlickeringGrid(backgroundCanvas, {
+        color: 'rgba(252, 191, 73', // Marigold Yellow
+        maxOpacity: 0.15,
+        flickerChance: 0.12,
+        squareSize: 4,
+        gridGap: 4
+      });
+
+      // Logo Grid Configuration (Buttercup Yellow)
+      const logoCanvas = document.getElementById('logoGrid');
+      const logoGrid = new FlickeringGrid(logoCanvas, {
+        color: 'rgba(255, 210, 63', // Buttercup Yellow
+        maxOpacity: 0.65,
+        flickerChance: 0.18,
+        squareSize: 3,
+        gridGap: 6
+      });
+
+      // Cleanup on page unload
+      window.addEventListener('beforeunload', () => {
+        backgroundGrid.destroy();
+        logoGrid.destroy();
+      });
+
+      // Handle CTA button click
+      const ctaButton = document.querySelector('.hero-cta');
+      ctaButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Get Started clicked! Welcome to DreamyHook!');
+        // Add your navigation or action here
+        // window.location.href = '/get-started';
+      });
+    });
+
+    // ====================== Performance Monitoring ======================
+    // Log performance metrics in development
+    if (window.performance && window.performance.memory) {
+      console.log('DreamyHook Flickering Grid Hero loaded successfully!');
+      console.log('Memory usage:', {
+        used: Math.round(performance.memory.usedJSHeapSize / 1048576) + ' MB',
+        total: Math.round(performance.memory.totalJSHeapSize / 1048576) + ' MB'
+      });
+    }
+  </script>
+</body>
+</html>
