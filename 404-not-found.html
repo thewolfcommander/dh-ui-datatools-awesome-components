@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found | DreamyHook</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       DreamyHook 404 Not Found Page - Single File Component
+       Brand Theme: Marigold Yellow (#FCBF49), Midnight Blue (#0A1128),
+                    Buttercup Yellow (#FFD23F), Coral (#FF6B4A)
+       ============================================================ */
+
+    /* ------------------------- CSS Variables ------------------------- */
+    :root {
+      /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+      --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+      --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+      --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+      --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+      --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+      /* Neutral Colors - Warm Gray Palette for Light Theme */
+      --color-neutral-100: #ffffff;    /* Pure white */
+      --color-neutral-200: #fffef9;    /* Warm white */
+      --color-neutral-300: #fffdf0;    /* Cream white */
+      --color-neutral-400: #fef9e7;    /* Light cream */
+      --color-neutral-500: #78716c;    /* Medium warm gray */
+      --color-neutral-600: #57534e;    /* Dark warm gray */
+      --color-neutral-700: #44403c;    /* Very dark warm gray */
+      --color-neutral-800: #292524;    /* Almost black warm gray */
+      --color-neutral-900: #1c1917;    /* Near black warm */
+
+      /* Semantic Colors */
+      --color-light: var(--color-neutral-200);
+      --color-dark: var(--color-secondary);
+      --color-white: var(--color-neutral-100);
+
+      /* Functional Colors */
+      --color-error: #ef4444;
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+
+      /* Theme-Specific */
+      --theme-background: #fffef9;     /* Warm white background */
+
+      /* Typography */
+      --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+      --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+      /* Shadows */
+      --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+      --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+      --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+      --shadow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+      --shadow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+
+      /* Border Radius */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+
+      /* Transitions */
+      --transition-default: all 0.3s ease;
+      --transition-fast: all 0.15s ease;
+      --transition-slow: all 0.5s ease;
+    }
+
+    /* ------------------------- Reset & Base Styles ------------------------- */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--theme-background);
+      color: var(--color-dark);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Selection - Marigold yellow background with white text */
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    ::-moz-selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    /* ------------------------- 404 Container ------------------------- */
+    .container-404 {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+    }
+
+    /* ------------------------- Empty Component ------------------------- */
+    .empty {
+      display: flex;
+      min-width: 0;
+      flex: 1 1 0%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      text-align: center;
+      max-width: 42rem;
+    }
+
+    .empty-header {
+      display: flex;
+      max-width: 28rem;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.5rem;
+    }
+
+    /* ------------------------- Empty Media (Icon Container) ------------------------- */
+    .empty-media {
+      position: relative;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .empty-media-icon {
+      position: relative;
+      display: flex;
+      height: 4.5rem;
+      width: 4.5rem;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-neutral-300);
+      background-color: var(--color-white);
+      color: var(--color-neutral-600);
+      box-shadow: var(--shadow-soft), 0 1px rgba(0, 0, 0, 0.04);
+      transition: var(--transition-default);
+    }
+
+    .empty-media-icon:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-marigold);
+    }
+
+    /* Decorative background icons */
+    .empty-media-bg-left,
+    .empty-media-bg-right {
+      position: absolute;
+      bottom: 1px;
+      display: flex;
+      height: 4.5rem;
+      width: 4.5rem;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-neutral-300);
+      background-color: var(--color-white);
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .empty-media-bg-left {
+      transform: translateX(-0.125rem) scale(0.84) rotate(-10deg);
+      transform-origin: bottom left;
+    }
+
+    .empty-media-bg-right {
+      transform: translateX(0.125rem) scale(0.84) rotate(10deg);
+      transform-origin: bottom right;
+    }
+
+    .empty-media-icon svg,
+    .empty-media-bg-left svg,
+    .empty-media-bg-right svg {
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+
+    /* ------------------------- Empty Title ------------------------- */
+    .empty-title {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 50%, #0ea5e9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    /* ------------------------- Empty Description ------------------------- */
+    .empty-description {
+      font-size: 1.125rem;
+      line-height: 1.75;
+      color: var(--color-neutral-600);
+      margin-top: 0.25rem;
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .empty-description a {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      transition: var(--transition-fast);
+    }
+
+    .empty-description a:hover {
+      color: var(--color-primary);
+    }
+
+    /* ------------------------- Empty Content ------------------------- */
+    .empty-content {
+      display: flex;
+      width: 100%;
+      max-width: 28rem;
+      min-width: 0;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.875rem;
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    /* ------------------------- Button Styles ------------------------- */
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      border-radius: var(--radius-lg);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: var(--transition-default);
+      cursor: pointer;
+      outline-offset: 2px;
+      height: 2.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      font-family: var(--font-sans);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    .btn:disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .btn svg {
+      pointer-events: none;
+      flex-shrink: 0;
+      margin-right: 0.25rem;
+      width: 1rem;
+      height: 1rem;
+      transition: var(--transition-default);
+    }
+
+    /* Primary Button - Marigold Yellow */
+    .btn-default {
+      background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+      color: var(--color-dark);
+      box-shadow: var(--shadow-soft), 0 0 0 1px rgba(252, 191, 73, 0.1);
+    }
+
+    .btn-default:hover {
+      background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+      box-shadow: var(--shadow-marigold);
+      transform: translateY(-2px);
+    }
+
+    .btn-default:active {
+      transform: translateY(0);
+    }
+
+    .btn-default:hover svg {
+      transform: scale(1.1);
+    }
+
+    /* Outline Button */
+    .btn-outline {
+      border: 1px solid var(--color-neutral-300);
+      background-color: var(--color-white);
+      color: var(--color-dark);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--color-neutral-200);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .btn-outline:hover svg {
+      transform: translateX(-4px);
+    }
+
+    /* ------------------------- Animations ------------------------- */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    .floating {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* ------------------------- Responsive Design ------------------------- */
+    @media (min-width: 640px) {
+      .button-group {
+        flex-direction: row;
+      }
+
+      .empty {
+        padding: 3rem;
+      }
+    }
+
+    @media (max-width: 479px) {
+      .empty-title {
+        font-size: 2.5rem;
+      }
+
+      .empty-description {
+        font-size: 1rem;
+      }
+
+      .empty {
+        padding: 1rem;
+      }
+    }
+
+    /* ------------------------- Background Decoration ------------------------- */
+    .container-404::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      right: -5%;
+      width: 30rem;
+      height: 30rem;
+      background: radial-gradient(circle, rgba(255, 210, 63, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .container-404::after {
+      content: '';
+      position: absolute;
+      bottom: -10%;
+      left: -5%;
+      width: 25rem;
+      height: 25rem;
+      background: radial-gradient(circle, rgba(252, 191, 73, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 8s ease-in-out infinite reverse;
+    }
+  </style>
+</head>
+<body>
+  <!-- 404 Not Found Container -->
+  <div class="container-404">
+    <div class="empty">
+      <!-- Empty Header Section -->
+      <div class="empty-header">
+        <!-- Icon Media with Background Decorations -->
+        <div class="empty-media">
+          <!-- Background decorative icons (left) -->
+          <div class="empty-media-bg-left">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 10h.01"></path>
+              <path d="M15 10h.01"></path>
+              <path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 18l2.5 3.5L17 19l3 3V10a8 8 0 0 0-8-8z"></path>
+            </svg>
+          </div>
+
+          <!-- Background decorative icons (right) -->
+          <div class="empty-media-bg-right">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 10h.01"></path>
+              <path d="M15 10h.01"></path>
+              <path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 18l2.5 3.5L17 19l3 3V10a8 8 0 0 0-8-8z"></path>
+            </svg>
+          </div>
+
+          <!-- Main Icon -->
+          <div class="empty-media-icon floating">
+            <!-- Ghost Icon (Lucide) -->
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 10h.01"></path>
+              <path d="M15 10h.01"></path>
+              <path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 18l2.5 3.5L17 19l3 3V10a8 8 0 0 0-8-8z"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Title with Gradient -->
+        <div class="empty-title">404</div>
+
+        <!-- Description -->
+        <div class="empty-description">
+          The page you're looking for doesn't exist. It may have been moved or deleted.
+        </div>
+      </div>
+
+      <!-- Empty Content Section -->
+      <div class="empty-content">
+        <div class="button-group">
+          <!-- Go Home Button -->
+          <button class="btn btn-default" onclick="goHome()">
+            <!-- Home Icon (Lucide) -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Go Home
+          </button>
+
+          <!-- Go Back Button -->
+          <button class="btn btn-outline" onclick="goBack()">
+            <!-- Arrow Left Icon (Lucide) -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Go Back
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for Button Interactions -->
+  <script>
+    /**
+     * Navigate to home page
+     */
+    function goHome() {
+      window.location.href = '/';
+    }
+
+    /**
+     * Navigate back in browser history
+     */
+    function goBack() {
+      window.history.back();
+    }
+
+    /**
+     * Add keyboard navigation support (optional enhancement)
+     */
+    document.addEventListener('keydown', function(event) {
+      // Press 'h' to go home
+      if (event.key === 'h' || event.key === 'H') {
+        goHome();
+      }
+      // Press 'b' to go back
+      if (event.key === 'b' || event.key === 'B') {
+        goBack();
+      }
+    });
+
+    /**
+     * Console message for developers
+     */
+    console.log('%c404 Page Not Found', 'color: #FCBF49; font-size: 24px; font-weight: bold;');
+    console.log('%cDreamyHook - Built with care 💛', 'color: #0A1128; font-size: 14px;');
+  </script>
+</body>
+</html>
