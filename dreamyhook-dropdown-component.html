@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Premium Dropdown Component</title>
+
+    <!-- Import Google Fonts - Inter & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors - Warm Palette */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Functional Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Transitions */
+            --transition-smooth: all 0.3s cubic-bezier(0.65, 0.05, 0, 1);
+            --transition-fast: all 0.2s ease;
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-neutral-200);
+            color: var(--color-secondary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ========================= Background Grid Pattern ========================= */
+        .grid-background {
+            position: absolute;
+            inset: 0;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ========================= Theme Toggle Button ========================= */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            border: 2px solid var(--color-secondary);
+            background-color: var(--color-neutral-100);
+            color: var(--color-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.15);
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(252, 191, 73, 0.5);
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: var(--transition-fast);
+        }
+
+        /* Dark Theme Styles */
+        body.dark-theme {
+            background-color: #000000;
+            color: var(--color-neutral-100);
+        }
+
+        body.dark-theme .theme-toggle {
+            background-color: var(--color-neutral-100);
+            border-color: var(--color-neutral-100);
+            color: #000000;
+        }
+
+        body.dark-theme .theme-toggle:hover {
+            background-color: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        body.dark-theme .grid-background {
+            opacity: 0.2;
+        }
+
+        /* ========================= Main Container ========================= */
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 28rem;
+            margin: 0 auto;
+        }
+
+        /* ========================= Header Section ========================= */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: slideDown 0.6s cubic-bezier(0.65, 0.05, 0, 1);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 0.875rem;
+            color: var(--color-neutral-600);
+            font-weight: 400;
+        }
+
+        body.dark-theme .header p {
+            color: var(--color-neutral-400);
+        }
+
+        /* ========================= Dropdown Component ========================= */
+        .dropdown-wrapper {
+            position: relative;
+            animation: scaleIn 0.5s cubic-bezier(0.65, 0.05, 0, 1) 0.2s backwards;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .dropdown-trigger {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            border: 2px solid var(--color-secondary);
+            background-color: var(--color-neutral-100);
+            color: var(--color-secondary);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.15);
+        }
+
+        .dropdown-trigger:hover {
+            transform: scale(1.01);
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            box-shadow: 0 0 30px rgba(252, 191, 73, 0.5);
+        }
+
+        .dropdown-trigger:active {
+            transform: scale(0.99);
+        }
+
+        body.dark-theme .dropdown-trigger {
+            background-color: #000000;
+            border-color: var(--color-neutral-100);
+            color: var(--color-neutral-100);
+        }
+
+        body.dark-theme .dropdown-trigger:hover {
+            background-color: transparent;
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .dropdown-trigger-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-trigger.open .dropdown-trigger-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            width: 100%;
+            margin-top: 0.5rem;
+            border-radius: 0.75rem;
+            border: 2px solid var(--color-secondary);
+            background-color: var(--color-neutral-100);
+            box-shadow: 0 10px 40px rgba(10, 17, 40, 0.15);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: var(--transition-fast);
+            z-index: 100;
+        }
+
+        .dropdown-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        body.dark-theme .dropdown-menu {
+            background-color: #000000;
+            border-color: var(--color-neutral-100);
+        }
+
+        .dropdown-option {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            background-color: transparent;
+            color: var(--color-secondary);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition-fast);
+            text-align: left;
+        }
+
+        .dropdown-option:not(:last-child) {
+            border-bottom: 1px solid var(--color-neutral-300);
+        }
+
+        body.dark-theme .dropdown-option:not(:last-child) {
+            border-bottom-color: var(--color-neutral-800);
+        }
+
+        .dropdown-option:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-neutral-100);
+        }
+
+        body.dark-theme .dropdown-option {
+            color: var(--color-neutral-100);
+        }
+
+        body.dark-theme .dropdown-option:hover {
+            background-color: var(--color-neutral-100);
+            color: #000000;
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-label {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .option-description {
+            font-size: 0.875rem;
+            color: var(--color-neutral-600);
+        }
+
+        .dropdown-option:hover .option-description {
+            color: var(--color-neutral-400);
+        }
+
+        body.dark-theme .option-description {
+            color: var(--color-neutral-400);
+        }
+
+        body.dark-theme .dropdown-option:hover .option-description {
+            color: var(--color-neutral-600);
+        }
+
+        .check-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-left: 1rem;
+            opacity: 0;
+            transform: scale(0);
+            transition: var(--transition-fast);
+        }
+
+        .check-icon.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ========================= Selected Info ========================= */
+        .selected-info {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--color-neutral-500);
+            animation: fadeIn 0.5s ease 0.4s backwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .selected-info span {
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        body.dark-theme .selected-info span {
+            color: var(--color-accent);
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .theme-toggle {
+                top: 1rem;
+                right: 1rem;
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+
+            .dropdown-trigger,
+            .dropdown-option {
+                padding: 0.875rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Grid Background Pattern -->
+    <div class="grid-background">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0A1128" stroke-width="0.5" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+    </div>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <!-- Sun Icon (Light Mode) -->
+        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- Moon Icon (Dark Mode) - Hidden by default -->
+        <svg class="moon-icon" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="content-wrapper">
+            <!-- Header -->
+            <div class="header">
+                <h1>Select Dropdown</h1>
+                <p>Choose your preferred plan option</p>
+            </div>
+
+            <!-- Dropdown Component -->
+            <div class="dropdown-wrapper">
+                <!-- Dropdown Trigger -->
+                <button class="dropdown-trigger" id="dropdownTrigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span id="selectedText">Select an option</span>
+                    <svg class="dropdown-trigger-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu" id="dropdownMenu" role="listbox">
+                    <button class="dropdown-option" data-value="Premium Plan" role="option">
+                        <div class="option-content">
+                            <div class="option-label">Premium Plan</div>
+                            <div class="option-description">Advanced features for professionals</div>
+                        </div>
+                        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="dropdown-option" data-value="Professional Plan" role="option">
+                        <div class="option-content">
+                            <div class="option-label">Professional Plan</div>
+                            <div class="option-description">Perfect for power users</div>
+                        </div>
+                        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="dropdown-option" data-value="Enterprise Plan" role="option">
+                        <div class="option-content">
+                            <div class="option-label">Enterprise Plan</div>
+                            <div class="option-description">Unlimited access and support</div>
+                        </div>
+                        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="dropdown-option" data-value="Starter Plan" role="option">
+                        <div class="option-content">
+                            <div class="option-label">Starter Plan</div>
+                            <div class="option-description">Get started for free today</div>
+                        </div>
+                        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Selected Info -->
+            <div class="selected-info">
+                Current selection: <span id="currentSelection">Select an option</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================= Theme Toggle Functionality =========================
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        const body = document.body;
+        const gridPattern = document.querySelector('#grid path');
+
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-theme');
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+            gridPattern.setAttribute('stroke', '#ffffff');
+        }
+
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-theme');
+
+            if (body.classList.contains('dark-theme')) {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+                gridPattern.setAttribute('stroke', '#ffffff');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+                gridPattern.setAttribute('stroke', '#0A1128');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // ========================= Dropdown Functionality =========================
+        const dropdownTrigger = document.getElementById('dropdownTrigger');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const selectedText = document.getElementById('selectedText');
+        const currentSelection = document.getElementById('currentSelection');
+        const dropdownOptions = document.querySelectorAll('.dropdown-option');
+
+        let isOpen = false;
+        let selectedValue = 'Select an option';
+
+        // Toggle dropdown
+        dropdownTrigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isOpen = !isOpen;
+
+            if (isOpen) {
+                dropdownTrigger.classList.add('open');
+                dropdownMenu.classList.add('open');
+                dropdownTrigger.setAttribute('aria-expanded', 'true');
+            } else {
+                dropdownTrigger.classList.remove('open');
+                dropdownMenu.classList.remove('open');
+                dropdownTrigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Handle option selection
+        dropdownOptions.forEach((option, index) => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+
+                // Update selected value
+                selectedValue = value;
+                selectedText.textContent = value;
+                currentSelection.textContent = value;
+
+                // Update check icons
+                dropdownOptions.forEach(opt => {
+                    const checkIcon = opt.querySelector('.check-icon');
+                    checkIcon.classList.remove('visible');
+                });
+
+                const currentCheckIcon = this.querySelector('.check-icon');
+                currentCheckIcon.classList.add('visible');
+
+                // Close dropdown
+                isOpen = false;
+                dropdownTrigger.classList.remove('open');
+                dropdownMenu.classList.remove('open');
+                dropdownTrigger.setAttribute('aria-expanded', 'false');
+            });
+
+            // Add animation delay for staggered effect
+            option.style.animationDelay = `${index * 0.05}s`;
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (isOpen && !dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                isOpen = false;
+                dropdownTrigger.classList.remove('open');
+                dropdownMenu.classList.remove('open');
+                dropdownTrigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Keyboard accessibility
+        dropdownTrigger.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                dropdownTrigger.click();
+            }
+        });
+
+        dropdownOptions.forEach((option, index) => {
+            option.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    option.click();
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const nextOption = dropdownOptions[Math.min(index + 1, dropdownOptions.length - 1)];
+                    nextOption.focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const prevOption = dropdownOptions[Math.max(index - 1, 0)];
+                    prevOption.focus();
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    isOpen = false;
+                    dropdownTrigger.classList.remove('open');
+                    dropdownMenu.classList.remove('open');
+                    dropdownTrigger.setAttribute('aria-expanded', 'false');
+                    dropdownTrigger.focus();
+                }
+            });
+        });
+
+        // ========================= Smooth Scroll & Performance =========================
+        // Enable smooth animations after page load
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '1';
+        });
+
+        // Prevent dropdown from staying open on window resize
+        window.addEventListener('resize', function() {
+            if (isOpen) {
+                isOpen = false;
+                dropdownTrigger.classList.remove('open');
+                dropdownMenu.classList.remove('open');
+                dropdownTrigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
+</body>
+</html>
