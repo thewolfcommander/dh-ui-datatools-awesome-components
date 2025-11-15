@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Tubelight Navbar Component</title>
+
+    <!-- Google Fonts - Inter & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Animation & Timing */
+            --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+            --duration-default: 0.735s;
+            --animation-default: var(--duration-default) var(--cubic-default);
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *:after, *:before {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ========================= Tubelight Navbar Styles ========================= */
+        .navbar-container {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            padding-top: 1.5rem;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(252, 191, 73, 0.2);
+            padding: 0.25rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1),
+                        0 0 30px 0 rgba(252, 191, 73, 0.1);
+        }
+
+        .nav-item {
+            position: relative;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            transition: all 0.3s var(--cubic-default);
+            color: rgba(10, 17, 40, 0.7);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            color: var(--color-primary);
+        }
+
+        .nav-item.active {
+            color: var(--color-primary);
+            background: rgba(252, 191, 73, 0.05);
+        }
+
+        /* Tubelight effect */
+        .tubelight-indicator {
+            position: absolute;
+            top: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2rem;
+            height: 0.25rem;
+            background: var(--color-primary);
+            border-radius: 9999px 9999px 0 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .nav-item.active .tubelight-indicator {
+            opacity: 1;
+        }
+
+        /* Glow effects */
+        .glow-effect {
+            position: absolute;
+            top: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3rem;
+            height: 1.5rem;
+            background: radial-gradient(circle, rgba(252, 191, 73, 0.3) 0%, transparent 70%);
+            border-radius: 9999px;
+            filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .nav-item.active .glow-effect {
+            opacity: 1;
+        }
+
+        .glow-effect-2 {
+            position: absolute;
+            top: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2rem;
+            height: 1.5rem;
+            background: radial-gradient(circle, rgba(252, 191, 73, 0.2) 0%, transparent 70%);
+            border-radius: 9999px;
+            filter: blur(6px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .nav-item.active .glow-effect-2 {
+            opacity: 1;
+        }
+
+        .glow-effect-3 {
+            position: absolute;
+            top: -0.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1rem;
+            height: 1rem;
+            background: radial-gradient(circle, rgba(252, 191, 73, 0.2) 0%, transparent 70%);
+            border-radius: 9999px;
+            filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .nav-item.active .glow-effect-3 {
+            opacity: 1;
+        }
+
+        /* Icon styles */
+        .nav-icon {
+            width: 1.125rem;
+            height: 1.125rem;
+            stroke-width: 2.5;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .navbar-container {
+                bottom: 0;
+                top: auto;
+                padding-top: 0;
+                padding-bottom: 1.5rem;
+            }
+
+            .nav-item-text {
+                display: none;
+            }
+
+            .nav-item {
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .nav-icon {
+                display: none;
+            }
+        }
+
+        /* ========================= Demo Content Styles ========================= */
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-neutral-600);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(252, 191, 73, 0.1);
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.05);
+            scroll-margin-top: 6rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-content {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--color-neutral-700);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 254, 249, 0.95) 100%);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(252, 191, 73, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px 0 rgba(252, 191, 73, 0.15);
+        }
+
+        .feature-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            color: var(--color-neutral-600);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .demo-container {
+                padding: 6rem 1rem 8rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+
+    <!-- Tubelight Navbar -->
+    <nav class="navbar-container">
+        <div class="navbar" id="navbar">
+            <a href="#home" class="nav-item active" data-section="home">
+                <div class="tubelight-indicator"></div>
+                <div class="glow-effect"></div>
+                <div class="glow-effect-2"></div>
+                <div class="glow-effect-3"></div>
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span class="nav-item-text">Home</span>
+            </a>
+
+            <a href="#about" class="nav-item" data-section="about">
+                <div class="tubelight-indicator"></div>
+                <div class="glow-effect"></div>
+                <div class="glow-effect-2"></div>
+                <div class="glow-effect-3"></div>
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span class="nav-item-text">About</span>
+            </a>
+
+            <a href="#projects" class="nav-item" data-section="projects">
+                <div class="tubelight-indicator"></div>
+                <div class="glow-effect"></div>
+                <div class="glow-effect-2"></div>
+                <div class="glow-effect-3"></div>
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                <span class="nav-item-text">Projects</span>
+            </a>
+
+            <a href="#resume" class="nav-item" data-section="resume">
+                <div class="tubelight-indicator"></div>
+                <div class="glow-effect"></div>
+                <div class="glow-effect-2"></div>
+                <div class="glow-effect-3"></div>
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span class="nav-item-text">Resume</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Demo Content -->
+    <main class="demo-container">
+        <section id="home" class="hero-section fade-in">
+            <h1 class="hero-title">DreamyHook Tubelight Navbar</h1>
+            <p class="hero-subtitle">
+                A beautiful, animated navigation component with a glowing tubelight effect.
+                Built with vanilla HTML, CSS, and JavaScript.
+            </p>
+        </section>
+
+        <section id="about" class="section fade-in delay-1">
+            <h2 class="section-title">About This Component</h2>
+            <div class="section-content">
+                <p>
+                    The Tubelight Navbar is a modern navigation component featuring a unique glowing indicator
+                    that follows the active navigation item. Inspired by neon tubelight aesthetics, it combines
+                    smooth animations with the DreamyHook brand theme colors.
+                </p>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        <h3 class="feature-title">Smooth Animations</h3>
+                        <p class="feature-description">Fluid transitions and spring-based animations for a delightful user experience.</p>
+                    </div>
+                    <div class="feature-card">
+                        <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <h3 class="feature-title">Fully Responsive</h3>
+                        <p class="feature-description">Adapts seamlessly between desktop and mobile views with icon-only mode.</p>
+                    </div>
+                    <div class="feature-card">
+                        <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <h3 class="feature-title">Brand Themed</h3>
+                        <p class="feature-description">Perfectly aligned with DreamyHook's Marigold Yellow and Midnight Blue palette.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="section fade-in delay-2">
+            <h2 class="section-title">Features & Specifications</h2>
+            <div class="section-content">
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid rgba(252, 191, 73, 0.1);">
+                        ✨ <strong>Glowing Tubelight Effect:</strong> Multi-layered glow effects simulate a real neon tube
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid rgba(252, 191, 73, 0.1);">
+                        🎨 <strong>DreamyHook Theme:</strong> Uses Marigold Yellow (#FCBF49) as primary accent color
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid rgba(252, 191, 73, 0.1);">
+                        📱 <strong>Mobile Optimized:</strong> Switches to icon-only mode on smaller screens
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid rgba(252, 191, 73, 0.1);">
+                        🔄 <strong>Smooth Transitions:</strong> Spring-based animations using cubic-bezier curves
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid rgba(252, 191, 73, 0.1);">
+                        🎯 <strong>Active State Tracking:</strong> Automatically highlights the current section
+                    </li>
+                    <li style="padding: 0.75rem 0;">
+                        🌈 <strong>Glassmorphism Design:</strong> Backdrop blur and transparency for modern aesthetics
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="resume" class="section fade-in delay-3">
+            <h2 class="section-title">Implementation Guide</h2>
+            <div class="section-content">
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-secondary);">Getting Started</h3>
+                <p style="margin-bottom: 1.5rem;">
+                    This component is built with pure HTML, CSS, and vanilla JavaScript - no dependencies required!
+                    Simply copy the code into a single HTML file and you're ready to go.
+                </p>
+
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; margin-top: 2rem; color: var(--color-secondary);">Key Components</h3>
+                <ul style="list-style: disc; padding-left: 2rem; line-height: 2;">
+                    <li><strong>HTML Structure:</strong> Semantic navigation with accessibility in mind</li>
+                    <li><strong>CSS Variables:</strong> DreamyHook theme colors defined in :root for easy customization</li>
+                    <li><strong>JavaScript:</strong> Smooth scroll behavior and active state management</li>
+                    <li><strong>Icons:</strong> Inline SVG icons from Lucide for perfect scaling</li>
+                </ul>
+
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; margin-top: 2rem; color: var(--color-secondary);">Customization</h3>
+                <p>
+                    All colors are defined as CSS variables in the :root selector. Adjust the brand colors,
+                    spacing, or animations to match your specific needs. The component is fully modular and
+                    easy to modify.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript for Navigation -->
+    <script>
+        // Get all navigation items
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.section, .hero-section');
+
+        // Handle navigation clicks
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Remove active class from all items
+                navItems.forEach(nav => nav.classList.remove('active'));
+
+                // Add active class to clicked item
+                this.classList.add('active');
+
+                // Smooth scroll to section
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                    const offsetTop = targetSection.offsetTop - 100;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll spy
+        const observerOptions = {
+            root: null,
+            rootMargin: '-100px 0px -70% 0px',
+            threshold: 0
+        };
+
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.getAttribute('id');
+
+                    // Update active nav item
+                    navItems.forEach(item => {
+                        item.classList.remove('active');
+                        if (item.getAttribute('data-section') === sectionId) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+        // Observe all sections
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Add smooth reveal on scroll
+        const revealElements = document.querySelectorAll('.fade-in');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            revealObserver.observe(el);
+        });
+
+        // Mobile detection and positioning
+        function updateNavbarPosition() {
+            const navbar = document.querySelector('.navbar-container');
+            if (window.innerWidth <= 768) {
+                navbar.style.bottom = '0';
+                navbar.style.top = 'auto';
+                navbar.style.paddingBottom = '1.5rem';
+                navbar.style.paddingTop = '0';
+            } else {
+                navbar.style.bottom = 'auto';
+                navbar.style.top = '0';
+                navbar.style.paddingTop = '1.5rem';
+                navbar.style.paddingBottom = '0';
+            }
+        }
+
+        // Update on load and resize
+        window.addEventListener('load', updateNavbarPosition);
+        window.addEventListener('resize', updateNavbarPosition);
+    </script>
+
+</body>
+</html>
