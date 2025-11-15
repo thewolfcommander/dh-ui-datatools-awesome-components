@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Transition Panel Component</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== CSS Variables - DreamyHook Theme ==================== */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral accent */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-white: #ffffff;
+            --color-warm-white: #fffef9;
+            --color-cream: #fef9e7;
+            --color-light-cream: #fffdf0;
+            --color-warm-gray: #78716c;
+            --color-dark-gray: #44403c;
+            --color-near-black: #1c1917;
+            --color-border: rgba(10, 17, 40, 0.1);
+
+            /* Typography */
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+
+            /* Animation */
+            --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+            --duration-default: 0.735s;
+
+            /* Spacing */
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+        }
+
+        /* ==================== Reset & Base Styles ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--color-warm-white) 0%, var(--color-cream) 100%);
+            color: var(--color-secondary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ==================== Container ==================== */
+        .container {
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        /* ==================== Transition Panel Card ==================== */
+        .transition-panel-card {
+            width: 100%;
+            max-width: 364px;
+            margin: 0 auto;
+            background: var(--color-white);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-medium);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .transition-panel-card:hover {
+            box-shadow: var(--shadow-marigold);
+        }
+
+        /* ==================== Panel Wrapper ==================== */
+        .panel-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .panel-content {
+            padding: 1.5rem 1rem;
+            transition: height var(--duration-default) var(--cubic-default);
+        }
+
+        .panel-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 1rem;
+            opacity: 0;
+            transform: translateX(364px);
+            transition: transform var(--duration-default) var(--cubic-default),
+                        opacity 0.2s ease;
+        }
+
+        .panel-item.active {
+            position: relative;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .panel-item.exit-left {
+            transform: translateX(-364px);
+            opacity: 0;
+        }
+
+        .panel-item.exit-right {
+            transform: translateX(364px);
+            opacity: 0;
+        }
+
+        .panel-item.enter-left {
+            transform: translateX(-364px);
+            opacity: 0;
+        }
+
+        .panel-item.enter-right {
+            transform: translateX(364px);
+            opacity: 0;
+        }
+
+        /* ==================== Panel Content ==================== */
+        .feature-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .feature-description {
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--color-warm-gray);
+        }
+
+        /* ==================== Navigation Buttons ==================== */
+        .panel-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-top: 1px solid var(--color-border);
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 254, 249, 0.5) 100%);
+        }
+
+        .nav-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 2rem;
+            padding: 0 0.75rem;
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-secondary);
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            user-select: none;
+        }
+
+        .nav-button:hover {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-secondary);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-marigold);
+            transform: translateY(-2px);
+        }
+
+        .nav-button:active {
+            transform: scale(0.98);
+        }
+
+        .nav-button:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .nav-button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .nav-spacer {
+            width: 1px;
+        }
+
+        /* ==================== Animations ==================== */
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(364px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                transform: translateX(-364px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutToLeft {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(-364px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideOutToRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(364px);
+                opacity: 0;
+            }
+        }
+
+        /* ==================== Responsive Design ==================== */
+        @media screen and (max-width: 479px) {
+            .transition-panel-card {
+                max-width: 100%;
+            }
+
+            .panel-item,
+            .panel-item.enter-left,
+            .panel-item.enter-right {
+                transform: translateX(100%);
+            }
+
+            .panel-item.exit-left {
+                transform: translateX(-100%);
+            }
+
+            .panel-item.exit-right {
+                transform: translateX(100%);
+            }
+
+            .feature-title {
+                font-size: 1.125rem;
+            }
+
+            .feature-description {
+                font-size: 0.875rem;
+            }
+        }
+
+        @media screen and (max-width: 374px) {
+            .panel-content,
+            .panel-item {
+                padding: 1rem 0.75rem;
+            }
+
+            .panel-navigation {
+                padding: 0.75rem;
+            }
+
+            .nav-button {
+                font-size: 0.8125rem;
+                padding: 0 0.625rem;
+            }
+        }
+
+        /* ==================== Utility Classes ==================== */
+        .text-gradient-golden {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="transition-panel-card">
+            <div class="panel-wrapper" id="panelWrapper">
+                <!-- Panels will be dynamically generated here -->
+            </div>
+
+            <div class="panel-navigation">
+                <button class="nav-button" id="prevButton" aria-label="Previous feature">
+                    Previous
+                </button>
+                <div class="nav-spacer"></div>
+                <button class="nav-button" id="nextButton" aria-label="Next feature">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== Feature Data ====================
+        const FEATURES = [
+            {
+                title: "Brand Design",
+                description: "Develop a distinctive brand identity with tailored logos and guidelines to ensure consistent messaging across all platforms."
+            },
+            {
+                title: "Product Development",
+                description: "Design and refine products that excel in user experience, meeting needs effectively and creating memorable interactions. We specialize in web applications."
+            },
+            {
+                title: "Website Creation",
+                description: "Create impactful websites that combine beautiful aesthetics with functional design, ensuring a superior online presence."
+            },
+            {
+                title: "Design Systems",
+                description: "Develop a design system that unifies your brand identity, ensuring consistency across all platforms and products."
+            }
+        ];
+
+        // ==================== State Management ====================
+        let activeIndex = 0;
+        let direction = 1; // 1 for forward, -1 for backward
+        let isAnimating = false;
+
+        // ==================== DOM Elements ====================
+        const panelWrapper = document.getElementById('panelWrapper');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+
+        // ==================== Initialize ====================
+        function init() {
+            renderPanels();
+            updateButtons();
+            attachEventListeners();
+        }
+
+        // ==================== Render Panels ====================
+        function renderPanels() {
+            panelWrapper.innerHTML = '';
+
+            FEATURES.forEach((feature, index) => {
+                const panel = document.createElement('div');
+                panel.className = 'panel-item';
+                panel.id = `panel-${index}`;
+
+                if (index === activeIndex) {
+                    panel.classList.add('active');
+                }
+
+                panel.innerHTML = `
+                    <h3 class="feature-title">${feature.title}</h3>
+                    <p class="feature-description">${feature.description}</p>
+                `;
+
+                panelWrapper.appendChild(panel);
+            });
+
+            // Set initial height
+            updateWrapperHeight();
+        }
+
+        // ==================== Update Wrapper Height ====================
+        function updateWrapperHeight() {
+            const activePanel = document.querySelector('.panel-item.active');
+            if (activePanel) {
+                panelWrapper.style.height = `${activePanel.offsetHeight}px`;
+            }
+        }
+
+        // ==================== Navigate to Index ====================
+        function navigateToIndex(newIndex) {
+            if (isAnimating || newIndex === activeIndex || newIndex < 0 || newIndex >= FEATURES.length) {
+                return;
+            }
+
+            isAnimating = true;
+            direction = newIndex > activeIndex ? 1 : -1;
+
+            const currentPanel = document.getElementById(`panel-${activeIndex}`);
+            const nextPanel = document.getElementById(`panel-${newIndex}`);
+
+            // Set exit animation for current panel
+            if (direction > 0) {
+                currentPanel.classList.add('exit-left');
+                nextPanel.classList.remove('enter-right');
+            } else {
+                currentPanel.classList.add('exit-right');
+                nextPanel.classList.remove('enter-left');
+            }
+
+            currentPanel.classList.remove('active');
+
+            // Small delay to ensure DOM has updated
+            setTimeout(() => {
+                // Set enter animation for next panel
+                if (direction > 0) {
+                    nextPanel.classList.add('enter-right');
+                } else {
+                    nextPanel.classList.add('enter-left');
+                }
+
+                // Trigger animation by adding active class
+                requestAnimationFrame(() => {
+                    nextPanel.classList.add('active');
+                    updateWrapperHeight();
+                });
+
+                // Update active index
+                activeIndex = newIndex;
+
+                // Clean up after animation
+                setTimeout(() => {
+                    currentPanel.classList.remove('exit-left', 'exit-right');
+                    nextPanel.classList.remove('enter-left', 'enter-right');
+                    isAnimating = false;
+                    updateButtons();
+                }, 750); // Match animation duration
+            }, 50);
+        }
+
+        // ==================== Update Buttons ====================
+        function updateButtons() {
+            // Update Previous button
+            if (activeIndex === 0) {
+                prevButton.classList.add('disabled');
+                prevButton.disabled = true;
+            } else {
+                prevButton.classList.remove('disabled');
+                prevButton.disabled = false;
+            }
+
+            // Update Next button
+            if (activeIndex === FEATURES.length - 1) {
+                nextButton.textContent = 'Close';
+            } else {
+                nextButton.textContent = 'Next';
+            }
+        }
+
+        // ==================== Event Listeners ====================
+        function attachEventListeners() {
+            prevButton.addEventListener('click', () => {
+                navigateToIndex(activeIndex - 1);
+            });
+
+            nextButton.addEventListener('click', () => {
+                if (activeIndex === FEATURES.length - 1) {
+                    // Handle "Close" action - could reset to first panel or do nothing
+                    console.log('Close clicked');
+                } else {
+                    navigateToIndex(activeIndex + 1);
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    navigateToIndex(activeIndex - 1);
+                } else if (e.key === 'ArrowRight') {
+                    navigateToIndex(activeIndex + 1);
+                }
+            });
+
+            // Update height on window resize
+            window.addEventListener('resize', updateWrapperHeight);
+        }
+
+        // ==================== Start Application ====================
+        init();
+    </script>
+</body>
+</html>
