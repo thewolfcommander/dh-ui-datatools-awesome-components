@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Sticky Scroll Gallery</title>
+
+    <!-- Google Fonts - Inter & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lenis Smooth Scroll CDN -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
+
+    <style>
+        /* ------------------------- DreamyHook Theme Variables ------------------------- */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Theme-Specific Colors */
+            --theme-background: #fffef9;     /* Warm white background */
+            --theme-dark-bg: #0A1128;        /* Midnight blue background */
+
+            /* Fonts */
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+            --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* ------------------------- Reset & Base Styles ------------------------- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--theme-dark-bg);
+            color: var(--color-neutral-100);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Selection - Marigold yellow background */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--theme-dark-bg);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--theme-dark-bg);
+            text-shadow: none;
+        }
+
+        /* ------------------------- Main Container ------------------------- */
+        main {
+            background-color: var(--theme-dark-bg);
+            min-height: 100vh;
+        }
+
+        /* ------------------------- Hero Section ------------------------- */
+        .hero-section {
+            height: 100vh;
+            width: 100%;
+            background-color: var(--theme-dark-bg);
+            display: grid;
+            place-content: center;
+            position: sticky;
+            top: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated grid background with warm tones */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background-image:
+                linear-gradient(to right, rgba(252, 191, 73, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(252, 191, 73, 0.08) 1px, transparent 1px);
+            background-size: 54px 54px;
+            mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 5rem);
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.2;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideUp 1s ease-out;
+        }
+
+        /* ------------------------- Gallery Section ------------------------- */
+        .gallery-section {
+            width: 100%;
+            background-color: var(--theme-dark-bg);
+            padding: 2rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 0.5rem;
+        }
+
+        /* Left Column - Scrolling */
+        .gallery-column-left {
+            display: grid;
+            gap: 0.5rem;
+            grid-column: span 4;
+        }
+
+        /* Center Column - Sticky */
+        .gallery-column-center {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            grid-column: span 4;
+            gap: 0.5rem;
+            display: grid;
+            grid-template-rows: repeat(3, 1fr);
+            padding: 1rem 0;
+        }
+
+        /* Right Column - Scrolling */
+        .gallery-column-right {
+            display: grid;
+            gap: 0.5rem;
+            grid-column: span 4;
+        }
+
+        /* Image Figures */
+        figure {
+            width: 100%;
+            margin: 0;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        figure::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(10, 17, 40, 0.3) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        figure:hover::after {
+            opacity: 1;
+        }
+
+        figure img {
+            width: 100%;
+            height: 24rem;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.65, 0.05, 0, 1);
+        }
+
+        .gallery-column-center figure img {
+            height: 100%;
+        }
+
+        figure:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Glow effect on hover */
+        figure:hover {
+            box-shadow: 0 0 30px rgba(252, 191, 73, 0.3);
+        }
+
+        /* ------------------------- Footer Section ------------------------- */
+        footer {
+            background-color: var(--theme-dark-bg);
+            padding: 4rem 0 0;
+            position: relative;
+        }
+
+        .footer-title {
+            font-size: clamp(8rem, 16vw, 16rem);
+            line-height: 1;
+            text-transform: uppercase;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            text-align: center;
+            background: linear-gradient(to right,
+                var(--color-neutral-500),
+                var(--color-primary),
+                var(--color-neutral-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transform: translateY(5rem);
+            transition: all 0.3s ease-linear;
+            letter-spacing: -0.05em;
+        }
+
+        footer:hover .footer-title {
+            background: linear-gradient(to right,
+                var(--color-accent),
+                var(--color-primary),
+                var(--color-coral));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-content {
+            background: linear-gradient(180deg, var(--theme-dark-bg) 0%, #000000 100%);
+            height: 10rem;
+            position: relative;
+            z-index: 10;
+            display: grid;
+            place-content: center;
+            border-top-left-radius: 3rem;
+            border-top-right-radius: 3rem;
+            margin-top: 2rem;
+        }
+
+        .footer-text {
+            font-size: 1.5rem;
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            text-align: center;
+        }
+
+        /* ------------------------- Animations ------------------------- */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ------------------------- Responsive Design ------------------------- */
+        @media screen and (max-width: 991px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-column-left,
+            .gallery-column-center,
+            .gallery-column-right {
+                grid-column: span 12;
+            }
+
+            .gallery-column-center {
+                position: relative;
+                height: auto;
+                grid-template-rows: auto;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .footer-title {
+                font-size: 8rem;
+            }
+        }
+
+        @media screen and (max-width: 767px) {
+            .gallery-section {
+                padding: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .footer-title {
+                font-size: 5rem;
+            }
+
+            figure img {
+                height: 16rem;
+            }
+        }
+
+        @media screen and (max-width: 479px) {
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .footer-title {
+                font-size: 3rem;
+            }
+
+            .gallery-section {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Loading animation for images */
+        img {
+            background: linear-gradient(90deg,
+                var(--color-neutral-800) 0%,
+                var(--color-neutral-700) 50%,
+                var(--color-neutral-800) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        img[src] {
+            animation: none;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">
+                Create Gallery In a Better Way
+                <br />
+                Using CSS Sticky Properties
+                <br />
+                Scroll Down! 👇
+            </h1>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section">
+            <div class="gallery-grid">
+                <!-- Left Column - Scrolling Images -->
+                <div class="gallery-column-left">
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1718838541476-d04e71caa347?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 1"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1715432362539-6ab2ab480db2?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 2"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1718601980986-0ce75101d52d?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 3"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1685904042960-66242a0ac352?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 4"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1719411182379-ffd97c1f7ebf?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 5"
+                            loading="lazy"
+                        />
+                    </figure>
+                </div>
+
+                <!-- Center Column - Sticky Images -->
+                <div class="gallery-column-center">
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1718969604981-de826f44ce15?w=500&auto=format&fit=crop"
+                            alt="Sticky Gallery Image 1"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1476180814856-a36609db0493?w=500&auto=format&fit=crop"
+                            alt="Sticky Gallery Image 2"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1595407660626-db35dcd16609?w=500&auto=format&fit=crop"
+                            alt="Sticky Gallery Image 3"
+                            loading="lazy"
+                        />
+                    </figure>
+                </div>
+
+                <!-- Right Column - Scrolling Images -->
+                <div class="gallery-column-right">
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1719547907790-f661a88302c2?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 6"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1599054799131-4b09c73a63cf?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 7"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1719963532023-01b573d1d584?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 8"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1714328101501-3594de6cb80f?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 9"
+                            loading="lazy"
+                        />
+                    </figure>
+                    <figure>
+                        <img
+                            src="https://images.unsplash.com/photo-1719554873571-0fd6bf322bb1?w=500&auto=format&fit=crop"
+                            alt="Gallery Image 10"
+                            loading="lazy"
+                        />
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer>
+            <h2 class="footer-title">DreamyHook</h2>
+            <div class="footer-content">
+                <p class="footer-text">Awesome Components Gallery</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Lenis Smooth Scroll Initialization -->
+    <script>
+        // Initialize Lenis smooth scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        // Request animation frame for smooth scrolling
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
+        // Optional: Add parallax effect to hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroSection = document.querySelector('.hero-section');
+            if (heroSection && scrolled < window.innerHeight) {
+                heroSection.style.opacity = 1 - (scrolled / window.innerHeight);
+            }
+        });
+
+        // Image lazy loading fallback for older browsers
+        if ('loading' in HTMLImageElement.prototype) {
+            // Browser supports lazy loading
+            console.log('Native lazy loading supported');
+        } else {
+            // Fallback for browsers that don't support lazy loading
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            images.forEach(img => {
+                img.src = img.src;
+            });
+        }
+
+        // Add loaded class to images when they load
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('load', function() {
+                this.style.animation = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
