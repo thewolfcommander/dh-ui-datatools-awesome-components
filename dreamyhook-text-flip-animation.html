@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamyHook Text Flip Animation</title>
+
+  <!-- Google Fonts - Inter & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================= DreamyHook Brand Theme Variables ========================= */
+    :root {
+      /* Brand Colors */
+      --color-primary: #FCBF49;        /* Marigold Yellow */
+      --color-secondary: #0A1128;      /* Midnight Blue */
+      --color-accent: #FFD23F;         /* Buttercup Yellow */
+      --color-coral: #FF6B4A;          /* Coral */
+      --color-sky: #0ea5e9;            /* Sky Blue */
+
+      /* Neutral Colors */
+      --color-white: #ffffff;
+      --color-warm-white: #fffef9;
+      --color-cream: #fef9e7;
+      --color-neutral-500: #78716c;
+      --color-neutral-700: #44403c;
+      --color-neutral-900: #1c1917;
+
+      /* Shadows & Effects */
+      --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+      --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+      --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+      --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+      --shadow-yellow-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+
+      /* Typography */
+      --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+      --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+      /* Animation */
+      --duration-word-transition: 700ms;
+      --duration-container-width: 350ms;
+      --duration-letter-fade: 400ms;
+      --letter-stagger-delay: 20ms;
+      --cubic-smooth: cubic-bezier(0.65, 0.05, 0, 1);
+      --cubic-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ========================= Reset & Base Styles ========================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, var(--color-warm-white) 0%, var(--color-cream) 100%);
+      color: var(--color-secondary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    /* ========================= Container Styles ========================= */
+    .demo-wrapper {
+      max-width: 1200px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .demo-header {
+      margin-bottom: 3rem;
+    }
+
+    .demo-header h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.75rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--color-secondary);
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-neutral-700) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .demo-header p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--color-neutral-500);
+      font-weight: 400;
+    }
+
+    .demo-section {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 1.5rem;
+      padding: 3rem 2rem;
+      box-shadow: var(--shadow-medium);
+      border: 1px solid rgba(252, 191, 73, 0.1);
+    }
+
+    .demo-label {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-neutral-500);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ========================= Text Flip Component ========================= */
+    .text-flip-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .text-flip-prefix {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 5vw, 4.5rem);
+      font-weight: 700;
+      color: var(--color-secondary);
+      line-height: 1.2;
+    }
+
+    .text-flip-container {
+      position: relative;
+      display: inline-block;
+      min-width: 150px;
+      height: auto;
+      transition: width var(--duration-container-width) var(--cubic-ease-in-out);
+      will-change: width;
+    }
+
+    .text-flip-content {
+      position: relative;
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+      box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.1),
+        var(--shadow-warm);
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 5vw, 4.5rem);
+      font-weight: 800;
+      color: var(--color-secondary);
+      line-height: 1.2;
+      white-space: nowrap;
+      transition:
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+      cursor: default;
+    }
+
+    .text-flip-content:hover {
+      box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.15),
+        var(--shadow-marigold-glow);
+      transform: translateY(-2px);
+    }
+
+    .text-flip-word {
+      display: inline-block;
+    }
+
+    .text-flip-letter {
+      display: inline-block;
+      opacity: 0;
+      filter: blur(10px);
+      animation: letterFadeIn var(--duration-letter-fade) ease-out forwards;
+    }
+
+    /* ========================= Animations ========================= */
+    @keyframes letterFadeIn {
+      0% {
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .demo-wrapper {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    /* ========================= Accessibility ========================= */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .text-flip-letter {
+        animation: none;
+        opacity: 1;
+        filter: none;
+      }
+    }
+
+    /* Screen reader only */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* ========================= Responsive Design ========================= */
+    @media screen and (max-width: 991px) {
+      .demo-section {
+        padding: 2.5rem 1.5rem;
+      }
+
+      .text-flip-content {
+        padding: 0.625rem 1.25rem;
+      }
+    }
+
+    @media screen and (max-width: 767px) {
+      body {
+        padding: 1rem;
+      }
+
+      .demo-header {
+        margin-bottom: 2rem;
+      }
+
+      .demo-section {
+        padding: 2rem 1rem;
+        border-radius: 1rem;
+      }
+
+      .text-flip-content {
+        padding: 0.5rem 1rem;
+      }
+
+      .text-flip-wrapper {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    }
+
+    @media screen and (max-width: 479px) {
+      .demo-section {
+        padding: 1.5rem 1rem;
+      }
+
+      .text-flip-content {
+        padding: 0.5rem 0.875rem;
+        border-radius: 0.75rem;
+      }
+    }
+
+    /* ========================= Additional Components ========================= */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(252, 191, 73, 0.2);
+    }
+
+    .feature-card {
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 1rem;
+      border: 1px solid rgba(252, 191, 73, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: var(--shadow-warm);
+      transform: translateY(-4px);
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      font-size: 0.875rem;
+      color: var(--color-neutral-500);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-wrapper">
+    <!-- Header -->
+    <div class="demo-header">
+      <h1>DreamyHook Text Flip Animation</h1>
+      <p>Smooth, accessible text transitions with warm golden aesthetics</p>
+    </div>
+
+    <!-- Main Demo -->
+    <div class="demo-section">
+      <div class="demo-label">Live Demo</div>
+
+      <div class="text-flip-wrapper">
+        <span class="text-flip-prefix">Build</span>
+
+        <!-- Text Flip Container -->
+        <div class="text-flip-container" id="textFlipContainer" aria-live="polite" aria-atomic="true">
+          <div class="text-flip-content" id="textFlipContent">
+            <span class="text-flip-word" id="textFlipWord"></span>
+          </div>
+        </div>
+
+        <span class="text-flip-prefix">products</span>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Smooth Animations</h3>
+          <p>Letter-by-letter fade and blur effects with staggered timing for visual appeal</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Responsive Design</h3>
+          <p>Adapts seamlessly across all devices with fluid typography and spacing</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Accessible</h3>
+          <p>Supports screen readers and respects reduced motion preferences</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>DreamyHook Brand</h3>
+          <p>Warm golden gradients with Marigold and Buttercup yellow palette</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vanilla JavaScript -->
+  <script>
+    /**
+     * DreamyHook Text Flip Animation
+     * Vanilla JavaScript implementation with smooth transitions
+     */
+
+    class TextFlipAnimation {
+      constructor(config = {}) {
+        // Configuration
+        this.words = config.words || ['better', 'modern', 'beautiful', 'awesome'];
+        this.interval = config.interval || 3000;
+        this.animationDuration = config.animationDuration || 700;
+        this.letterStaggerDelay = config.letterStaggerDelay || 20;
+
+        // DOM Elements
+        this.container = document.getElementById(config.containerId || 'textFlipContainer');
+        this.content = document.getElementById(config.contentId || 'textFlipContent');
+        this.wordElement = document.getElementById(config.wordId || 'textFlipWord');
+
+        // State
+        this.currentWordIndex = 0;
+        this.intervalId = null;
+        this.isAnimating = false;
+
+        // Check for reduced motion preference
+        this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Initialize
+        this.init();
+      }
+
+      init() {
+        // Display first word
+        this.updateWord();
+
+        // Start cycling
+        this.startCycling();
+
+        // Add visibility change listener to pause when tab is inactive
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            this.stopCycling();
+          } else {
+            this.startCycling();
+          }
+        });
+      }
+
+      startCycling() {
+        if (this.intervalId) return;
+
+        this.intervalId = setInterval(() => {
+          this.nextWord();
+        }, this.interval);
+      }
+
+      stopCycling() {
+        if (this.intervalId) {
+          clearInterval(this.intervalId);
+          this.intervalId = null;
+        }
+      }
+
+      nextWord() {
+        this.currentWordIndex = (this.currentWordIndex + 1) % this.words.length;
+        this.updateWord();
+      }
+
+      updateWord() {
+        const word = this.words[this.currentWordIndex];
+
+        // Clear previous content
+        this.wordElement.innerHTML = '';
+
+        // Calculate width before rendering
+        this.wordElement.textContent = word;
+        const targetWidth = this.content.scrollWidth + 30; // Add padding
+
+        // Animate container width
+        this.animateWidth(targetWidth);
+
+        // Clear and render with animation
+        this.wordElement.innerHTML = '';
+        this.renderAnimatedWord(word);
+      }
+
+      animateWidth(targetWidth) {
+        // Smoothly transition container width
+        this.container.style.width = `${targetWidth}px`;
+      }
+
+      renderAnimatedWord(word) {
+        const letters = word.split('');
+
+        letters.forEach((letter, index) => {
+          const span = document.createElement('span');
+          span.className = 'text-flip-letter';
+          span.textContent = letter;
+
+          // Apply staggered animation delay
+          if (!this.prefersReducedMotion) {
+            span.style.animationDelay = `${index * this.letterStaggerDelay}ms`;
+          } else {
+            // For reduced motion, show immediately
+            span.style.opacity = '1';
+            span.style.filter = 'none';
+            span.style.animation = 'none';
+          }
+
+          this.wordElement.appendChild(span);
+        });
+      }
+
+      destroy() {
+        this.stopCycling();
+        this.wordElement.innerHTML = '';
+      }
+
+      // Public API
+      setWords(words) {
+        this.words = words;
+        this.currentWordIndex = 0;
+        this.updateWord();
+      }
+
+      setInterval(interval) {
+        this.interval = interval;
+        this.stopCycling();
+        this.startCycling();
+      }
+
+      pause() {
+        this.stopCycling();
+      }
+
+      resume() {
+        this.startCycling();
+      }
+    }
+
+    // Initialize the animation when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      // Create text flip animation instance
+      const textFlip = new TextFlipAnimation({
+        words: ['better', 'modern', 'beautiful', 'awesome'],
+        interval: 3000,
+        animationDuration: 700,
+        letterStaggerDelay: 20,
+        containerId: 'textFlipContainer',
+        contentId: 'textFlipContent',
+        wordId: 'textFlipWord'
+      });
+
+      // Make it globally accessible for debugging
+      window.textFlipAnimation = textFlip;
+
+      // Example: You can change words dynamically
+      // textFlip.setWords(['elegant', 'powerful', 'reliable', 'innovative']);
+
+      // Example: You can change the interval
+      // textFlip.setInterval(2000);
+
+      // Example: You can pause/resume
+      // textFlip.pause();
+      // textFlip.resume();
+    });
+  </script>
+</body>
+</html>
