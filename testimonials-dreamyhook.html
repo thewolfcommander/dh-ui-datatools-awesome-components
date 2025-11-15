@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Testimonials Component</title>
+
+    <!-- Google Fonts - Inter & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= CSS Reset ========================= */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors - Warm Gray Palette */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-colored: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+            --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            --radius-3xl: 2rem;
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 2.5rem;
+            --spacing-3xl: 3rem;
+        }
+
+        /* ========================= Base Styles ========================= */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            padding: var(--spacing-2xl) var(--spacing-md);
+        }
+
+        /* ========================= Typography ========================= */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        /* ========================= Container ========================= */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* ========================= Section Styles ========================= */
+        .testimonials-section {
+            background: var(--color-neutral-200);
+            margin: var(--spacing-3xl) 0;
+            position: relative;
+            padding: var(--spacing-3xl) 0;
+        }
+
+        /* ========================= Header Styles ========================= */
+        .testimonials-header {
+            text-align: center;
+            max-width: 540px;
+            margin: 0 auto var(--spacing-3xl);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            border: 1px solid var(--color-neutral-400);
+            padding: 0.25rem 1rem;
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-secondary);
+            background: var(--color-neutral-100);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .testimonials-header h2 {
+            margin: var(--spacing-lg) 0;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .testimonials-header p {
+            color: var(--color-neutral-600);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* ========================= Testimonials Grid ========================= */
+        .testimonials-grid {
+            display: flex;
+            gap: var(--spacing-lg);
+            justify-content: center;
+            margin-top: var(--spacing-3xl);
+            max-height: 740px;
+            overflow: hidden;
+            position: relative;
+            /* Gradient mask for fade effect */
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
+            mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
+        }
+
+        /* ========================= Testimonial Column ========================= */
+        .testimonials-column {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+            animation: scroll-up linear infinite;
+            will-change: transform;
+        }
+
+        .testimonials-column:nth-child(1) {
+            animation-duration: 15s;
+        }
+
+        .testimonials-column:nth-child(2) {
+            animation-duration: 19s;
+        }
+
+        .testimonials-column:nth-child(3) {
+            animation-duration: 17s;
+        }
+
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+
+        /* Pause animation on hover */
+        .testimonials-grid:hover .testimonials-column {
+            animation-play-state: paused;
+        }
+
+        /* ========================= Testimonial Card ========================= */
+        .testimonial-card {
+            padding: var(--spacing-2xl);
+            border-radius: var(--radius-3xl);
+            border: 1px solid var(--color-neutral-300);
+            background: var(--color-neutral-100);
+            box-shadow: var(--shadow-warm);
+            max-width: 320px;
+            width: 100%;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-colored);
+            border-color: var(--color-primary);
+        }
+
+        .testimonial-text {
+            color: var(--color-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* ========================= Author Info ========================= */
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-lg);
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-primary);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .author-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 0.9375rem;
+            color: var(--color-secondary);
+            line-height: 1.4;
+        }
+
+        .author-role {
+            font-size: 0.875rem;
+            color: var(--color-neutral-600);
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* ========================= Responsive Design ========================= */
+
+        /* Hide third column on large tablets and below */
+        @media screen and (max-width: 1024px) {
+            .testimonials-column:nth-child(3) {
+                display: none;
+            }
+        }
+
+        /* Hide second column on tablets and below */
+        @media screen and (max-width: 768px) {
+            .testimonials-column:nth-child(2) {
+                display: none;
+            }
+
+            .testimonials-grid {
+                gap: var(--spacing-md);
+            }
+
+            .testimonial-card {
+                max-width: 100%;
+            }
+        }
+
+        /* Mobile adjustments */
+        @media screen and (max-width: 479px) {
+            body {
+                padding: var(--spacing-md) var(--spacing-xs);
+            }
+
+            .testimonials-section {
+                padding: var(--spacing-xl) 0;
+            }
+
+            .testimonial-card {
+                padding: var(--spacing-lg);
+            }
+
+            .testimonials-header h2 {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* ========================= Selection ========================= */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ========================= Scrollbar Styling ========================= */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-neutral-300);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: var(--radius-md);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-accent);
+        }
+    </style>
+</head>
+<body>
+    <section class="testimonials-section">
+        <div class="container">
+            <!-- Header -->
+            <div class="testimonials-header">
+                <div class="badge">Testimonials</div>
+                <h2>What our users say</h2>
+                <p>See what our customers have to say about us.</p>
+            </div>
+
+            <!-- Testimonials Grid -->
+            <div class="testimonials-grid" id="testimonialsGrid">
+                <!-- Columns will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ========================= Testimonials Data =========================
+        const testimonials = [
+            {
+                text: "This ERP revolutionized our operations, streamlining finance and inventory. The cloud-based platform keeps us productive, even remotely.",
+                image: "https://randomuser.me/api/portraits/women/1.jpg",
+                name: "Briana Patton",
+                role: "Operations Manager",
+            },
+            {
+                text: "Implementing this ERP was smooth and quick. The customizable, user-friendly interface made team training effortless.",
+                image: "https://randomuser.me/api/portraits/men/2.jpg",
+                name: "Bilal Ahmed",
+                role: "IT Manager",
+            },
+            {
+                text: "The support team is exceptional, guiding us through setup and providing ongoing assistance, ensuring our satisfaction.",
+                image: "https://randomuser.me/api/portraits/women/3.jpg",
+                name: "Saman Malik",
+                role: "Customer Support Lead",
+            },
+            {
+                text: "This ERP's seamless integration enhanced our business operations and efficiency. Highly recommend for its intuitive interface.",
+                image: "https://randomuser.me/api/portraits/men/4.jpg",
+                name: "Omar Raza",
+                role: "CEO",
+            },
+            {
+                text: "Its robust features and quick support have transformed our workflow, making us significantly more efficient.",
+                image: "https://randomuser.me/api/portraits/women/5.jpg",
+                name: "Zainab Hussain",
+                role: "Project Manager",
+            },
+            {
+                text: "The smooth implementation exceeded expectations. It streamlined processes, improving overall business performance.",
+                image: "https://randomuser.me/api/portraits/women/6.jpg",
+                name: "Aliza Khan",
+                role: "Business Analyst",
+            },
+            {
+                text: "Our business functions improved with a user-friendly design and positive customer feedback.",
+                image: "https://randomuser.me/api/portraits/men/7.jpg",
+                name: "Farhan Siddiqui",
+                role: "Marketing Director",
+            },
+            {
+                text: "They delivered a solution that exceeded expectations, understanding our needs and enhancing our operations.",
+                image: "https://randomuser.me/api/portraits/women/8.jpg",
+                name: "Sana Sheikh",
+                role: "Sales Manager",
+            },
+            {
+                text: "Using this ERP, our online presence and conversions significantly improved, boosting business performance.",
+                image: "https://randomuser.me/api/portraits/men/9.jpg",
+                name: "Hassan Ali",
+                role: "E-commerce Manager",
+            },
+        ];
+
+        // ========================= Split testimonials into columns =========================
+        const firstColumn = testimonials.slice(0, 3);
+        const secondColumn = testimonials.slice(3, 6);
+        const thirdColumn = testimonials.slice(6, 9);
+
+        // ========================= Create testimonial card HTML =========================
+        function createTestimonialCard(testimonial) {
+            return `
+                <div class="testimonial-card">
+                    <div class="testimonial-text">${testimonial.text}</div>
+                    <div class="author-info">
+                        <img
+                            src="${testimonial.image}"
+                            alt="${testimonial.name}"
+                            class="author-avatar"
+                            loading="lazy"
+                        />
+                        <div class="author-details">
+                            <div class="author-name">${testimonial.name}</div>
+                            <div class="author-role">${testimonial.role}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ========================= Create column HTML =========================
+        function createColumn(testimonials, className = '') {
+            const column = document.createElement('div');
+            column.className = `testimonials-column ${className}`;
+
+            // Duplicate testimonials for infinite scroll effect
+            const duplicatedTestimonials = [...testimonials, ...testimonials];
+
+            duplicatedTestimonials.forEach(testimonial => {
+                const cardHTML = createTestimonialCard(testimonial);
+                column.innerHTML += cardHTML;
+            });
+
+            return column;
+        }
+
+        // ========================= Initialize testimonials grid =========================
+        function initializeTestimonials() {
+            const grid = document.getElementById('testimonialsGrid');
+
+            // Create three columns
+            const column1 = createColumn(firstColumn);
+            const column2 = createColumn(secondColumn);
+            const column3 = createColumn(thirdColumn);
+
+            // Append columns to grid
+            grid.appendChild(column1);
+            grid.appendChild(column2);
+            grid.appendChild(column3);
+        }
+
+        // ========================= Run on DOM load =========================
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeTestimonials);
+        } else {
+            initializeTestimonials();
+        }
+
+        // ========================= Reduce motion for accessibility =========================
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        if (prefersReducedMotion.matches) {
+            document.querySelectorAll('.testimonials-column').forEach(column => {
+                column.style.animation = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
