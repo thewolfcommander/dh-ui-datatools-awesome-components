@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Particles Effect</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* DreamyHook Theme Variables */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 2rem;
+            border: 2px solid rgba(252, 191, 73, 0.2);
+            overflow: hidden;
+            box-shadow:
+                0 10px 40px 0 rgba(10, 17, 40, 0.15),
+                0 0 30px 0 rgba(252, 191, 73, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Canvas */
+        #particlesCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Content Overlay */
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        /* Heading */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 50%, #FF6B4A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 20px rgba(252, 191, 73, 0.2);
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        /* Subtitle */
+        .subtitle {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: var(--color-neutral-600);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            animation: fadeInUp 1s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            animation: fadeInUp 1s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            min-width: 200px;
+        }
+
+        .control-group label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, var(--color-accent), var(--color-primary));
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(252, 191, 73, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.7);
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(252, 191, 73, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.7);
+        }
+
+        .control-group .value-display {
+            font-size: 0.875rem;
+            color: var(--color-neutral-500);
+            font-weight: 500;
+        }
+
+        /* Color Selector */
+        .color-selector {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-option.active {
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 0 3px rgba(252, 191, 73, 0.3);
+        }
+
+        .color-option.marigold {
+            background: var(--color-primary);
+        }
+
+        .color-option.buttercup {
+            background: var(--color-accent);
+        }
+
+        .color-option.midnight {
+            background: var(--color-secondary);
+        }
+
+        .color-option.coral {
+            background: var(--color-coral);
+        }
+
+        .color-option.sky {
+            background: var(--color-sky);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Selection */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                height: 500px;
+                border-radius: 1.5rem;
+            }
+
+            .content {
+                padding: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .control-group {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 479px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                height: 400px;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Canvas for Particles -->
+        <canvas id="particlesCanvas"></canvas>
+
+        <!-- Content Overlay -->
+        <div class="content">
+            <h1>DreamyHook</h1>
+            <p class="subtitle">
+                Experience the magic of interactive particles powered by your brand's golden touch
+            </p>
+
+            <!-- Interactive Controls -->
+            <div class="controls">
+                <div class="control-group">
+                    <label for="quantitySlider">
+                        Quantity: <span id="quantityValue" class="value-display">100</span>
+                    </label>
+                    <input type="range" id="quantitySlider" min="10" max="300" value="100" step="10">
+                </div>
+
+                <div class="control-group">
+                    <label for="sizeSlider">
+                        Size: <span id="sizeValue" class="value-display">0.4</span>
+                    </label>
+                    <input type="range" id="sizeSlider" min="0.1" max="2" value="0.4" step="0.1">
+                </div>
+
+                <div class="control-group">
+                    <label for="easeSlider">
+                        Ease: <span id="easeValue" class="value-display">80</span>
+                    </label>
+                    <input type="range" id="easeSlider" min="10" max="200" value="80" step="10">
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label>Color Theme</label>
+                    <div class="color-selector">
+                        <div class="color-option marigold active" data-color="#FCBF49" title="Marigold Yellow"></div>
+                        <div class="color-option buttercup" data-color="#FFD23F" title="Buttercup Yellow"></div>
+                        <div class="color-option midnight" data-color="#0A1128" title="Midnight Blue"></div>
+                        <div class="color-option coral" data-color="#FF6B4A" title="Coral"></div>
+                        <div class="color-option sky" data-color="#0ea5e9" title="Sky Blue"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Particles Animation Class
+        class ParticlesEffect {
+            constructor(canvas, options = {}) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.dpr = window.devicePixelRatio || 1;
+
+                // Configuration
+                this.config = {
+                    quantity: options.quantity || 100,
+                    staticity: options.staticity || 50,
+                    ease: options.ease || 80,
+                    size: options.size || 0.4,
+                    color: options.color || '#FCBF49',
+                    vx: options.vx || 0,
+                    vy: options.vy || 0
+                };
+
+                // State
+                this.particles = [];
+                this.mouse = { x: 0, y: 0 };
+                this.canvasSize = { w: 0, h: 0 };
+
+                // Initialize
+                this.init();
+                this.setupEventListeners();
+                this.animate();
+            }
+
+            init() {
+                this.resizeCanvas();
+                this.createParticles();
+            }
+
+            setupEventListeners() {
+                window.addEventListener('resize', () => this.resizeCanvas());
+
+                this.canvas.addEventListener('mousemove', (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.mouse.x = e.clientX - rect.left - this.canvasSize.w / 2;
+                    this.mouse.y = e.clientY - rect.top - this.canvasSize.h / 2;
+                });
+
+                this.canvas.addEventListener('mouseleave', () => {
+                    this.mouse.x = 0;
+                    this.mouse.y = 0;
+                });
+            }
+
+            resizeCanvas() {
+                this.canvasSize.w = this.canvas.offsetWidth;
+                this.canvasSize.h = this.canvas.offsetHeight;
+                this.canvas.width = this.canvasSize.w * this.dpr;
+                this.canvas.height = this.canvasSize.h * this.dpr;
+                this.canvas.style.width = `${this.canvasSize.w}px`;
+                this.canvas.style.height = `${this.canvasSize.h}px`;
+                this.ctx.scale(this.dpr, this.dpr);
+            }
+
+            hexToRgb(hex) {
+                hex = hex.replace('#', '');
+                if (hex.length === 3) {
+                    hex = hex.split('').map(char => char + char).join('');
+                }
+                const num = parseInt(hex, 16);
+                return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+            }
+
+            createParticle() {
+                return {
+                    x: Math.random() * this.canvasSize.w,
+                    y: Math.random() * this.canvasSize.h,
+                    translateX: 0,
+                    translateY: 0,
+                    size: Math.random() * 2 + this.config.size,
+                    alpha: 0,
+                    targetAlpha: parseFloat((Math.random() * 0.6 + 0.1).toFixed(1)),
+                    dx: (Math.random() - 0.5) * 0.1,
+                    dy: (Math.random() - 0.5) * 0.1,
+                    magnetism: 0.1 + Math.random() * 4
+                };
+            }
+
+            createParticles() {
+                this.particles = [];
+                for (let i = 0; i < this.config.quantity; i++) {
+                    this.particles.push(this.createParticle());
+                }
+            }
+
+            drawParticle(particle) {
+                const { x, y, translateX, translateY, size, alpha } = particle;
+                const rgb = this.hexToRgb(this.config.color);
+
+                this.ctx.save();
+                this.ctx.translate(translateX, translateY);
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+                this.ctx.fillStyle = `rgba(${rgb.join(', ')}, ${alpha})`;
+                this.ctx.fill();
+                this.ctx.restore();
+            }
+
+            updateParticle(particle, index) {
+                // Calculate edge distances
+                const edge = [
+                    particle.x + particle.translateX - particle.size,
+                    this.canvasSize.w - particle.x - particle.translateX - particle.size,
+                    particle.y + particle.translateY - particle.size,
+                    this.canvasSize.h - particle.y - particle.translateY - particle.size
+                ];
+                const closestEdge = Math.min(...edge);
+                const remapClosestEdge = Math.max(0, Math.min(1, closestEdge / 20));
+
+                // Update alpha
+                if (remapClosestEdge > 1) {
+                    particle.alpha += 0.02;
+                    if (particle.alpha > particle.targetAlpha) {
+                        particle.alpha = particle.targetAlpha;
+                    }
+                } else {
+                    particle.alpha = particle.targetAlpha * remapClosestEdge;
+                }
+
+                // Update position
+                particle.x += particle.dx + this.config.vx;
+                particle.y += particle.dy + this.config.vy;
+
+                // Mouse interaction
+                particle.translateX += (this.mouse.x / (this.config.staticity / particle.magnetism) - particle.translateX) / this.config.ease;
+                particle.translateY += (this.mouse.y / (this.config.staticity / particle.magnetism) - particle.translateY) / this.config.ease;
+
+                // Reset particle if out of bounds
+                if (
+                    particle.x < -particle.size ||
+                    particle.x > this.canvasSize.w + particle.size ||
+                    particle.y < -particle.size ||
+                    particle.y > this.canvasSize.h + particle.size
+                ) {
+                    this.particles[index] = this.createParticle();
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h);
+
+                this.particles.forEach((particle, index) => {
+                    this.updateParticle(particle, index);
+                    this.drawParticle(particle);
+                });
+
+                requestAnimationFrame(() => this.animate());
+            }
+
+            updateConfig(newConfig) {
+                this.config = { ...this.config, ...newConfig };
+                if (newConfig.quantity && newConfig.quantity !== this.particles.length) {
+                    this.createParticles();
+                }
+            }
+        }
+
+        // Initialize Particles
+        const canvas = document.getElementById('particlesCanvas');
+        const particles = new ParticlesEffect(canvas, {
+            quantity: 100,
+            ease: 80,
+            size: 0.4,
+            color: '#FCBF49'
+        });
+
+        // Control Event Listeners
+        const quantitySlider = document.getElementById('quantitySlider');
+        const quantityValue = document.getElementById('quantityValue');
+        const sizeSlider = document.getElementById('sizeSlider');
+        const sizeValue = document.getElementById('sizeValue');
+        const easeSlider = document.getElementById('easeSlider');
+        const easeValue = document.getElementById('easeValue');
+
+        quantitySlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            quantityValue.textContent = value;
+            particles.updateConfig({ quantity: value });
+        });
+
+        sizeSlider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            sizeValue.textContent = value;
+            particles.updateConfig({ size: value });
+        });
+
+        easeSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            easeValue.textContent = value;
+            particles.updateConfig({ ease: value });
+        });
+
+        // Color Selector
+        const colorOptions = document.querySelectorAll('.color-option');
+        colorOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                colorOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                const color = option.dataset.color;
+                particles.updateConfig({ color });
+            });
+        });
+    </script>
+</body>
+</html>
