@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook Lamp Component</title>
+
+    <!-- Import Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ------------------------- DreamyHook Theme Variables ------------------------- */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Color Assignments */
+            --color-light: var(--color-neutral-200);   /* Light background */
+            --color-dark: var(--color-secondary);      /* Dark text (midnight blue) */
+            --color-white: var(--color-neutral-100);
+            --color-black: var(--color-neutral-900);
+
+            /* Theme-Specific Colors */
+            --theme-primary: #FCBF49;        /* Marigold Yellow */
+            --theme-secondary: #0A1128;      /* Midnight Blue */
+            --theme-accent: #FFD23F;         /* Buttercup Yellow */
+            --theme-background: #fffef9;     /* Warm white background */
+        }
+
+        /* ------------------------- Reset & Base Styles ------------------------- */
+        *, *:after, *:before {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            -webkit-font-smoothing: antialiased;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            background-color: var(--color-neutral-100);
+            color: var(--color-dark);
+        }
+
+        /* Selection - Marigold yellow background with white text */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ------------------------- Lamp Container ------------------------- */
+        .lamp-container {
+            position: relative;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            width: 100%;
+            border-radius: 0.375rem;
+            z-index: 0;
+        }
+
+        /* Lamp visual effects wrapper */
+        .lamp-effects-wrapper {
+            position: relative;
+            display: flex;
+            width: 100%;
+            flex: 1;
+            transform: scaleY(1.25);
+            align-items: center;
+            justify-content: center;
+            isolation: isolate;
+            z-index: 0;
+        }
+
+        /* Left conic gradient (Marigold to Buttercup) */
+        .lamp-conic-left {
+            position: absolute;
+            right: 50%;
+            height: 14rem;
+            width: 15rem;
+            background: conic-gradient(from 70deg at center top, var(--color-primary), transparent, transparent);
+            animation: expandConic 0.8s ease-in-out 0.3s forwards;
+            opacity: 0.5;
+        }
+
+        /* Right conic gradient (Buttercup to Coral) */
+        .lamp-conic-right {
+            position: absolute;
+            left: 50%;
+            height: 14rem;
+            width: 15rem;
+            background: conic-gradient(from 290deg at center top, transparent, transparent, var(--color-accent));
+            animation: expandConic 0.8s ease-in-out 0.3s forwards;
+            opacity: 0.5;
+        }
+
+        /* Mask overlays for gradient fading */
+        .lamp-mask-bottom {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            height: 10rem;
+            bottom: 0;
+            z-index: 20;
+            -webkit-mask-image: linear-gradient(to top, white, transparent);
+            mask-image: linear-gradient(to top, white, transparent);
+        }
+
+        .lamp-mask-left {
+            position: absolute;
+            width: 10rem;
+            height: 100%;
+            left: 0;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            bottom: 0;
+            z-index: 20;
+            -webkit-mask-image: linear-gradient(to right, white, transparent);
+            mask-image: linear-gradient(to right, white, transparent);
+        }
+
+        .lamp-mask-right {
+            position: absolute;
+            width: 10rem;
+            height: 100%;
+            right: 0;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            bottom: 0;
+            z-index: 20;
+            -webkit-mask-image: linear-gradient(to left, white, transparent);
+            mask-image: linear-gradient(to left, white, transparent);
+        }
+
+        /* Blur effects */
+        .lamp-blur-bg {
+            position: absolute;
+            top: 50%;
+            height: 12rem;
+            width: 100%;
+            transform: translateY(3rem) scaleX(1.5);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            filter: blur(2rem);
+        }
+
+        .lamp-blur-overlay {
+            position: absolute;
+            top: 50%;
+            z-index: 50;
+            height: 12rem;
+            width: 100%;
+            background: transparent;
+            opacity: 0.1;
+            backdrop-filter: blur(0.375rem);
+        }
+
+        /* Glowing orb - Golden glow instead of cyan */
+        .lamp-glow-orb {
+            position: absolute;
+            z-index: 50;
+            height: 9rem;
+            width: 28rem;
+            transform: translateY(-50%);
+            border-radius: 9999px;
+            background: radial-gradient(circle, var(--color-primary), var(--color-accent));
+            opacity: 0.6;
+            filter: blur(3rem);
+        }
+
+        /* Smaller glow - Buttercup yellow */
+        .lamp-glow-small {
+            position: absolute;
+            z-index: 30;
+            height: 9rem;
+            width: 8rem;
+            transform: translateY(-6rem);
+            border-radius: 9999px;
+            background: var(--color-accent);
+            filter: blur(2rem);
+            animation: expandGlow 0.8s ease-in-out 0.3s forwards;
+        }
+
+        /* Lamp beam - Golden beam */
+        .lamp-beam {
+            position: absolute;
+            z-index: 50;
+            height: 0.125rem;
+            width: 15rem;
+            transform: translateY(-7rem);
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            box-shadow: 0 0 20px rgba(252, 191, 73, 0.5);
+            animation: expandBeam 0.8s ease-in-out 0.3s forwards;
+        }
+
+        /* Top mask to hide upper portion */
+        .lamp-top-mask {
+            position: absolute;
+            z-index: 40;
+            height: 11rem;
+            width: 100%;
+            transform: translateY(-12.5rem);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+        }
+
+        /* Content wrapper */
+        .lamp-content {
+            position: relative;
+            z-index: 50;
+            display: flex;
+            transform: translateY(-20rem);
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1.25rem;
+        }
+
+        /* Heading with gradient text */
+        .lamp-heading {
+            margin-top: 2rem;
+            padding: 1rem 0;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--theme-secondary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.25rem;
+            font-weight: 600;
+            font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            letter-spacing: -0.025em;
+            opacity: 0.5;
+            transform: translateY(100px);
+            animation: slideUpFade 0.8s ease-in-out 0.3s forwards;
+        }
+
+        /* ------------------------- Animations ------------------------- */
+        @keyframes expandConic {
+            from {
+                opacity: 0.5;
+                width: 15rem;
+            }
+            to {
+                opacity: 1;
+                width: 30rem;
+            }
+        }
+
+        @keyframes expandGlow {
+            from {
+                width: 8rem;
+            }
+            to {
+                width: 16rem;
+            }
+        }
+
+        @keyframes expandBeam {
+            from {
+                width: 15rem;
+            }
+            to {
+                width: 30rem;
+            }
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0.5;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ------------------------- Responsive Design ------------------------- */
+        @media (min-width: 768px) {
+            .lamp-heading {
+                font-size: 4.5rem;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .lamp-heading {
+                font-size: 1.875rem;
+            }
+
+            .lamp-glow-orb {
+                width: 20rem;
+            }
+
+            .lamp-content {
+                transform: translateY(-15rem);
+            }
+        }
+
+        @media (max-width: 479px) {
+            .lamp-heading {
+                font-size: 1.5rem;
+            }
+
+            .lamp-glow-orb {
+                width: 15rem;
+            }
+        }
+
+        /* Additional utility classes */
+        .text-gradient-golden {
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glow-marigold {
+            box-shadow: 0 0 20px rgba(252, 191, 73, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .glow-marigold:hover {
+            box-shadow: 0 0 30px rgba(252, 191, 73, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- DreamyHook Lamp Component -->
+    <div class="lamp-container">
+        <div class="lamp-effects-wrapper">
+            <!-- Left conic gradient -->
+            <div class="lamp-conic-left">
+                <div class="lamp-mask-bottom"></div>
+                <div class="lamp-mask-left"></div>
+            </div>
+
+            <!-- Right conic gradient -->
+            <div class="lamp-conic-right">
+                <div class="lamp-mask-right"></div>
+                <div class="lamp-mask-bottom"></div>
+            </div>
+
+            <!-- Background blur effects -->
+            <div class="lamp-blur-bg"></div>
+            <div class="lamp-blur-overlay"></div>
+
+            <!-- Glowing orb (large) -->
+            <div class="lamp-glow-orb"></div>
+
+            <!-- Smaller glow (medium) -->
+            <div class="lamp-glow-small"></div>
+
+            <!-- Lamp beam (horizontal line) -->
+            <div class="lamp-beam"></div>
+
+            <!-- Top mask to hide upper portion -->
+            <div class="lamp-top-mask"></div>
+        </div>
+
+        <!-- Content section -->
+        <div class="lamp-content">
+            <h1 class="lamp-heading">
+                Build amazing experiences<br />with DreamyHook
+            </h1>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Add scroll-based animations or interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DreamyHook Lamp Component Loaded');
+
+            // Example: Add intersection observer for viewport animations
+            const heading = document.querySelector('.lamp-heading');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            if (heading) {
+                observer.observe(heading);
+            }
+
+            // Optional: Add mouse parallax effect
+            const lampContainer = document.querySelector('.lamp-container');
+            const lampEffects = document.querySelector('.lamp-effects-wrapper');
+
+            lampContainer.addEventListener('mousemove', (e) => {
+                const { clientX, clientY } = e;
+                const { innerWidth, innerHeight } = window;
+
+                const xPercent = (clientX / innerWidth - 0.5) * 20;
+                const yPercent = (clientY / innerHeight - 0.5) * 20;
+
+                lampEffects.style.transform = `scaleY(1.25) translate(${xPercent}px, ${yPercent}px)`;
+            });
+
+            lampContainer.addEventListener('mouseleave', () => {
+                lampEffects.style.transform = 'scaleY(1.25) translate(0, 0)';
+            });
+        });
+    </script>
+</body>
+</html>
