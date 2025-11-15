@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Hero Section Component</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Animation */
+            --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+            --duration-default: 0.735s;
+
+            /* Grid Options */
+            --grid-angle: 65deg;
+            --cell-size: 60px;
+            --grid-opacity: 0.5;
+            --light-line: rgba(252, 191, 73, 0.2);
+            --dark-line: rgba(252, 191, 73, 0.3);
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *,
+        *:after,
+        *:before {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--color-neutral-200);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Selection - Marigold yellow background */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ========================= Hero Section Styles ========================= */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Background Gradient Overlay */
+        .hero-background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100vh;
+            width: 100vw;
+            z-index: 0;
+            background: radial-gradient(ellipse 20% 80% at 50% -20%, rgba(252, 191, 73, 0.15), rgba(255, 255, 255, 0));
+            pointer-events: none;
+        }
+
+        /* Retro Grid Animation */
+        .retro-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            perspective: 200px;
+            opacity: var(--grid-opacity);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .retro-grid-inner {
+            position: absolute;
+            inset: 0;
+            transform: rotateX(var(--grid-angle));
+        }
+
+        .retro-grid-pattern {
+            position: absolute;
+            inset: 0;
+            width: 600vw;
+            height: 300vh;
+            margin-left: -200%;
+            transform-origin: 100% 0 0;
+            background-image:
+                linear-gradient(to right, var(--light-line) 1px, transparent 0),
+                linear-gradient(to bottom, var(--light-line) 1px, transparent 0);
+            background-size: var(--cell-size) var(--cell-size);
+            background-repeat: repeat;
+            animation: grid-move 20s linear infinite;
+        }
+
+        @keyframes grid-move {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(calc(var(--cell-size) * -1));
+            }
+        }
+
+        .retro-grid-fade {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--color-neutral-200) 0%, transparent 90%);
+            pointer-events: none;
+        }
+
+        /* Hero Content Section */
+        .hero-section {
+            position: relative;
+            max-width: 100%;
+            margin: 0 auto;
+            z-index: 10;
+        }
+
+        .hero-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 7rem 1rem 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-inner {
+            max-width: 48rem;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Badge/Pill */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-neutral-600);
+            padding: 0.5rem 1.25rem;
+            border-radius: 1.5rem;
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.1) 0%, rgba(255, 210, 63, 0.05) 100%);
+            border: 2px solid rgba(252, 191, 73, 0.2);
+            margin: 0 auto;
+            width: fit-content;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .hero-badge:hover {
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.15) 0%, rgba(255, 210, 63, 0.1) 100%);
+            border-color: rgba(252, 191, 73, 0.3);
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.2);
+        }
+
+        .hero-badge svg {
+            width: 1rem;
+            height: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-badge:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* Main Heading */
+        .hero-heading {
+            font-size: clamp(2rem, 5vw, 3.75rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin: 0;
+            background: linear-gradient(180deg, var(--color-secondary) 0%, rgba(10, 17, 40, 0.75) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-heading .gradient-text {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Description */
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--color-neutral-600);
+            max-width: 42rem;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* CTA Button Container */
+        .hero-cta-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Animated Border Button */
+        .animated-border-button {
+            position: relative;
+            display: inline-block;
+            padding: 1.5px;
+            border-radius: 9999px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .animated-border-button::before {
+            content: '';
+            position: absolute;
+            inset: -1000%;
+            background: conic-gradient(
+                from 90deg at 50% 50%,
+                var(--color-accent) 0%,
+                var(--color-primary) 50%,
+                var(--color-accent) 100%
+            );
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .button-inner {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            background: linear-gradient(135deg,
+                rgba(252, 191, 73, 0.15) 0%,
+                rgba(255, 210, 63, 0.2) 50%,
+                transparent 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(252, 191, 73, 0.3);
+            color: var(--color-secondary);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .button-inner:hover {
+            background: linear-gradient(135deg,
+                rgba(252, 191, 73, 0.25) 0%,
+                rgba(255, 210, 63, 0.3) 50%,
+                transparent 100%);
+            box-shadow: 0 8px 30px rgba(252, 191, 73, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Bottom Image */
+        .hero-image-container {
+            margin-top: 8rem;
+            padding: 0 2.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-image {
+            width: 100%;
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(10, 17, 40, 0.15), 0 0 30px rgba(252, 191, 73, 0.1);
+            border: 1px solid rgba(252, 191, 73, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .hero-image:hover {
+            box-shadow: 0 20px 60px rgba(10, 17, 40, 0.2), 0 0 40px rgba(252, 191, 73, 0.2);
+            transform: translateY(-4px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 5rem 1rem 2rem;
+            }
+
+            .hero-heading {
+                font-size: 2rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .hero-image-container {
+                margin-top: 4rem;
+                padding: 0 1rem;
+            }
+
+            .button-inner {
+                padding: 0.875rem 2rem;
+                font-size: 0.9375rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding: 4rem 0.75rem 1.5rem;
+            }
+
+            .hero-badge {
+                font-size: 0.8125rem;
+                padding: 0.4rem 1rem;
+            }
+
+            .hero-heading {
+                font-size: 1.75rem;
+            }
+
+            .button-inner {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Utility Classes */
+        .glow-marigold {
+            box-shadow: 0 0 20px rgba(252, 191, 73, 0.3);
+        }
+
+        .text-gradient-golden {
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section Component -->
+    <div class="hero-container" id="heroSection">
+        <!-- Background Overlay -->
+        <div class="hero-background-overlay"></div>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <!-- Retro Grid -->
+            <div class="retro-grid">
+                <div class="retro-grid-inner">
+                    <div class="retro-grid-pattern"></div>
+                </div>
+                <div class="retro-grid-fade"></div>
+            </div>
+
+            <!-- Hero Content -->
+            <div class="hero-content">
+                <div class="hero-inner">
+                    <!-- Badge/Pill -->
+                    <h1 class="hero-badge" id="heroBadge">
+                        <span id="badgeText">Build products for everyone</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </h1>
+
+                    <!-- Main Heading -->
+                    <h2 class="hero-heading" id="heroHeading">
+                        <span id="headingRegular">Designing your projects faster with </span>
+                        <span class="gradient-text" id="headingGradient">the largest figma UI kit.</span>
+                    </h2>
+
+                    <!-- Description -->
+                    <p class="hero-description" id="heroDescription">
+                        Sed ut perspiciatis unde omnis iste natus voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae.
+                    </p>
+
+                    <!-- CTA Button -->
+                    <div class="hero-cta-container">
+                        <span class="animated-border-button">
+                            <a href="#" class="button-inner" id="heroCtaButton">
+                                <span id="ctaText">Browse courses</span>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Bottom Image -->
+                <div class="hero-image-container" id="heroImageContainer">
+                    <img
+                        src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop&q=80"
+                        alt="Dashboard preview"
+                        class="hero-image"
+                        id="heroImage"
+                    />
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        /**
+         * DreamyHook Hero Section Component
+         * Vanilla JavaScript implementation with customization options
+         */
+        class DreamyHookHeroSection {
+            constructor(options = {}) {
+                this.options = {
+                    // Badge/Title
+                    badgeText: options.badgeText || 'Build products for everyone',
+
+                    // Heading
+                    headingRegular: options.headingRegular || 'Designing your projects faster with ',
+                    headingGradient: options.headingGradient || 'the largest figma UI kit.',
+
+                    // Description
+                    description: options.description || 'Sed ut perspiciatis unde omnis iste natus voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae.',
+
+                    // CTA
+                    ctaText: options.ctaText || 'Browse courses',
+                    ctaHref: options.ctaHref || '#',
+
+                    // Image
+                    imageUrl: options.imageUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop&q=80',
+                    imageAlt: options.imageAlt || 'Dashboard preview',
+                    showImage: options.showImage !== false,
+
+                    // Grid Options
+                    gridAngle: options.gridAngle || 65,
+                    gridCellSize: options.gridCellSize || 60,
+                    gridOpacity: options.gridOpacity || 0.5,
+
+                    // Callbacks
+                    onCtaClick: options.onCtaClick || null,
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.updateContent();
+                this.updateGridStyles();
+                this.attachEventListeners();
+            }
+
+            updateContent() {
+                // Update badge
+                const badgeTextEl = document.getElementById('badgeText');
+                if (badgeTextEl) {
+                    badgeTextEl.textContent = this.options.badgeText;
+                }
+
+                // Update heading
+                const headingRegularEl = document.getElementById('headingRegular');
+                const headingGradientEl = document.getElementById('headingGradient');
+                if (headingRegularEl) {
+                    headingRegularEl.textContent = this.options.headingRegular;
+                }
+                if (headingGradientEl) {
+                    headingGradientEl.textContent = this.options.headingGradient;
+                }
+
+                // Update description
+                const descriptionEl = document.getElementById('heroDescription');
+                if (descriptionEl) {
+                    descriptionEl.textContent = this.options.description;
+                }
+
+                // Update CTA
+                const ctaTextEl = document.getElementById('ctaText');
+                const ctaButtonEl = document.getElementById('heroCtaButton');
+                if (ctaTextEl) {
+                    ctaTextEl.textContent = this.options.ctaText;
+                }
+                if (ctaButtonEl) {
+                    ctaButtonEl.href = this.options.ctaHref;
+                }
+
+                // Update image
+                const imageEl = document.getElementById('heroImage');
+                const imageContainerEl = document.getElementById('heroImageContainer');
+                if (imageEl && this.options.showImage) {
+                    imageEl.src = this.options.imageUrl;
+                    imageEl.alt = this.options.imageAlt;
+                } else if (imageContainerEl && !this.options.showImage) {
+                    imageContainerEl.style.display = 'none';
+                }
+            }
+
+            updateGridStyles() {
+                document.documentElement.style.setProperty('--grid-angle', `${this.options.gridAngle}deg`);
+                document.documentElement.style.setProperty('--cell-size', `${this.options.gridCellSize}px`);
+                document.documentElement.style.setProperty('--grid-opacity', this.options.gridOpacity);
+            }
+
+            attachEventListeners() {
+                const ctaButton = document.getElementById('heroCtaButton');
+                if (ctaButton && this.options.onCtaClick) {
+                    ctaButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.options.onCtaClick(e);
+                    });
+                }
+            }
+
+            // Public methods for updating content dynamically
+            updateBadge(text) {
+                this.options.badgeText = text;
+                const el = document.getElementById('badgeText');
+                if (el) el.textContent = text;
+            }
+
+            updateHeading(regular, gradient) {
+                this.options.headingRegular = regular;
+                this.options.headingGradient = gradient;
+                const regularEl = document.getElementById('headingRegular');
+                const gradientEl = document.getElementById('headingGradient');
+                if (regularEl) regularEl.textContent = regular;
+                if (gradientEl) gradientEl.textContent = gradient;
+            }
+
+            updateDescription(text) {
+                this.options.description = text;
+                const el = document.getElementById('heroDescription');
+                if (el) el.textContent = text;
+            }
+
+            updateCta(text, href) {
+                this.options.ctaText = text;
+                this.options.ctaHref = href;
+                const textEl = document.getElementById('ctaText');
+                const buttonEl = document.getElementById('heroCtaButton');
+                if (textEl) textEl.textContent = text;
+                if (buttonEl) buttonEl.href = href;
+            }
+
+            updateImage(url, alt) {
+                this.options.imageUrl = url;
+                this.options.imageAlt = alt || this.options.imageAlt;
+                const el = document.getElementById('heroImage');
+                if (el) {
+                    el.src = url;
+                    el.alt = this.options.imageAlt;
+                }
+            }
+        }
+
+        // Initialize the hero section with default options
+        // You can customize by passing options to the constructor
+        const heroSection = new DreamyHookHeroSection({
+            badgeText: 'Welcome to DreamyHook',
+            headingRegular: 'Transform your ideas into ',
+            headingGradient: 'beautiful digital experiences.',
+            description: 'Build powerful, accessible components with our comprehensive design system featuring warm golden tones and intuitive workflows.',
+            ctaText: 'Get Started',
+            ctaHref: '#get-started',
+            imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop&q=80',
+            gridAngle: 65,
+            gridCellSize: 60,
+            gridOpacity: 0.5,
+            onCtaClick: (e) => {
+                console.log('CTA button clicked!');
+                // Add your custom logic here
+            }
+        });
+
+        // Example: Update content dynamically after 5 seconds (for demonstration)
+        // Uncomment to see dynamic updates in action
+        /*
+        setTimeout(() => {
+            heroSection.updateHeading(
+                'Experience the power of ',
+                'DreamyHook design system'
+            );
+            heroSection.updateDescription(
+                'Create stunning user interfaces with our carefully crafted components and golden color palette.'
+            );
+        }, 5000);
+        */
+    </script>
+</body>
+</html>
