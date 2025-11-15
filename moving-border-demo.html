@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook Moving Border Component</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== DreamyHook Theme Variables ==================== */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors - Warm Gray Palette */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* ==================== Reset & Base Styles ==================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Text Selection */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ==================== Layout Styles ==================== */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .demo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4rem;
+            min-height: 100vh;
+            padding: 3rem 1rem;
+        }
+
+        .demo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .demo-label {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            text-align: center;
+        }
+
+        /* ==================== Header ==================== */
+        .header {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--color-neutral-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ==================== MovingBorder Component Styles ==================== */
+        .moving-border-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .moving-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            aspect-ratio: 1;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .moving-gradient-inner {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            aspect-ratio: 1;
+            border-radius: 50%;
+        }
+
+        .moving-border-content {
+            position: relative;
+            z-index: 30;
+            background: white;
+        }
+
+        /* ==================== Demo Button Styles ==================== */
+        .demo-button {
+            width: 200px;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #fef9e7 0%, #ffffff 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.15);
+        }
+
+        .demo-button:hover {
+            background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(252, 191, 73, 0.3);
+        }
+
+        .demo-button svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* ==================== Demo Avatar Styles ==================== */
+        .demo-avatar {
+            width: 200px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--color-neutral-300);
+        }
+
+        .demo-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ==================== Demo Card Styles ==================== */
+        .demo-card {
+            width: 300px;
+            padding: 2rem;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .demo-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+        }
+
+        .demo-card p {
+            font-size: 1rem;
+            color: var(--color-neutral-600);
+            line-height: 1.6;
+        }
+
+        .demo-card-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            align-self: flex-start;
+        }
+
+        /* ==================== Responsive Design ==================== */
+        @media screen and (max-width: 768px) {
+            .demo-wrapper {
+                gap: 3rem;
+                padding: 2rem 1rem;
+            }
+
+            .demo-button {
+                width: 160px;
+            }
+
+            .demo-avatar {
+                width: 160px;
+            }
+
+            .demo-card {
+                width: 280px;
+                padding: 1.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .header {
+                padding: 2rem 1rem 1rem;
+            }
+
+            .demo-wrapper {
+                gap: 2rem;
+            }
+
+            .demo-button {
+                width: 140px;
+            }
+
+            .demo-avatar {
+                width: 140px;
+            }
+
+            .demo-card {
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+
+        /* ==================== Animations ==================== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .demo-item {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .demo-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .demo-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .demo-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        /* ==================== Reduced Motion ==================== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>DreamyHook Moving Border</h1>
+        <p>Smooth, animated borders powered by GSAP with DreamyHook's signature golden aesthetic</p>
+    </div>
+
+    <!-- Demo Wrapper -->
+    <div class="demo-wrapper">
+
+        <!-- Demo 1: Button with Warm Gradient -->
+        <div class="demo-item">
+            <div id="demo-button-wrapper"></div>
+            <div class="demo-label">Interactive Button</div>
+        </div>
+
+        <!-- Demo 2: Circular Avatar -->
+        <div class="demo-item">
+            <div id="demo-avatar-wrapper"></div>
+            <div class="demo-label">Profile Avatar</div>
+        </div>
+
+        <!-- Demo 3: Feature Card -->
+        <div class="demo-item">
+            <div id="demo-card-wrapper"></div>
+            <div class="demo-label">Feature Card</div>
+        </div>
+
+    </div>
+
+    <!-- GSAP Library -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/MotionPathPlugin.min.js"></script>
+
+    <script>
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+        /**
+         * DreamyHook MovingBorder Component
+         * Creates an animated gradient border around any element
+         *
+         * @param {Object} config - Configuration options
+         * @param {HTMLElement} config.container - Container element to append the border to
+         * @param {HTMLElement} config.content - Content element to wrap with border
+         * @param {number} config.borderWidth - Width of the border in pixels (default: 1)
+         * @param {number} config.radius - Border radius in pixels (default: 15)
+         * @param {number} config.gradientWidth - Width of gradient effect (default: borderWidth * 10)
+         * @param {number} config.duration - Animation duration in seconds (default: 3)
+         * @param {string[]} config.colors - Array of gradient colors (default: ["#FCBF49"])
+         * @param {boolean} config.isCircle - Render as perfect circle (default: false)
+         */
+        class MovingBorder {
+            constructor(config) {
+                this.container = config.container;
+                this.content = config.content;
+                this.borderWidth = config.borderWidth || 1;
+                this.radius = config.radius || 15;
+                this.gradientWidth = config.gradientWidth || this.borderWidth * 10;
+                this.duration = config.duration || 3;
+                this.colors = config.colors || ["#FCBF49"];
+                this.isCircle = config.isCircle || false;
+
+                // Use large radius for perfect circle
+                this.effectiveRadius = this.isCircle ? 9999 : this.radius;
+
+                this.pathTimeline = null;
+                this.colorTimeline = null;
+                this.resizeObserver = null;
+
+                this.init();
+            }
+
+            init() {
+                this.createWrapper();
+                this.createMovingGradient();
+                this.setupAnimation();
+                this.setupResizeObserver();
+            }
+
+            createWrapper() {
+                // Create wrapper element
+                this.wrapper = document.createElement('div');
+                this.wrapper.className = 'moving-border-wrapper';
+                this.wrapper.style.padding = `${this.borderWidth}px`;
+                this.wrapper.style.borderRadius = `${this.effectiveRadius + this.borderWidth}px`;
+
+                // Set initial color
+                this.wrapper.style.setProperty('--border-color', this.colors[0]);
+
+                // Wrap content
+                this.content.className = 'moving-border-content';
+                this.content.style.borderRadius = `${this.effectiveRadius}px`;
+
+                this.wrapper.appendChild(this.content);
+                this.container.appendChild(this.wrapper);
+            }
+
+            createMovingGradient() {
+                // Create moving gradient element
+                this.movingGradient = document.createElement('div');
+                this.movingGradient.className = 'moving-gradient';
+                this.movingGradient.style.width = `${this.borderWidth}px`;
+
+                // Create gradient inner
+                const gradientInner = document.createElement('div');
+                gradientInner.className = 'moving-gradient-inner';
+                gradientInner.style.width = `${this.gradientWidth}px`;
+                gradientInner.style.background = `radial-gradient(circle, var(--border-color) 0%, transparent 70%)`;
+
+                this.movingGradient.appendChild(gradientInner);
+                this.wrapper.insertBefore(this.movingGradient, this.content);
+            }
+
+            setupAnimation() {
+                this.updatePathAnimation();
+                this.setupColorAnimation();
+            }
+
+            updatePathAnimation() {
+                // Kill existing timeline
+                if (this.pathTimeline) {
+                    this.pathTimeline.kill();
+                }
+
+                // Get current dimensions
+                const rect = this.wrapper.getBoundingClientRect();
+                const width = rect.width - this.borderWidth * 2;
+                const height = rect.height - this.borderWidth * 2;
+
+                let path;
+
+                if (this.isCircle) {
+                    // Create circular path
+                    const centerX = width / 2;
+                    const centerY = height / 2;
+                    const circleRadius = Math.min(width, height) / 2;
+                    const numPoints = 64;
+
+                    path = Array.from({ length: numPoints }, (_, i) => {
+                        const angle = (i / numPoints) * Math.PI * 2;
+                        return {
+                            x: centerX + circleRadius * Math.cos(angle),
+                            y: centerY + circleRadius * Math.sin(angle)
+                        };
+                    });
+                } else {
+                    // Create rounded rectangle path
+                    path = [
+                        { x: this.effectiveRadius, y: 0 },
+                        { x: width - this.effectiveRadius, y: 0 },
+                        { x: width, y: this.effectiveRadius },
+                        { x: width, y: height - this.effectiveRadius },
+                        { x: width - this.effectiveRadius, y: height },
+                        { x: this.effectiveRadius, y: height },
+                        { x: 0, y: height - this.effectiveRadius },
+                        { x: 0, y: this.effectiveRadius },
+                        { x: this.effectiveRadius, y: 0 }
+                    ];
+                }
+
+                // Create path animation
+                this.pathTimeline = gsap.timeline({
+                    repeat: -1,
+                    defaults: { ease: "none", duration: this.duration }
+                });
+
+                this.pathTimeline.to(this.movingGradient, {
+                    motionPath: {
+                        path: path,
+                        fromCurrent: false,
+                        curviness: this.isCircle ? 1 : 1.5
+                    }
+                });
+            }
+
+            setupColorAnimation() {
+                if (this.colors.length <= 1) {
+                    return;
+                }
+
+                // Kill existing color timeline
+                if (this.colorTimeline) {
+                    this.colorTimeline.kill();
+                }
+
+                // Create color animation
+                this.colorTimeline = gsap.timeline({
+                    repeat: -1,
+                    defaults: { ease: "none", duration: this.duration / this.colors.length }
+                });
+
+                this.colors.forEach((_, index) => {
+                    const nextColor = this.colors[(index + 1) % this.colors.length];
+                    this.colorTimeline.to(this.wrapper, {
+                        '--border-color': nextColor
+                    });
+                });
+            }
+
+            setupResizeObserver() {
+                this.resizeObserver = new ResizeObserver(() => {
+                    this.updatePathAnimation();
+                });
+
+                this.resizeObserver.observe(this.wrapper);
+            }
+
+            destroy() {
+                if (this.pathTimeline) {
+                    this.pathTimeline.kill();
+                }
+                if (this.colorTimeline) {
+                    this.colorTimeline.kill();
+                }
+                if (this.resizeObserver) {
+                    this.resizeObserver.disconnect();
+                }
+            }
+        }
+
+        // ==================== Initialize Demos ====================
+
+        // Demo 1: Button with warm gradient border
+        const buttonContent = document.createElement('button');
+        buttonContent.className = 'demo-button';
+        buttonContent.style.borderRadius = '12px';
+        buttonContent.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                <line x1="9" y1="9" x2="9.01" y2="9"/>
+                <line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
+        `;
+
+        new MovingBorder({
+            container: document.getElementById('demo-button-wrapper'),
+            content: buttonContent,
+            borderWidth: 2,
+            radius: 12,
+            gradientWidth: 60,
+            duration: 3,
+            colors: ["#FFD23F", "#FCBF49", "#FF6B4A"]
+        });
+
+        // Demo 2: Circular avatar
+        const avatarContent = document.createElement('div');
+        avatarContent.className = 'demo-avatar';
+        avatarContent.innerHTML = `
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop"
+                 alt="Profile avatar"
+                 loading="lazy">
+        `;
+
+        new MovingBorder({
+            container: document.getElementById('demo-avatar-wrapper'),
+            content: avatarContent,
+            borderWidth: 4,
+            gradientWidth: 150,
+            duration: 4,
+            colors: ["#0ea5e9", "#FCBF49", "#FFD23F"],
+            isCircle: true
+        });
+
+        // Demo 3: Feature card
+        const cardContent = document.createElement('div');
+        cardContent.className = 'demo-card';
+        cardContent.style.borderRadius = '20px';
+        cardContent.innerHTML = `
+            <span class="demo-card-badge">✨ Featured</span>
+            <h3>DreamyHook</h3>
+            <p>Beautiful animated borders that bring your UI to life with smooth GSAP animations and golden accents.</p>
+        `;
+
+        new MovingBorder({
+            container: document.getElementById('demo-card-wrapper'),
+            content: cardContent,
+            borderWidth: 3,
+            radius: 20,
+            gradientWidth: 80,
+            duration: 5,
+            colors: ["#FCBF49", "#f59e0b", "#FCBF49"]
+        });
+
+        // ==================== Accessibility: Respect Reduced Motion ====================
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        if (prefersReducedMotion.matches) {
+            console.log('Reduced motion preference detected. Animations are minimized.');
+        }
+    </script>
+</body>
+</html>
