@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Background Circles</title>
+
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ------------------------- DreamyHook Theme Variables ------------------------- */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-500: #78716c;
+            --color-neutral-900: #1c1917;
+
+            /* Theme Background */
+            --theme-background: #fffef9;
+        }
+
+        /* ------------------------- Reset & Base Styles ------------------------- */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--theme-background);
+            color: var(--color-secondary);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ------------------------- Container ------------------------- */
+        .background-circles-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+        }
+
+        /* ------------------------- Animated Grid Background ------------------------- */
+        .animated-grid {
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(
+                100deg,
+                #64748B 0%,
+                #64748B 1px,
+                transparent 1px,
+                transparent 4%
+            );
+            opacity: 0.2;
+            -webkit-mask-image: radial-gradient(ellipse at center, transparent 30%, black);
+            mask-image: radial-gradient(ellipse at center, transparent 30%, black);
+            animation: gridMove 40s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* ------------------------- Circles Container ------------------------- */
+        .circles-wrapper {
+            position: absolute;
+            width: 480px;
+            height: 480px;
+        }
+
+        @media (max-width: 768px) {
+            .circles-wrapper {
+                width: 320px;
+                height: 320px;
+            }
+        }
+
+        /* ------------------------- Individual Circle ------------------------- */
+        .circle {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid;
+            background: linear-gradient(to bottom right, transparent, transparent);
+        }
+
+        /* Circle animations */
+        .circle-1 {
+            animation: rotateAndPulse1 5s ease-in-out infinite;
+        }
+
+        .circle-2 {
+            animation: rotateAndPulse2 5s ease-in-out infinite;
+        }
+
+        .circle-3 {
+            animation: rotateAndPulse3 5s ease-in-out infinite;
+        }
+
+        @keyframes rotateAndPulse1 {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: rotate(360deg) scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        @keyframes rotateAndPulse2 {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: rotate(360deg) scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes rotateAndPulse3 {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: rotate(360deg) scale(1.15);
+                opacity: 1;
+            }
+        }
+
+        /* ------------------------- Radial Glow ------------------------- */
+        .radial-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            mix-blend-mode: screen;
+        }
+
+        /* ------------------------- Color Variants ------------------------- */
+        /* Marigold (Primary) */
+        .variant-marigold .circle-1 {
+            border-color: rgba(252, 191, 73, 0.6);
+            background: linear-gradient(to bottom right, rgba(252, 191, 73, 0.3), transparent);
+        }
+        .variant-marigold .circle-2 {
+            border-color: rgba(255, 210, 63, 0.5);
+            background: linear-gradient(to bottom right, rgba(255, 210, 63, 0.3), transparent);
+        }
+        .variant-marigold .circle-3 {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: linear-gradient(to bottom right, rgba(245, 158, 11, 0.3), transparent);
+        }
+        .variant-marigold .radial-glow {
+            background: radial-gradient(ellipse at center, rgba(252, 191, 73, 0.15), transparent 70%);
+        }
+
+        /* Buttercup (Accent) */
+        .variant-buttercup .circle-1 {
+            border-color: rgba(255, 210, 63, 0.6);
+            background: linear-gradient(to bottom right, rgba(255, 210, 63, 0.3), transparent);
+        }
+        .variant-buttercup .circle-2 {
+            border-color: rgba(255, 237, 71, 0.5);
+            background: linear-gradient(to bottom right, rgba(255, 237, 71, 0.3), transparent);
+        }
+        .variant-buttercup .circle-3 {
+            border-color: rgba(230, 184, 0, 0.3);
+            background: linear-gradient(to bottom right, rgba(230, 184, 0, 0.3), transparent);
+        }
+        .variant-buttercup .radial-glow {
+            background: radial-gradient(ellipse at center, rgba(255, 210, 63, 0.15), transparent 70%);
+        }
+
+        /* Midnight Blue (Secondary) */
+        .variant-midnight .circle-1 {
+            border-color: rgba(10, 17, 40, 0.6);
+            background: linear-gradient(to bottom right, rgba(10, 17, 40, 0.3), transparent);
+        }
+        .variant-midnight .circle-2 {
+            border-color: rgba(51, 78, 104, 0.5);
+            background: linear-gradient(to bottom right, rgba(51, 78, 104, 0.3), transparent);
+        }
+        .variant-midnight .circle-3 {
+            border-color: rgba(98, 125, 152, 0.3);
+            background: linear-gradient(to bottom right, rgba(98, 125, 152, 0.3), transparent);
+        }
+        .variant-midnight .radial-glow {
+            background: radial-gradient(ellipse at center, rgba(10, 17, 40, 0.15), transparent 70%);
+        }
+
+        /* Coral */
+        .variant-coral .circle-1 {
+            border-color: rgba(255, 107, 74, 0.6);
+            background: linear-gradient(to bottom right, rgba(255, 107, 74, 0.3), transparent);
+        }
+        .variant-coral .circle-2 {
+            border-color: rgba(255, 138, 113, 0.5);
+            background: linear-gradient(to bottom right, rgba(255, 138, 113, 0.3), transparent);
+        }
+        .variant-coral .circle-3 {
+            border-color: rgba(230, 85, 57, 0.3);
+            background: linear-gradient(to bottom right, rgba(230, 85, 57, 0.3), transparent);
+        }
+        .variant-coral .radial-glow {
+            background: radial-gradient(ellipse at center, rgba(255, 107, 74, 0.15), transparent 70%);
+        }
+
+        /* Sky Blue */
+        .variant-sky .circle-1 {
+            border-color: rgba(14, 165, 233, 0.6);
+            background: linear-gradient(to bottom right, rgba(14, 165, 233, 0.3), transparent);
+        }
+        .variant-sky .circle-2 {
+            border-color: rgba(56, 189, 248, 0.5);
+            background: linear-gradient(to bottom right, rgba(56, 189, 248, 0.3), transparent);
+        }
+        .variant-sky .circle-3 {
+            border-color: rgba(125, 211, 252, 0.3);
+            background: linear-gradient(to bottom right, rgba(125, 211, 252, 0.3), transparent);
+        }
+        .variant-sky .radial-glow {
+            background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.15), transparent 70%);
+        }
+
+        /* Sunrise (Gradient - Buttercup to Coral) */
+        .variant-sunrise .circle-1 {
+            border-color: rgba(255, 210, 63, 0.6);
+            background: linear-gradient(135deg, rgba(255, 210, 63, 0.3), rgba(255, 107, 74, 0.3));
+        }
+        .variant-sunrise .circle-2 {
+            border-color: rgba(252, 191, 73, 0.5);
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.3), rgba(255, 107, 74, 0.3));
+        }
+        .variant-sunrise .circle-3 {
+            border-color: rgba(255, 107, 74, 0.3);
+            background: linear-gradient(135deg, rgba(255, 210, 63, 0.3), rgba(255, 107, 74, 0.3));
+        }
+        .variant-sunrise .radial-glow {
+            background: radial-gradient(ellipse at center, rgba(255, 158, 73, 0.15), transparent 70%);
+        }
+
+        /* Golden (Marigold to Amber) */
+        .variant-golden .circle-1 {
+            border-color: rgba(252, 191, 73, 0.6);
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.3), rgba(245, 158, 11, 0.3));
+        }
+        .variant-golden .circle-2 {
+            border-color: rgba(255, 210, 63, 0.5);
+            background: linear-gradient(135deg, rgba(255, 210, 63, 0.3), rgba(217, 119, 6, 0.3));
+        }
+        .variant-golden .circle-3 {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.3), rgba(245, 158, 11, 0.3));
+        }
+        .variant-golden .radial-glow {
+            background: radial-gradient(ellipse at center, rgba(252, 191, 73, 0.15), transparent 70%);
+        }
+
+        /* Ocean (Sky to Midnight) */
+        .variant-ocean .circle-1 {
+            border-color: rgba(14, 165, 233, 0.6);
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(10, 17, 40, 0.3));
+        }
+        .variant-ocean .circle-2 {
+            border-color: rgba(56, 189, 248, 0.5);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(51, 78, 104, 0.3));
+        }
+        .variant-ocean .circle-3 {
+            border-color: rgba(125, 211, 252, 0.3);
+            background: linear-gradient(135deg, rgba(125, 211, 252, 0.3), rgba(98, 125, 152, 0.3));
+        }
+        .variant-ocean .radial-glow {
+            background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.15), transparent 70%);
+        }
+
+        /* ------------------------- Content ------------------------- */
+        .content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(to bottom, var(--color-secondary), rgba(10, 17, 40, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 32px rgba(252, 191, 73, 0.4));
+            margin-bottom: 1.5rem;
+        }
+
+        .description {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            color: var(--color-secondary);
+            opacity: 0.9;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .separator {
+            margin: 0 0.75rem;
+            opacity: 0.5;
+        }
+
+        /* ------------------------- Background Gradient Overlay ------------------------- */
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            -webkit-mask-image: radial-gradient(90% 60% at 50% 50%, #000 40%, transparent);
+            mask-image: radial-gradient(90% 60% at 50% 50%, #000 40%, transparent);
+            pointer-events: none;
+        }
+
+        .gradient-layer-1 {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(252, 191, 73, 0.3), transparent 70%);
+            filter: blur(120px);
+        }
+
+        .gradient-layer-2 {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(255, 210, 63, 0.15), transparent);
+            filter: blur(80px);
+        }
+
+        /* ------------------------- Control Button ------------------------- */
+        .control-button {
+            position: fixed;
+            top: 3rem;
+            right: 3rem;
+            z-index: 20;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--color-secondary);
+            color: var(--color-neutral-100);
+            border: none;
+            border-radius: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(10, 17, 40, 0.2);
+        }
+
+        .control-button:hover {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(252, 191, 73, 0.4);
+        }
+
+        .control-button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .control-button {
+                top: 1.5rem;
+                right: 1.5rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ------------------------- Variant Info ------------------------- */
+        .variant-info {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-secondary);
+            box-shadow: 0 4px 20px rgba(10, 17, 40, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .variant-info {
+                bottom: 1rem;
+                font-size: 0.75rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-circles-container" id="container">
+        <!-- Animated Grid Background -->
+        <div class="animated-grid"></div>
+
+        <!-- Circles Wrapper -->
+        <div class="circles-wrapper" id="circlesWrapper">
+            <div class="circle circle-1">
+                <div class="radial-glow"></div>
+            </div>
+            <div class="circle circle-2">
+                <div class="radial-glow"></div>
+            </div>
+            <div class="circle circle-3">
+                <div class="radial-glow"></div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <h1 class="title" id="title">DreamyHook Background</h1>
+            <p class="description">
+                <span id="description">Beautiful animated circles with golden gradients</span>
+                <span class="separator">·</span>
+                <span>DreamyHook UI</span>
+            </p>
+        </div>
+
+        <!-- Gradient Overlay -->
+        <div class="gradient-overlay">
+            <div class="gradient-layer-1"></div>
+            <div class="gradient-layer-2"></div>
+        </div>
+    </div>
+
+    <!-- Control Button -->
+    <button class="control-button" id="changeVariantBtn">
+        Change Variant
+    </button>
+
+    <!-- Variant Info Display -->
+    <div class="variant-info" id="variantInfo">
+        Current: Marigold
+    </div>
+
+    <script>
+        // Color Variants Configuration
+        const COLOR_VARIANTS = {
+            marigold: {
+                name: 'Marigold',
+                description: 'Warm golden tones of marigold yellow'
+            },
+            buttercup: {
+                name: 'Buttercup',
+                description: 'Bright cheerful buttercup yellow'
+            },
+            midnight: {
+                name: 'Midnight',
+                description: 'Deep sophisticated midnight blue'
+            },
+            coral: {
+                name: 'Coral',
+                description: 'Warm inviting coral accent'
+            },
+            sky: {
+                name: 'Sky',
+                description: 'Fresh airy sky blue'
+            },
+            sunrise: {
+                name: 'Sunrise',
+                description: 'Gradient from buttercup to coral'
+            },
+            golden: {
+                name: 'Golden',
+                description: 'Rich marigold to amber gradient'
+            },
+            ocean: {
+                name: 'Ocean',
+                description: 'Sky blue to midnight gradient'
+            }
+        };
+
+        // State
+        let currentVariantIndex = 0;
+        const variantKeys = Object.keys(COLOR_VARIANTS);
+
+        // DOM Elements
+        const circlesWrapper = document.getElementById('circlesWrapper');
+        const changeVariantBtn = document.getElementById('changeVariantBtn');
+        const variantInfo = document.getElementById('variantInfo');
+        const titleElement = document.getElementById('title');
+        const descriptionElement = document.getElementById('description');
+
+        // Initialize with first variant
+        function init() {
+            applyVariant(variantKeys[currentVariantIndex]);
+        }
+
+        // Apply variant class
+        function applyVariant(variantKey) {
+            // Remove all variant classes
+            variantKeys.forEach(key => {
+                circlesWrapper.classList.remove(`variant-${key}`);
+            });
+
+            // Add current variant class
+            circlesWrapper.classList.add(`variant-${variantKey}`);
+
+            // Update variant info
+            const variant = COLOR_VARIANTS[variantKey];
+            variantInfo.textContent = `Current: ${variant.name}`;
+            descriptionElement.textContent = variant.description;
+        }
+
+        // Change to next variant
+        function changeVariant() {
+            currentVariantIndex = (currentVariantIndex + 1) % variantKeys.length;
+            const variantKey = variantKeys[currentVariantIndex];
+            applyVariant(variantKey);
+
+            // Add subtle animation feedback
+            circlesWrapper.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                circlesWrapper.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        // Event Listeners
+        changeVariantBtn.addEventListener('click', changeVariant);
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                changeVariant();
+            }
+        });
+
+        // Initialize on load
+        init();
+
+        // Add smooth transition to circles wrapper
+        circlesWrapper.style.transition = 'transform 0.2s ease-out';
+    </script>
+</body>
+</html>
