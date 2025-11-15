@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Testimonials - DreamyHook</title>
+
+    <!-- Import Google Fonts - DreamyHook Brand Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Color Assignments */
+            --color-light: var(--color-neutral-200);
+            --color-dark: var(--color-secondary);
+
+            /* Shadow System */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-colored: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+            --shadow-yellow-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+            --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+
+            /* Typography */
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+            --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========================= Testimonials Container ========================= */
+        .testimonials-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        /* ========================= Image Section ========================= */
+        .image-section {
+            position: relative;
+            height: 500px;
+            perspective: 1000px;
+        }
+
+        .image-wrapper {
+            position: absolute;
+            inset: 0;
+            transition: all 0.6s cubic-bezier(0.65, 0.05, 0, 1);
+            transform-style: preserve-3d;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 2rem;
+            box-shadow: var(--shadow-hard);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .image-wrapper.active {
+            z-index: 999;
+            opacity: 1;
+            transform: scale(1) rotateY(0deg) translateZ(0);
+        }
+
+        .image-wrapper.active img {
+            box-shadow: var(--shadow-marigold-glow), var(--shadow-hard);
+        }
+
+        .image-wrapper.inactive {
+            opacity: 0.7;
+            transform: scale(0.95) rotateY(5deg) translateZ(-100px);
+            z-index: 1;
+        }
+
+        /* ========================= Content Section ========================= */
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 400px;
+            padding: 2rem 0;
+        }
+
+        .testimonial-content {
+            flex-grow: 1;
+        }
+
+        .testimonial-name {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #0A1128 0%, #334e68 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .testimonial-designation {
+            font-size: 1rem;
+            color: var(--color-neutral-600);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .testimonial-quote {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--color-neutral-700);
+            margin-top: 2rem;
+        }
+
+        .testimonial-quote .word {
+            display: inline-block;
+            opacity: 0;
+            filter: blur(10px);
+            transform: translateY(5px);
+            animation: fadeInWord 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeInWord {
+            to {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================= Navigation Buttons ========================= */
+        .navigation-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .nav-button {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+            color: var(--color-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-yellow-glow), var(--shadow-medium);
+        }
+
+        .nav-button:hover::before {
+            opacity: 1;
+        }
+
+        .nav-button:active {
+            transform: translateY(0);
+        }
+
+        .nav-button svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-button:hover svg {
+            transform: rotate(12deg);
+        }
+
+        .nav-button.prev:hover svg {
+            transform: rotate(-12deg);
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media screen and (max-width: 991px) {
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .image-section {
+                height: 400px;
+            }
+
+            .content-section {
+                min-height: auto;
+            }
+
+            .testimonial-name {
+                font-size: 1.75rem;
+            }
+
+            .testimonial-quote {
+                font-size: 1.125rem;
+            }
+        }
+
+        @media screen and (max-width: 767px) {
+            .testimonials-container {
+                padding: 3rem 1rem;
+            }
+
+            .image-section {
+                height: 350px;
+            }
+
+            .testimonial-name {
+                font-size: 1.5rem;
+            }
+
+            .testimonial-quote {
+                font-size: 1rem;
+            }
+
+            .nav-button {
+                width: 3rem;
+                height: 3rem;
+            }
+
+            .nav-button svg {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+        }
+
+        @media screen and (max-width: 479px) {
+            .testimonials-container {
+                padding: 2rem 1rem;
+            }
+
+            .testimonials-grid {
+                gap: 2rem;
+            }
+
+            .image-section {
+                height: 300px;
+            }
+        }
+
+        /* ========================= Loading Animation ========================= */
+        .testimonials-container {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================= Selection Styling ========================= */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="testimonials-container">
+        <div class="testimonials-grid">
+            <!-- Image Section -->
+            <div class="image-section" id="imageSection">
+                <!-- Images will be dynamically inserted here -->
+            </div>
+
+            <!-- Content Section -->
+            <div class="content-section">
+                <div class="testimonial-content" id="testimonialContent">
+                    <!-- Content will be dynamically inserted here -->
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="navigation-buttons">
+                    <button class="nav-button prev" id="prevButton" aria-label="Previous testimonial">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <button class="nav-button next" id="nextButton" aria-label="Next testimonial">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================= Testimonials Data =========================
+        const testimonials = [
+            {
+                quote: "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
+                name: "Sarah Chen",
+                designation: "Product Manager at TechFlow",
+                src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format&fit=crop"
+            },
+            {
+                quote: "Implementation was seamless and the results exceeded our expectations. The platform's flexibility is remarkable.",
+                name: "Michael Rodriguez",
+                designation: "CTO at InnovateSphere",
+                src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop"
+            },
+            {
+                quote: "This solution has significantly improved our team's productivity. The intuitive interface makes complex tasks simple.",
+                name: "Emily Watson",
+                designation: "Operations Director at CloudScale",
+                src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1000&auto=format&fit=crop"
+            },
+            {
+                quote: "Outstanding support and robust features. It's rare to find a product that delivers on all its promises.",
+                name: "James Kim",
+                designation: "Engineering Lead at DataPro",
+                src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000&auto=format&fit=crop"
+            },
+            {
+                quote: "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
+                name: "Lisa Thompson",
+                designation: "VP of Technology at FutureNet",
+                src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop"
+            }
+        ];
+
+        // ========================= State Management =========================
+        let currentIndex = 0;
+        let autoplayInterval = null;
+        const AUTOPLAY_DELAY = 5000;
+        const AUTOPLAY_ENABLED = true;
+
+        // ========================= DOM Elements =========================
+        const imageSection = document.getElementById('imageSection');
+        const testimonialContent = document.getElementById('testimonialContent');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+
+        // ========================= Utility Functions =========================
+        function randomRotateY() {
+            return Math.floor(Math.random() * 21) - 10;
+        }
+
+        function animateQuoteWords(quote) {
+            const words = quote.split(' ');
+            return words.map((word, index) => {
+                return `<span class="word" style="animation-delay: ${0.02 * index}s">${word}</span>`;
+            }).join(' ');
+        }
+
+        // ========================= Render Functions =========================
+        function renderImages() {
+            imageSection.innerHTML = testimonials.map((testimonial, index) => {
+                const isActive = index === currentIndex;
+                const rotation = isActive ? 0 : randomRotateY();
+                return `
+                    <div class="image-wrapper ${isActive ? 'active' : 'inactive'}"
+                         data-index="${index}"
+                         style="transform: ${isActive ? 'scale(1) rotateY(0deg) translateZ(0)' : `scale(0.95) rotateY(${rotation}deg) translateZ(-100px)`}">
+                        <img src="${testimonial.src}"
+                             alt="${testimonial.name}"
+                             loading="lazy">
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderContent() {
+            const current = testimonials[currentIndex];
+            const animatedQuote = animateQuoteWords(current.quote);
+
+            testimonialContent.innerHTML = `
+                <h3 class="testimonial-name">${current.name}</h3>
+                <p class="testimonial-designation">${current.designation}</p>
+                <p class="testimonial-quote">${animatedQuote}</p>
+            `;
+        }
+
+        function updateTestimonial() {
+            // Update images
+            const imageWrappers = document.querySelectorAll('.image-wrapper');
+            imageWrappers.forEach((wrapper, index) => {
+                const isActive = index === currentIndex;
+                wrapper.className = `image-wrapper ${isActive ? 'active' : 'inactive'}`;
+
+                const rotation = isActive ? 0 : randomRotateY();
+                wrapper.style.transform = isActive
+                    ? 'scale(1) rotateY(0deg) translateZ(0)'
+                    : `scale(0.95) rotateY(${rotation}deg) translateZ(-100px)`;
+            });
+
+            // Update content with fade transition
+            testimonialContent.style.opacity = '0';
+            testimonialContent.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                renderContent();
+                testimonialContent.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                testimonialContent.style.opacity = '1';
+                testimonialContent.style.transform = 'translateY(0)';
+            }, 200);
+        }
+
+        // ========================= Navigation Functions =========================
+        function goToNext() {
+            currentIndex = (currentIndex + 1) % testimonials.length;
+            updateTestimonial();
+            resetAutoplay();
+        }
+
+        function goToPrev() {
+            currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+            updateTestimonial();
+            resetAutoplay();
+        }
+
+        // ========================= Autoplay Functions =========================
+        function startAutoplay() {
+            if (AUTOPLAY_ENABLED) {
+                autoplayInterval = setInterval(goToNext, AUTOPLAY_DELAY);
+            }
+        }
+
+        function stopAutoplay() {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+            }
+        }
+
+        function resetAutoplay() {
+            stopAutoplay();
+            startAutoplay();
+        }
+
+        // ========================= Event Listeners =========================
+        prevButton.addEventListener('click', goToPrev);
+        nextButton.addEventListener('click', goToNext);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                goToPrev();
+            } else if (e.key === 'ArrowRight') {
+                goToNext();
+            }
+        });
+
+        // Pause autoplay on hover
+        const container = document.querySelector('.testimonials-container');
+        container.addEventListener('mouseenter', stopAutoplay);
+        container.addEventListener('mouseleave', startAutoplay);
+
+        // ========================= Initialization =========================
+        function init() {
+            renderImages();
+            renderContent();
+            startAutoplay();
+        }
+
+        // Start the application when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
