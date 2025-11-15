@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Reveal - DreamyHook Component</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* DreamyHook Brand Theme - Text Reveal Component */
+        /* Single File Implementation with Vanilla JavaScript */
+
+        /* ------------------------- CSS Variables ------------------------- */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors - Warm Gray Palette */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Fonts */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Animation */
+            --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+            --duration-default: 0.735s;
+        }
+
+        /* ------------------------- Reset & Base ------------------------- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Selection - Marigold yellow background with white text */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ------------------------- Text Reveal Component ------------------------- */
+        .text-reveal-container {
+            position: relative;
+            min-height: 200vh;
+            width: 100%;
+        }
+
+        .text-reveal-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .text-reveal-card {
+            width: 100%;
+            max-width: 1200px;
+            min-height: 500px;
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            border: 2px solid rgba(252, 191, 73, 0.2);
+            box-shadow: 0 4px 25px rgba(252, 191, 73, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .text-reveal-card:hover {
+            border-color: rgba(252, 191, 73, 0.4);
+            box-shadow: 0 8px 35px rgba(252, 191, 73, 0.25);
+        }
+
+        .text-reveal-content {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 4vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.4;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .text-reveal-word {
+            position: relative;
+            display: inline-block;
+            margin: 0 0.3rem;
+        }
+
+        .text-reveal-word-ghost {
+            opacity: 0.2;
+            color: var(--color-neutral-500);
+        }
+
+        .text-reveal-word-active {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transition: opacity 0.3s var(--cubic-default);
+        }
+
+        .text-reveal-word-active.revealed {
+            opacity: 1;
+        }
+
+        /* Header Section */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            background: rgba(255, 254, 249, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(252, 191, 73, 0.2);
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(10, 17, 40, 0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            color: var(--color-neutral-600);
+        }
+
+        /* Info Section */
+        .info-section {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .info-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .info-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-description {
+            font-size: 1.1rem;
+            color: var(--color-neutral-600);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .scroll-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-secondary);
+            border-radius: 2rem;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.3);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .arrow-down {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid var(--color-secondary);
+            animation: arrow-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes arrow-bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(5px);
+            }
+        }
+
+        /* Footer */
+        .footer {
+            padding: 3rem 2rem;
+            background: var(--color-secondary);
+            color: var(--color-neutral-200);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-accent);
+        }
+
+        .footer-text {
+            font-size: 0.95rem;
+            color: var(--color-neutral-400);
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .text-reveal-card {
+                min-height: 400px;
+                padding: 2rem 1.5rem;
+            }
+
+            .text-reveal-content {
+                font-size: clamp(1.25rem, 3.5vw, 2rem);
+            }
+
+            .header {
+                padding: 1rem 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            .tagline {
+                font-size: 0.8rem;
+            }
+
+            .info-section {
+                padding: 3rem 1.5rem;
+            }
+
+            .info-description {
+                font-size: 1rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .text-reveal-card {
+                min-height: 300px;
+                padding: 1.5rem 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .scroll-indicator {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">DreamyHook</div>
+            <div class="tagline">Beautiful Components, Perfectly Crafted</div>
+        </div>
+    </header>
+
+    <!-- Info Section -->
+    <section class="info-section">
+        <div class="info-content">
+            <h1 class="info-title">Text Reveal Animation</h1>
+            <p class="info-description">
+                Experience the magic of progressive text revelation as you scroll.
+                Watch each word come to life with smooth animations and beautiful gradients,
+                powered by vanilla JavaScript and the DreamyHook brand theme.
+            </p>
+            <div class="scroll-indicator">
+                Scroll Down to Reveal
+                <span class="arrow-down"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Text Reveal Component -->
+    <div class="text-reveal-container" id="textRevealContainer">
+        <div class="text-reveal-sticky">
+            <div class="text-reveal-card">
+                <div class="text-reveal-content" id="textRevealContent">
+                    <!-- Words will be injected here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-title">DreamyHook UI Components</div>
+            <div class="footer-text">
+                Built with HTML, CSS, and JavaScript | Marigold Yellow & Midnight Blue Theme
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /**
+         * DreamyHook Text Reveal Component
+         * Vanilla JavaScript Implementation
+         * Replaces Framer Motion with custom scroll-based animation
+         */
+
+        class TextReveal {
+            constructor(containerId, contentId, text) {
+                this.container = document.getElementById(containerId);
+                this.content = document.getElementById(contentId);
+                this.text = text;
+                this.words = text.split(' ');
+                this.wordElements = [];
+
+                this.init();
+            }
+
+            init() {
+                // Create word elements
+                this.createWordElements();
+
+                // Set up scroll listener
+                this.setupScrollListener();
+
+                // Initial update
+                this.updateReveal();
+            }
+
+            createWordElements() {
+                // Clear existing content
+                this.content.innerHTML = '';
+
+                // Create elements for each word
+                this.words.forEach((word, index) => {
+                    const wordWrapper = document.createElement('span');
+                    wordWrapper.className = 'text-reveal-word';
+
+                    // Ghost text (always visible at low opacity)
+                    const ghostSpan = document.createElement('span');
+                    ghostSpan.className = 'text-reveal-word-ghost';
+                    ghostSpan.textContent = word;
+
+                    // Active text (revealed on scroll)
+                    const activeSpan = document.createElement('span');
+                    activeSpan.className = 'text-reveal-word-active';
+                    activeSpan.textContent = word;
+                    activeSpan.dataset.index = index;
+
+                    wordWrapper.appendChild(ghostSpan);
+                    wordWrapper.appendChild(activeSpan);
+                    this.content.appendChild(wordWrapper);
+
+                    this.wordElements.push(activeSpan);
+                });
+            }
+
+            setupScrollListener() {
+                // Use passive listener for better performance
+                window.addEventListener('scroll', () => {
+                    requestAnimationFrame(() => this.updateReveal());
+                }, { passive: true });
+            }
+
+            updateReveal() {
+                // Get scroll progress within the container
+                const containerRect = this.container.getBoundingClientRect();
+                const containerHeight = this.container.offsetHeight;
+                const viewportHeight = window.innerHeight;
+
+                // Calculate scroll progress (0 to 1)
+                // Start revealing when container enters viewport
+                // Finish when container exits viewport
+                const scrollStart = -containerRect.top;
+                const scrollRange = containerHeight - viewportHeight;
+                const scrollProgress = Math.max(0, Math.min(1, scrollStart / scrollRange));
+
+                // Reveal words based on scroll progress
+                this.wordElements.forEach((wordElement, index) => {
+                    const wordStart = index / this.words.length;
+                    const wordEnd = (index + 1) / this.words.length;
+
+                    // Calculate opacity for this word
+                    if (scrollProgress >= wordEnd) {
+                        // Fully revealed
+                        wordElement.classList.add('revealed');
+                    } else if (scrollProgress >= wordStart) {
+                        // Partially revealed (during transition)
+                        wordElement.classList.add('revealed');
+                    } else {
+                        // Not yet revealed
+                        wordElement.classList.remove('revealed');
+                    }
+                });
+            }
+        }
+
+        // Initialize the component when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            const text = "DreamyHook will change the way you design beautiful interfaces with stunning components and delightful user experiences";
+
+            new TextReveal('textRevealContainer', 'textRevealContent', text);
+        });
+
+        // Smooth scroll behavior for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
