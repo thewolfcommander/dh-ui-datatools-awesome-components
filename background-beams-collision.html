@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DreamyHook Background Beams with Collision Animation - Beautiful animated beams with explosion effects">
+  <title>Background Beams with Collision - DreamyHook</title>
+  <style>
+    /* ==================== DreamyHook Fonts ==================== */
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap");
+
+    /* ==================== DreamyHook Theme Variables ==================== */
+    :root {
+      /* Brand Colors */
+      --color-primary: #FCBF49;        /* Marigold Yellow */
+      --color-secondary: #0A1128;      /* Midnight Blue */
+      --color-accent: #FFD23F;         /* Buttercup Yellow */
+      --color-coral: #FF6B4A;          /* Coral */
+      --color-sky: #0ea5e9;            /* Sky Blue */
+
+      /* Neutral Colors */
+      --color-neutral-100: #ffffff;
+      --color-neutral-200: #fffef9;
+      --color-neutral-300: #fffdf0;
+      --color-neutral-400: #fef9e7;
+      --color-neutral-500: #78716c;
+      --color-neutral-600: #57534e;
+      --color-neutral-700: #44403c;
+      --color-neutral-800: #292524;
+      --color-neutral-900: #1c1917;
+
+      /* Semantic Colors */
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+    }
+
+    /* ==================== Reset & Base Styles ==================== */
+    *,
+    *:after,
+    *:before {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      background: linear-gradient(to bottom, var(--color-neutral-100), var(--color-neutral-300));
+      color: var(--color-secondary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+    }
+
+    /* ==================== Main Container ==================== */
+    .beams-container {
+      position: relative;
+      width: 100%;
+      height: 40rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+    }
+
+    /* ==================== Content Area ==================== */
+    .content {
+      position: relative;
+      z-index: 20;
+      text-align: center;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .content h2 {
+      font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--color-secondary);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .gradient-text {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--color-coral) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0px 2px 4px rgba(252, 191, 73, 0.3));
+      font-size: 3.5rem;
+      font-weight: 800;
+      animation: glow-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% {
+        filter: drop-shadow(0px 2px 4px rgba(252, 191, 73, 0.3));
+      }
+      50% {
+        filter: drop-shadow(0px 4px 8px rgba(252, 191, 73, 0.5));
+      }
+    }
+
+    /* ==================== Beam Styles ==================== */
+    .beam {
+      position: absolute;
+      width: 2px;
+      border-radius: 999px;
+      top: -200px;
+      pointer-events: none;
+      will-change: transform;
+      background: linear-gradient(
+        to top,
+        transparent 0%,
+        var(--color-accent) 40%,
+        var(--color-primary) 100%
+      );
+      box-shadow:
+        0 0 10px rgba(255, 210, 63, 0.5),
+        0 0 20px rgba(252, 191, 73, 0.3);
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-200px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(1800px);
+        opacity: 0;
+      }
+    }
+
+    /* ==================== Collision Surface ==================== */
+    .collision-surface {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(to top, var(--color-neutral-200), transparent);
+      box-shadow:
+        0 0 24px rgba(252, 191, 73, 0.1),
+        0 -2px 10px rgba(252, 191, 73, 0.05),
+        0 1px 1px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(252, 191, 73, 0.08);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ==================== Explosion Effects ==================== */
+    .explosion {
+      position: absolute;
+      z-index: 50;
+      pointer-events: none;
+      width: 100px;
+      height: 100px;
+    }
+
+    .explosion-line {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        var(--color-accent) 20%,
+        var(--color-primary) 50%,
+        var(--color-accent) 80%,
+        transparent 100%
+      );
+      filter: blur(3px);
+      animation: explosionLineFade 1.5s ease-out forwards;
+      box-shadow:
+        0 0 10px rgba(255, 210, 63, 0.8),
+        0 0 20px rgba(252, 191, 73, 0.6);
+    }
+
+    @keyframes explosionLineFade {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scaleX(0.5);
+      }
+      50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scaleX(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scaleX(1.5);
+      }
+    }
+
+    .explosion-particle {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        var(--color-accent) 0%,
+        var(--color-primary) 40%,
+        var(--color-coral) 100%
+      );
+      box-shadow:
+        0 0 8px rgba(255, 210, 63, 0.8),
+        0 0 16px rgba(252, 191, 73, 0.5);
+      animation: particleMove 1.5s ease-out forwards;
+    }
+
+    @keyframes particleMove {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--directionX), var(--directionY)) scale(0.3);
+      }
+    }
+
+    /* ==================== Responsive Design ==================== */
+    @media (max-width: 991px) {
+      .beams-container {
+        height: 35rem;
+      }
+
+      .content h2 {
+        font-size: 2.5rem;
+      }
+
+      .gradient-text {
+        font-size: 3rem;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .beams-container {
+        height: 30rem;
+      }
+
+      .content h2 {
+        font-size: 1.75rem;
+      }
+
+      .gradient-text {
+        font-size: 2rem;
+      }
+
+      .content {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 479px) {
+      .beams-container {
+        height: 25rem;
+      }
+
+      .content h2 {
+        font-size: 1.5rem;
+      }
+
+      .gradient-text {
+        font-size: 1.75rem;
+      }
+
+      .content {
+        padding: 1rem;
+      }
+    }
+
+    /* ==================== Additional Styling ==================== */
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    ::-moz-selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Beams Container -->
+  <div class="beams-container" id="beamsContainer">
+
+    <!-- Content Area -->
+    <div class="content">
+      <h2>
+        What's cooler than Beams?
+        <br>
+        <span class="gradient-text">Exploding beams.</span>
+      </h2>
+    </div>
+
+    <!-- Collision Surface -->
+    <div class="collision-surface" id="collisionSurface"></div>
+  </div>
+
+  <!-- Vanilla JavaScript Animation Logic -->
+  <script>
+    // ==================== Configuration ====================
+    const beamConfigs = [
+      { initialX: 50, duration: 7000, delay: 2000, height: 60 },
+      { initialX: 200, duration: 5000, delay: 4000, height: 70 },
+      { initialX: 400, duration: 8000, delay: 0, height: 80 },
+      { initialX: 600, duration: 6000, delay: 3000, height: 60 },
+      { initialX: 800, duration: 11000, delay: 1000, height: 100 },
+      { initialX: 1000, duration: 4000, delay: 2000, height: 70 },
+      { initialX: 1200, duration: 9000, delay: 0, height: 90 },
+      { initialX: 1400, duration: 7000, delay: 5000, height: 65 },
+    ];
+
+    // ==================== DOM Elements ====================
+    const container = document.getElementById('beamsContainer');
+    const surface = document.getElementById('collisionSurface');
+
+    // ==================== Beam Creation & Animation ====================
+    function createBeam(config) {
+      const beam = document.createElement('div');
+      beam.className = 'beam';
+      beam.style.left = `${config.initialX}px`;
+      beam.style.height = `${config.height}px`;
+      beam.style.animationName = 'fall';
+      beam.style.animationDuration = `${config.duration}ms`;
+      beam.style.animationDelay = `${config.delay}ms`;
+      beam.style.animationTimingFunction = 'linear';
+      beam.style.animationIterationCount = '1';
+      beam.style.animationFillMode = 'forwards';
+
+      container.appendChild(beam);
+
+      let collisionDetected = false;
+
+      // ==================== Collision Detection ====================
+      const checkCollision = setInterval(() => {
+        if (collisionDetected) {
+          clearInterval(checkCollision);
+          return;
+        }
+
+        const beamRect = beam.getBoundingClientRect();
+        const surfaceRect = surface.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+
+        // Check if beam has collided with surface
+        if (beamRect.bottom >= surfaceRect.top && beamRect.top <= surfaceRect.bottom) {
+          collisionDetected = true;
+
+          // Calculate collision point relative to container
+          const relativeX = beamRect.left - containerRect.left + (beamRect.width / 2);
+          const relativeY = surfaceRect.top - containerRect.top;
+
+          createExplosion(relativeX, relativeY);
+          clearInterval(checkCollision);
+        }
+      }, 50);
+
+      // ==================== Restart Beam After Animation ====================
+      const totalDuration = config.duration + config.delay + 2000;
+      setTimeout(() => {
+        beam.remove();
+        clearInterval(checkCollision);
+
+        // Restart beam with same configuration
+        setTimeout(() => createBeam(config), 500);
+      }, totalDuration);
+    }
+
+    // ==================== Explosion Effect Creation ====================
+    function createExplosion(x, y) {
+      const explosion = document.createElement('div');
+      explosion.className = 'explosion';
+      explosion.style.left = `${x}px`;
+      explosion.style.top = `${y}px`;
+      explosion.style.transform = 'translate(-50%, -50%)';
+
+      // Create explosion line effect
+      const line = document.createElement('div');
+      line.className = 'explosion-line';
+      explosion.appendChild(line);
+
+      // Create particle burst (20 particles)
+      const particleCount = 20;
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'explosion-particle';
+
+        // Random directions for particles
+        const angle = (Math.PI * 2 * i) / particleCount;
+        const velocity = 40 + Math.random() * 40;
+        const directionX = Math.cos(angle) * velocity;
+        const directionY = Math.sin(angle) * velocity - 30; // Bias upward
+
+        // Set CSS custom properties for animation
+        particle.style.setProperty('--directionX', `${directionX}px`);
+        particle.style.setProperty('--directionY', `${directionY}px`);
+
+        // Randomize particle animation duration
+        const duration = 1 + Math.random() * 0.5;
+        particle.style.animationDuration = `${duration}s`;
+
+        explosion.appendChild(particle);
+      }
+
+      container.appendChild(explosion);
+
+      // Remove explosion after animation completes
+      setTimeout(() => {
+        explosion.remove();
+      }, 2000);
+    }
+
+    // ==================== Initialize All Beams ====================
+    function initializeBeams() {
+      beamConfigs.forEach((config, index) => {
+        // Stagger initial creation slightly
+        setTimeout(() => {
+          createBeam(config);
+        }, index * 100);
+      });
+    }
+
+    // ==================== Start Animation on Load ====================
+    window.addEventListener('load', () => {
+      initializeBeams();
+    });
+
+    // ==================== Responsive Beam Adjustment ====================
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Adjust beam positions on resize if needed
+        const containerWidth = container.offsetWidth;
+
+        // Re-calculate beam positions for smaller screens
+        if (containerWidth < 768) {
+          // Mobile optimization: use fewer beams or adjust positions
+          console.log('Mobile view detected - optimizing animations');
+        }
+      }, 250);
+    });
+  </script>
+</body>
+</html>
