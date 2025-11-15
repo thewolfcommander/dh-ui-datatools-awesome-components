@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DreamyHook Bento Grid - Beautiful feature showcase with warm, golden design">
+  <title>DreamyHook Bento Grid</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==================== DreamyHook Brand Theme Variables ==================== */
+    :root {
+      /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+      --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+      --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+      --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+      --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+      --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+      /* Neutral Colors - Warm Gray Palette for Light Theme */
+      --color-neutral-100: #ffffff;    /* Pure white */
+      --color-neutral-200: #fffef9;    /* Warm white */
+      --color-neutral-300: #fffdf0;    /* Cream white */
+      --color-neutral-400: #fef9e7;    /* Light cream */
+      --color-neutral-500: #78716c;    /* Medium warm gray */
+      --color-neutral-600: #57534e;    /* Dark warm gray */
+      --color-neutral-700: #44403c;    /* Very dark warm gray */
+      --color-neutral-800: #292524;    /* Almost black warm gray */
+      --color-neutral-900: #1c1917;    /* Near black warm */
+
+      /* Semantic Colors */
+      --color-error: #ef4444;
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+
+      /* Typography */
+      --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+      /* Shadows */
+      --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+      --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+      --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+      --shadow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+      --shadow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+      --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+
+      /* Transitions */
+      --transition-fast: 0.2s ease;
+      --transition-default: 0.3s ease;
+      --transition-slow: 0.5s ease;
+    }
+
+    /* ==================== Reset & Base Styles ==================== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+      color: var(--color-secondary);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+    }
+
+    /* ==================== Container & Layout ==================== */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .header h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--color-secondary);
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--color-neutral-500);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ==================== Bento Grid Layout ==================== */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 22rem;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      animation: slideUp 0.8s ease-out;
+    }
+
+    /* Grid positioning for featured layout */
+    .bento-card:nth-child(1) {
+      grid-row: span 3;
+      grid-column: span 1;
+    }
+
+    .bento-card:nth-child(2) {
+      grid-row: span 2;
+      grid-column: span 1;
+    }
+
+    .bento-card:nth-child(3) {
+      grid-row: span 1;
+      grid-column: span 1;
+    }
+
+    .bento-card:nth-child(4) {
+      grid-row: span 1;
+      grid-column: span 1;
+    }
+
+    .bento-card:nth-child(5) {
+      grid-row: span 2;
+      grid-column: span 1;
+    }
+
+    /* ==================== Bento Card Styles ==================== */
+    .bento-card {
+      position: relative;
+      background: var(--color-neutral-100);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: var(--shadow-medium);
+      transition: all var(--transition-default);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      cursor: pointer;
+    }
+
+    .bento-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 17, 40, 0.02);
+      opacity: 0;
+      transition: opacity var(--transition-default);
+      pointer-events: none;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-marigold);
+    }
+
+    .bento-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Card Background Image */
+    .card-background {
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 300px;
+      height: 300px;
+      opacity: 0.1;
+      transition: all var(--transition-slow);
+      pointer-events: none;
+    }
+
+    .card-background img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .bento-card:hover .card-background {
+      opacity: 0.15;
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Card Content */
+    .card-content {
+      position: relative;
+      z-index: 2;
+      transition: transform var(--transition-default);
+    }
+
+    .bento-card:hover .card-content {
+      transform: translateY(-10px);
+    }
+
+    /* Card Icon */
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--color-secondary);
+      margin-bottom: 1rem;
+      transition: all var(--transition-default);
+      transform-origin: left center;
+    }
+
+    .bento-card:hover .card-icon {
+      transform: scale(0.85);
+      color: var(--color-primary);
+    }
+
+    /* Card Title */
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-secondary);
+      margin-bottom: 0.5rem;
+      font-family: var(--font-heading);
+    }
+
+    /* Card Description */
+    .card-description {
+      font-size: 0.95rem;
+      color: var(--color-neutral-500);
+      line-height: 1.6;
+      max-width: 90%;
+    }
+
+    /* Card CTA */
+    .card-cta {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all var(--transition-default);
+      pointer-events: none;
+    }
+
+    .bento-card:hover .card-cta {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--color-primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      border: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+      box-shadow: 0 2px 10px rgba(252, 191, 73, 0.2);
+    }
+
+    .btn:hover {
+      background: #f59e0b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(252, 191, 73, 0.4);
+    }
+
+    .btn-arrow {
+      width: 16px;
+      height: 16px;
+      transition: transform var(--transition-fast);
+    }
+
+    .btn:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ==================== Animations ==================== */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* ==================== Responsive Design ==================== */
+    /* Tablet (768px - 991px) */
+    @media (max-width: 991px) {
+      .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 20rem;
+      }
+
+      .bento-card:nth-child(1),
+      .bento-card:nth-child(2),
+      .bento-card:nth-child(3),
+      .bento-card:nth-child(4),
+      .bento-card:nth-child(5) {
+        grid-row: auto;
+        grid-column: auto;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+    /* Mobile (below 768px) */
+    @media (max-width: 767px) {
+      body {
+        padding: 1.5rem 0.75rem;
+      }
+
+      .bento-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 18rem;
+        gap: 0.75rem;
+      }
+
+      .bento-card {
+        padding: 1.25rem;
+      }
+
+      .header {
+        margin-bottom: 2rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .card-icon {
+        width: 40px;
+        height: 40px;
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+      }
+
+      .card-description {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* ==================== Accessibility ==================== */
+    .btn:focus-visible,
+    .bento-card:focus-visible {
+      outline: 3px solid var(--color-primary);
+      outline-offset: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ==================== Footer ==================== */
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--color-neutral-500);
+      font-size: 0.9rem;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .footer a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--transition-fast);
+    }
+
+    .footer a:hover {
+      color: var(--color-coral);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>DreamyHook Features</h1>
+      <p>Discover the powerful tools that make your workflow seamless and delightful</p>
+    </header>
+
+    <!-- Bento Grid -->
+    <div class="bento-grid" id="bentoGrid">
+      <!-- Card 1: Save Files -->
+      <div class="bento-card" tabindex="0" role="article" aria-label="Save your files feature">
+        <div class="card-background">
+          <img src="https://images.unsplash.com/photo-1557683316-973673baf926?w=300&h=300&fit=crop" alt="" loading="lazy">
+        </div>
+        <div class="card-content">
+          <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <h3 class="card-title">Save your files</h3>
+          <p class="card-description">We automatically save your files as you type. Never lose your work again with our intelligent auto-save system.</p>
+        </div>
+        <div class="card-cta">
+          <a href="#" class="btn">
+            Learn more
+            <svg class="btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 2: Full Text Search -->
+      <div class="bento-card" tabindex="0" role="article" aria-label="Full text search feature">
+        <div class="card-background">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop" alt="" loading="lazy">
+        </div>
+        <div class="card-content">
+          <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <h3 class="card-title">Full text search</h3>
+          <p class="card-description">Search through all your files in one place. Lightning-fast results powered by advanced indexing.</p>
+        </div>
+        <div class="card-cta">
+          <a href="#" class="btn">
+            Learn more
+            <svg class="btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 3: Multilingual -->
+      <div class="bento-card" tabindex="0" role="article" aria-label="Multilingual support feature">
+        <div class="card-background">
+          <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=300&h=300&fit=crop" alt="" loading="lazy">
+        </div>
+        <div class="card-content">
+          <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+          </svg>
+          <h3 class="card-title">Multilingual</h3>
+          <p class="card-description">Supports 100+ languages and counting. Break down language barriers effortlessly.</p>
+        </div>
+        <div class="card-cta">
+          <a href="#" class="btn">
+            Learn more
+            <svg class="btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 4: Calendar -->
+      <div class="bento-card" tabindex="0" role="article" aria-label="Calendar feature">
+        <div class="card-background">
+          <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=300&h=300&fit=crop" alt="" loading="lazy">
+        </div>
+        <div class="card-content">
+          <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <h3 class="card-title">Calendar</h3>
+          <p class="card-description">Use the calendar to filter your files by date. Organize your work timeline with ease.</p>
+        </div>
+        <div class="card-cta">
+          <a href="#" class="btn">
+            Learn more
+            <svg class="btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 5: Notifications -->
+      <div class="bento-card" tabindex="0" role="article" aria-label="Notifications feature">
+        <div class="card-background">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=300&fit=crop" alt="" loading="lazy">
+        </div>
+        <div class="card-content">
+          <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+          <h3 class="card-title">Notifications</h3>
+          <p class="card-description">Get notified when someone shares a file or mentions you in a comment. Stay connected and informed.</p>
+        </div>
+        <div class="card-cta">
+          <a href="#" class="btn">
+            Learn more
+            <svg class="btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Built with <a href="https://dreamyhook.com" target="_blank" rel="noopener">DreamyHook</a> design system</p>
+    </footer>
+  </div>
+
+  <script>
+    // ==================== DreamyHook Bento Grid JavaScript ==================== //
+
+    // Feature data configuration
+    const features = [
+      {
+        icon: 'file-text',
+        name: 'Save your files',
+        description: 'We automatically save your files as you type. Never lose your work again with our intelligent auto-save system.',
+        cta: 'Learn more',
+        href: '#save-files',
+        image: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=300&h=300&fit=crop'
+      },
+      {
+        icon: 'search',
+        name: 'Full text search',
+        description: 'Search through all your files in one place. Lightning-fast results powered by advanced indexing.',
+        cta: 'Learn more',
+        href: '#search',
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop'
+      },
+      {
+        icon: 'globe',
+        name: 'Multilingual',
+        description: 'Supports 100+ languages and counting. Break down language barriers effortlessly.',
+        cta: 'Learn more',
+        href: '#multilingual',
+        image: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=300&h=300&fit=crop'
+      },
+      {
+        icon: 'calendar',
+        name: 'Calendar',
+        description: 'Use the calendar to filter your files by date. Organize your work timeline with ease.',
+        cta: 'Learn more',
+        href: '#calendar',
+        image: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=300&h=300&fit=crop'
+      },
+      {
+        icon: 'bell',
+        name: 'Notifications',
+        description: 'Get notified when someone shares a file or mentions you in a comment. Stay connected and informed.',
+        cta: 'Learn more',
+        href: '#notifications',
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=300&fit=crop'
+      }
+    ];
+
+    // Initialize animations on scroll (optional enhancement)
+    function initScrollAnimations() {
+      const cards = document.querySelectorAll('.bento-card');
+
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              entry.target.style.animation = `slideUp 0.6s ease-out forwards`;
+            }, index * 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      cards.forEach(card => {
+        observer.observe(card);
+      });
+    }
+
+    // Add keyboard navigation support
+    function initKeyboardNavigation() {
+      const cards = document.querySelectorAll('.bento-card');
+
+      cards.forEach(card => {
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const link = card.querySelector('.btn');
+            if (link) {
+              link.click();
+            }
+          }
+        });
+      });
+    }
+
+    // Handle CTA button clicks with smooth behavior
+    function initCTAHandlers() {
+      const ctaButtons = document.querySelectorAll('.btn');
+
+      ctaButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          // Add click animation
+          button.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            button.style.transform = '';
+          }, 150);
+
+          // If it's a hash link, handle smooth scroll
+          const href = button.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            e.preventDefault();
+            console.log('Navigating to:', href);
+            // You can add your own navigation logic here
+          }
+        });
+      });
+    }
+
+    // Add hover sound effect (optional - uncomment if you want audio feedback)
+    /*
+    function initHoverSounds() {
+      const cards = document.querySelectorAll('.bento-card');
+      const hoverSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10...');
+
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          hoverSound.currentTime = 0;
+          hoverSound.play().catch(() => {});
+        });
+      });
+    }
+    */
+
+    // Performance: Lazy load background images
+    function initLazyLoading() {
+      const images = document.querySelectorAll('.card-background img');
+
+      if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              img.src = img.src; // Trigger load if not already loaded
+              imageObserver.unobserve(img);
+            }
+          });
+        });
+
+        images.forEach(img => imageObserver.observe(img));
+      }
+    }
+
+    // Initialize all features when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🎨 DreamyHook Bento Grid initialized');
+
+      // Initialize features
+      // initScrollAnimations(); // Uncomment for scroll animations
+      initKeyboardNavigation();
+      initCTAHandlers();
+      initLazyLoading();
+
+      // Log features for debugging
+      console.log('Features loaded:', features.length);
+    });
+
+    // Add responsive behavior
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        console.log('Window resized - grid adapting to:', window.innerWidth + 'px');
+      }, 250);
+    });
+
+    // Prevent link default behavior for demo purposes
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.btn[href^="#"]')) {
+        e.preventDefault();
+        const href = e.target.closest('.btn').getAttribute('href');
+        console.log('🔗 Feature clicked:', href);
+        // Add your custom navigation logic here
+      }
+    });
+  </script>
+
+</body>
+</html>
