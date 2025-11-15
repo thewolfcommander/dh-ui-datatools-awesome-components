@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Beams Background</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* DreamyHook Theme Variables */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+            --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+        }
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-neutral-200);
+            color: var(--color-secondary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Selection - Marigold yellow background with white text */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* Beams Container */
+        .beams-container {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+        }
+
+        /* Canvas */
+        #beamsCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            filter: blur(25px);
+        }
+
+        /* Overlay for subtle animation */
+        .beams-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 254, 249, 0.1), rgba(254, 249, 231, 0.2));
+            backdrop-filter: blur(50px);
+            animation: pulseOverlay 10s ease-in-out infinite;
+        }
+
+        @keyframes pulseOverlay {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Content */
+        .beams-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        .beams-content h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            color: var(--color-secondary);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out forwards;
+            filter: drop-shadow(0 4px 20px rgba(252, 191, 73, 0.15));
+        }
+
+        .beams-content p {
+            font-size: clamp(1.25rem, 3vw, 2rem);
+            color: var(--color-neutral-500);
+            letter-spacing: -0.01em;
+            animation: fadeInUp 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        /* Interactive Demo Card */
+        .demo-card {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 2rem 3rem;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-warm);
+            border: 2px solid rgba(252, 191, 73, 0.2);
+            animation: fadeInUp 0.8s ease-out 0.4s forwards;
+            opacity: 0;
+            transition: all 0.3s ease;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .demo-card:hover {
+            box-shadow: var(--shadow-marigold-glow);
+            transform: translateY(-5px);
+        }
+
+        .demo-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .demo-card p {
+            font-size: 1rem;
+            color: var(--color-neutral-500);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            animation: none;
+            opacity: 1;
+        }
+
+        /* Intensity Controls */
+        .intensity-controls {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .intensity-btn {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 2px solid var(--color-primary);
+            background: transparent;
+            color: var(--color-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .intensity-btn:hover {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 210, 63, 0.3);
+        }
+
+        .intensity-btn.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            box-shadow: var(--shadow-marigold-glow);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .beams-content {
+                padding: 1rem;
+            }
+
+            .demo-card {
+                padding: 1.5rem 2rem;
+                margin: 0 1rem;
+            }
+
+            .intensity-btn {
+                font-size: 0.75rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            .beams-overlay,
+            .beams-content h1,
+            .beams-content p,
+            .demo-card {
+                animation: none;
+                opacity: 1;
+            }
+
+            #beamsCanvas {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="beams-container">
+        <canvas id="beamsCanvas"></canvas>
+        <div class="beams-overlay"></div>
+        <div class="beams-content">
+            <h1>DreamyHook<br>Beams Background</h1>
+            <p>Beautiful animated backgrounds for your pleasure</p>
+
+            <div class="demo-card">
+                <h3>Interactive Demo</h3>
+                <p>Choose your preferred intensity level to see the beams adapt in real-time:</p>
+                <div class="intensity-controls">
+                    <button class="intensity-btn" data-intensity="subtle">Subtle</button>
+                    <button class="intensity-btn" data-intensity="medium">Medium</button>
+                    <button class="intensity-btn active" data-intensity="strong">Strong</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Beams Background Animation
+        class BeamsBackground {
+            constructor(canvasId, options = {}) {
+                this.canvas = document.getElementById(canvasId);
+                if (!this.canvas) {
+                    console.error('Canvas element not found');
+                    return;
+                }
+
+                this.ctx = this.canvas.getContext('2d');
+                this.beams = [];
+                this.animationFrame = null;
+                this.MINIMUM_BEAMS = 20;
+
+                // Configuration
+                this.intensity = options.intensity || 'strong';
+                this.opacityMap = {
+                    subtle: 0.5,
+                    medium: 0.7,
+                    strong: 1
+                };
+
+                // Check for reduced motion preference
+                this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                if (!this.prefersReducedMotion) {
+                    this.init();
+                }
+            }
+
+            init() {
+                this.updateCanvasSize();
+                window.addEventListener('resize', () => this.updateCanvasSize());
+                this.animate();
+            }
+
+            updateCanvasSize() {
+                const dpr = window.devicePixelRatio || 1;
+                this.canvas.width = window.innerWidth * dpr;
+                this.canvas.height = window.innerHeight * dpr;
+                this.canvas.style.width = `${window.innerWidth}px`;
+                this.canvas.style.height = `${window.innerHeight}px`;
+                this.ctx.scale(dpr, dpr);
+
+                const totalBeams = Math.floor(this.MINIMUM_BEAMS * 1.5);
+                this.beams = Array.from({ length: totalBeams }, (_, i) =>
+                    this.createBeam(i, totalBeams)
+                );
+            }
+
+            createBeam(index, totalBeams) {
+                const angle = -35 + Math.random() * 10;
+                // DreamyHook colors: Marigold Yellow (40), Buttercup Yellow (50), Coral (15)
+                const hueVariation = index % 3;
+                let hue;
+                if (hueVariation === 0) hue = 40 + Math.random() * 5;      // Marigold range
+                else if (hueVariation === 1) hue = 48 + Math.random() * 5; // Buttercup range
+                else hue = 15 + Math.random() * 10;                        // Coral range
+
+                return {
+                    x: Math.random() * this.canvas.width * 1.5 - this.canvas.width * 0.25,
+                    y: Math.random() * this.canvas.height * 1.5 - this.canvas.height * 0.25,
+                    width: 60 + Math.random() * 80,
+                    length: this.canvas.height * 2.5,
+                    angle: angle,
+                    speed: 0.4 + Math.random() * 0.8,
+                    opacity: 0.15 + Math.random() * 0.12,
+                    hue: hue,
+                    pulse: Math.random() * Math.PI * 2,
+                    pulseSpeed: 0.02 + Math.random() * 0.03
+                };
+            }
+
+            resetBeam(beam, index, totalBeams) {
+                const column = index % 3;
+                const spacing = this.canvas.width / 3;
+
+                beam.y = this.canvas.height + 100;
+                beam.x = column * spacing + spacing / 2 + (Math.random() - 0.5) * spacing * 0.5;
+                beam.width = 80 + Math.random() * 100;
+                beam.speed = 0.4 + Math.random() * 0.6;
+
+                // Cycle through DreamyHook colors
+                const hueVariation = index % 3;
+                if (hueVariation === 0) beam.hue = 40 + Math.random() * 5;
+                else if (hueVariation === 1) beam.hue = 48 + Math.random() * 5;
+                else beam.hue = 15 + Math.random() * 10;
+
+                beam.opacity = 0.15 + Math.random() * 0.1;
+                return beam;
+            }
+
+            drawBeam(beam) {
+                this.ctx.save();
+                this.ctx.translate(beam.x, beam.y);
+                this.ctx.rotate((beam.angle * Math.PI) / 180);
+
+                // Calculate pulsing opacity
+                const pulsingOpacity = beam.opacity *
+                    (0.8 + Math.sin(beam.pulse) * 0.2) *
+                    this.opacityMap[this.intensity];
+
+                const gradient = this.ctx.createLinearGradient(0, 0, 0, beam.length);
+
+                // Enhanced gradient with DreamyHook warm colors
+                gradient.addColorStop(0, `hsla(${beam.hue}, 90%, 60%, 0)`);
+                gradient.addColorStop(0.1, `hsla(${beam.hue}, 90%, 60%, ${pulsingOpacity * 0.5})`);
+                gradient.addColorStop(0.4, `hsla(${beam.hue}, 92%, 62%, ${pulsingOpacity})`);
+                gradient.addColorStop(0.6, `hsla(${beam.hue}, 92%, 62%, ${pulsingOpacity})`);
+                gradient.addColorStop(0.9, `hsla(${beam.hue}, 90%, 60%, ${pulsingOpacity * 0.5})`);
+                gradient.addColorStop(1, `hsla(${beam.hue}, 90%, 60%, 0)`);
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(-beam.width / 2, 0, beam.width, beam.length);
+                this.ctx.restore();
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.filter = 'blur(30px)';
+
+                const totalBeams = this.beams.length;
+                this.beams.forEach((beam, index) => {
+                    beam.y -= beam.speed;
+                    beam.pulse += beam.pulseSpeed;
+
+                    // Reset beam when it goes off screen
+                    if (beam.y + beam.length < -100) {
+                        this.resetBeam(beam, index, totalBeams);
+                    }
+
+                    this.drawBeam(beam);
+                });
+
+                this.animationFrame = requestAnimationFrame(() => this.animate());
+            }
+
+            setIntensity(newIntensity) {
+                this.intensity = newIntensity;
+            }
+
+            destroy() {
+                if (this.animationFrame) {
+                    cancelAnimationFrame(this.animationFrame);
+                }
+                window.removeEventListener('resize', () => this.updateCanvasSize());
+            }
+        }
+
+        // Initialize the beams background
+        let beamsInstance = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            beamsInstance = new BeamsBackground('beamsCanvas', { intensity: 'strong' });
+
+            // Intensity control buttons
+            const intensityButtons = document.querySelectorAll('.intensity-btn');
+            intensityButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const intensity = btn.dataset.intensity;
+
+                    // Update active state
+                    intensityButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Update beams intensity
+                    if (beamsInstance) {
+                        beamsInstance.setIntensity(intensity);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
