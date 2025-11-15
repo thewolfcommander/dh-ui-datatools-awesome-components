@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlickeringGrid - DreamyHook Component</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* DreamyHook Brand Theme Variables */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Theme Background */
+            --theme-background: #fffef9;
+
+            /* Typography */
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+            --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Base Styles */
+        html {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Selection */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--color-neutral-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            margin-bottom: 3rem;
+        }
+
+        .demo-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* FlickeringGrid Container */
+        .flickering-grid-container {
+            position: relative;
+            height: 500px;
+            width: 100%;
+            background: var(--color-neutral-100);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 2px solid var(--color-neutral-300);
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .flickering-grid {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .flickering-grid canvas {
+            pointer-events: none;
+            display: block;
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            background: var(--color-neutral-100);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 2px solid var(--color-neutral-300);
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--color-neutral-300);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(252, 191, 73, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb:hover {
+            background: var(--color-accent);
+            box-shadow: 0 4px 12px rgba(255, 210, 63, 0.6);
+            transform: scale(1.1);
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(252, 191, 73, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb:hover {
+            background: var(--color-accent);
+            box-shadow: 0 4px 12px rgba(255, 210, 63, 0.6);
+            transform: scale(1.1);
+        }
+
+        .control-group input[type="color"] {
+            width: 100%;
+            height: 50px;
+            border: 2px solid var(--color-neutral-300);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .control-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-value {
+            font-size: 0.875rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            background: linear-gradient(135deg, rgba(255, 210, 63, 0.2) 0%, rgba(252, 191, 73, 0.2) 100%);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--color-neutral-600);
+            font-size: 0.875rem;
+        }
+
+        .footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: var(--color-accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .flickering-grid-container {
+                height: 400px;
+            }
+
+            .controls-panel {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>FlickeringGrid</h1>
+            <p>A mesmerizing animated grid component with DreamyHook branding. Customize the appearance using the controls below.</p>
+        </header>
+
+        <!-- Demo Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">Live Demo</h2>
+            <div class="flickering-grid-container">
+                <div class="flickering-grid" id="flickeringGrid"></div>
+            </div>
+        </section>
+
+        <!-- Controls Panel -->
+        <section class="controls-panel">
+            <div class="control-group">
+                <div class="control-info">
+                    <label for="squareSize">Square Size</label>
+                    <span class="control-value" id="squareSizeValue">4px</span>
+                </div>
+                <input type="range" id="squareSize" min="2" max="10" value="4" step="1">
+            </div>
+
+            <div class="control-group">
+                <div class="control-info">
+                    <label for="gridGap">Grid Gap</label>
+                    <span class="control-value" id="gridGapValue">6px</span>
+                </div>
+                <input type="range" id="gridGap" min="2" max="15" value="6" step="1">
+            </div>
+
+            <div class="control-group">
+                <div class="control-info">
+                    <label for="flickerChance">Flicker Speed</label>
+                    <span class="control-value" id="flickerChanceValue">0.3</span>
+                </div>
+                <input type="range" id="flickerChance" min="0.1" max="1" value="0.3" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <div class="control-info">
+                    <label for="maxOpacity">Max Opacity</label>
+                    <span class="control-value" id="maxOpacityValue">0.3</span>
+                </div>
+                <input type="range" id="maxOpacity" min="0.1" max="1" value="0.3" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <div class="control-info">
+                    <label for="color">Grid Color</label>
+                    <span class="control-value" id="colorValue">#0A1128</span>
+                </div>
+                <input type="color" id="color" value="#0A1128">
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with <a href="#">DreamyHook</a> brand theme &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        /**
+         * FlickeringGrid Component
+         * A vanilla JavaScript implementation of an animated flickering grid
+         * Optimized for performance with canvas rendering and intersection observer
+         */
+        class FlickeringGrid {
+            constructor(container, options = {}) {
+                this.container = container;
+                this.canvas = document.createElement('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.isInView = false;
+                this.animationFrameId = null;
+                this.lastTime = 0;
+
+                // Default options with DreamyHook branding
+                this.options = {
+                    squareSize: options.squareSize || 4,
+                    gridGap: options.gridGap || 6,
+                    flickerChance: options.flickerChance || 0.3,
+                    color: options.color || '#0A1128', // Midnight Blue
+                    maxOpacity: options.maxOpacity || 0.3,
+                    width: options.width || container.clientWidth,
+                    height: options.height || container.clientHeight
+                };
+
+                this.init();
+            }
+
+            init() {
+                // Setup canvas
+                this.canvas.className = 'flickering-grid-canvas';
+                this.container.appendChild(this.canvas);
+
+                // Setup grid
+                this.setupCanvas();
+
+                // Setup observers
+                this.setupIntersectionObserver();
+                this.setupResizeObserver();
+
+                // Start animation if in view
+                if (this.isInView) {
+                    this.animate(0);
+                }
+            }
+
+            setupCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                const width = this.options.width;
+                const height = this.options.height;
+
+                this.canvas.width = width * dpr;
+                this.canvas.height = height * dpr;
+                this.canvas.style.width = `${width}px`;
+                this.canvas.style.height = `${height}px`;
+
+                this.ctx.scale(dpr, dpr);
+
+                // Calculate grid dimensions
+                this.cols = Math.floor(width / (this.options.squareSize + this.options.gridGap));
+                this.rows = Math.floor(height / (this.options.squareSize + this.options.gridGap));
+
+                // Initialize squares with random opacity
+                this.squares = new Float32Array(this.cols * this.rows);
+                for (let i = 0; i < this.squares.length; i++) {
+                    this.squares[i] = Math.random() * this.options.maxOpacity;
+                }
+
+                this.dpr = dpr;
+            }
+
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver(
+                    ([entry]) => {
+                        this.isInView = entry.isIntersecting;
+                        if (this.isInView) {
+                            this.animate(0);
+                        } else {
+                            cancelAnimationFrame(this.animationFrameId);
+                        }
+                    },
+                    { threshold: 0 }
+                );
+
+                observer.observe(this.canvas);
+                this.intersectionObserver = observer;
+            }
+
+            setupResizeObserver() {
+                const observer = new ResizeObserver(() => {
+                    this.options.width = this.container.clientWidth;
+                    this.options.height = this.container.clientHeight;
+                    this.setupCanvas();
+                });
+
+                observer.observe(this.container);
+                this.resizeObserver = observer;
+            }
+
+            updateSquares(deltaTime) {
+                for (let i = 0; i < this.squares.length; i++) {
+                    if (Math.random() < this.options.flickerChance * deltaTime) {
+                        this.squares[i] = Math.random() * this.options.maxOpacity;
+                    }
+                }
+            }
+
+            drawGrid() {
+                const { squareSize, gridGap } = this.options;
+
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Convert color to RGBA
+                const rgbaColor = this.colorToRGBA(this.options.color);
+
+                for (let i = 0; i < this.cols; i++) {
+                    for (let j = 0; j < this.rows; j++) {
+                        const opacity = this.squares[i * this.rows + j];
+                        this.ctx.fillStyle = `${rgbaColor}${opacity})`;
+                        this.ctx.fillRect(
+                            i * (squareSize + gridGap),
+                            j * (squareSize + gridGap),
+                            squareSize,
+                            squareSize
+                        );
+                    }
+                }
+            }
+
+            colorToRGBA(color) {
+                // Create temporary canvas to convert any color to RGB
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = tempCanvas.height = 1;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.fillStyle = color;
+                tempCtx.fillRect(0, 0, 1, 1);
+                const [r, g, b] = tempCtx.getImageData(0, 0, 1, 1).data;
+                return `rgba(${r}, ${g}, ${b},`;
+            }
+
+            animate(time) {
+                if (!this.isInView) return;
+
+                const deltaTime = (time - this.lastTime) / 1000;
+                this.lastTime = time;
+
+                this.updateSquares(deltaTime);
+                this.drawGrid();
+
+                this.animationFrameId = requestAnimationFrame((t) => this.animate(t));
+            }
+
+            updateOptions(newOptions) {
+                this.options = { ...this.options, ...newOptions };
+                this.setupCanvas();
+            }
+
+            destroy() {
+                cancelAnimationFrame(this.animationFrameId);
+                if (this.intersectionObserver) this.intersectionObserver.disconnect();
+                if (this.resizeObserver) this.resizeObserver.disconnect();
+                if (this.canvas && this.canvas.parentNode) {
+                    this.canvas.parentNode.removeChild(this.canvas);
+                }
+            }
+        }
+
+        // Initialize FlickeringGrid
+        const container = document.getElementById('flickeringGrid');
+        let grid = new FlickeringGrid(container, {
+            squareSize: 4,
+            gridGap: 6,
+            flickerChance: 0.3,
+            color: '#0A1128', // Midnight Blue from DreamyHook theme
+            maxOpacity: 0.3
+        });
+
+        // Controls
+        const squareSizeInput = document.getElementById('squareSize');
+        const gridGapInput = document.getElementById('gridGap');
+        const flickerChanceInput = document.getElementById('flickerChance');
+        const maxOpacityInput = document.getElementById('maxOpacity');
+        const colorInput = document.getElementById('color');
+
+        const squareSizeValue = document.getElementById('squareSizeValue');
+        const gridGapValue = document.getElementById('gridGapValue');
+        const flickerChanceValue = document.getElementById('flickerChanceValue');
+        const maxOpacityValue = document.getElementById('maxOpacityValue');
+        const colorValue = document.getElementById('colorValue');
+
+        squareSizeInput.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            squareSizeValue.textContent = `${value}px`;
+            grid.updateOptions({ squareSize: value });
+        });
+
+        gridGapInput.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            gridGapValue.textContent = `${value}px`;
+            grid.updateOptions({ gridGap: value });
+        });
+
+        flickerChanceInput.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            flickerChanceValue.textContent = value.toFixed(1);
+            grid.updateOptions({ flickerChance: value });
+        });
+
+        maxOpacityInput.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            maxOpacityValue.textContent = value.toFixed(1);
+            grid.updateOptions({ maxOpacity: value });
+        });
+
+        colorInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            colorValue.textContent = value.toUpperCase();
+            grid.updateOptions({ color: value });
+        });
+    </script>
+</body>
+</html>
