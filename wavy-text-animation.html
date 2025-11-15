@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook Wavy Text Animation</title>
+
+    <!-- Google Fonts - Inter and Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors - Warm Gray Palette */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Colors */
+            --color-light: var(--color-neutral-200);
+            --color-dark: var(--color-secondary);
+
+            /* Animation Configuration */
+            --base-offset-factor: 0.1;
+            --base-extra: 0;
+            --base-amplitude: 160;
+            --length-effect: 0.6;
+            --frequency: 35;
+            --progress-scale: 6;
+            --phase-shift-deg: -180;
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--color-neutral-200) 0%, var(--color-neutral-400) 100%);
+            color: var(--color-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ========================= Container Styles ========================= */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--color-neutral-100) 0%, var(--color-neutral-300) 50%, var(--color-neutral-400) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(252, 191, 73, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 210, 63, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            color: var(--color-neutral-600);
+            margin-bottom: 3rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .subtitle span {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========================= Wavy Text Container ========================= */
+        .wavy-container {
+            height: 300vh;
+            padding-top: 15rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .wavy-block {
+            max-width: 90vw;
+            margin: 0 auto;
+            position: sticky;
+            top: 20vh;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .wavy-item {
+            position: relative;
+            will-change: transform;
+            transition: transform 0.1s linear;
+        }
+
+        .wavy-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(3rem, 9.3vw, 12rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 50%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 20px rgba(252, 191, 73, 0.15);
+            position: relative;
+        }
+
+        .wavy-text::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.3;
+            filter: blur(20px);
+        }
+
+        /* Individual text colors for variety */
+        .wavy-text:nth-child(1) {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wavy-text:nth-child(2) {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-sky) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wavy-text:nth-child(3) {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wavy-text:nth-child(4) {
+            background: linear-gradient(135deg, var(--color-coral) 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wavy-text:nth-child(5) {
+            background: linear-gradient(135deg, var(--color-sky) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wavy-text:nth-child(6) {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wavy-text:nth-child(7) {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-sky) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========================= Footer Section ========================= */
+        .footer {
+            background: var(--color-secondary);
+            color: var(--color-neutral-200);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--color-coral) 100%);
+        }
+
+        .footer h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer p {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) scale(1);
+            }
+            50% {
+                transform: translateY(-30px) scale(1.05);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media screen and (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 1rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .wavy-container {
+                padding-top: 10rem;
+            }
+
+            .wavy-block {
+                gap: 1.5rem;
+                max-width: 95vw;
+            }
+
+            .footer {
+                padding: 3rem 1.5rem;
+            }
+
+            .footer h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .wavy-block {
+                gap: 1rem;
+            }
+
+            .hero-section::before,
+            .hero-section::after {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="content-wrapper">
+            <p class="subtitle">Welcome to <span>DreamyHook</span></p>
+            <h1 class="wavy-text" style="background: linear-gradient(135deg, #FCBF49 0%, #FFD23F 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: clamp(2.5rem, 8vw, 6rem); margin-bottom: 1.5rem;">
+                Scroll to Experience
+            </h1>
+            <p style="font-size: 1.1rem; color: var(--color-neutral-600); max-width: 700px; margin: 0 auto; line-height: 1.8;">
+                Watch as text flows and waves with your scroll. A beautiful demonstration of motion and design,
+                powered by the DreamyHook brand aesthetic.
+            </p>
+        </div>
+    </section>
+
+    <!-- Wavy Text Animation Container -->
+    <div class="wavy-container" id="wavyContainer">
+        <div class="wavy-block" id="wavyBlock">
+            <div class="wavy-item" data-index="0">
+                <h2 class="wavy-text" data-text="Flexible">Flexible</h2>
+            </div>
+            <div class="wavy-item" data-index="1">
+                <h2 class="wavy-text" data-text="Animated">Animated</h2>
+            </div>
+            <div class="wavy-item" data-index="2">
+                <h2 class="wavy-text" data-text="Customizable">Customizable</h2>
+            </div>
+            <div class="wavy-item" data-index="3">
+                <h2 class="wavy-text" data-text="Optimized">Optimized</h2>
+            </div>
+            <div class="wavy-item" data-index="4">
+                <h2 class="wavy-text" data-text="Lightweight">Lightweight</h2>
+            </div>
+            <div class="wavy-item" data-index="5">
+                <h2 class="wavy-text" data-text="Responsive">Responsive</h2>
+            </div>
+            <div class="wavy-item" data-index="6">
+                <h2 class="wavy-text" data-text="UI Blocks">UI Blocks</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <h3>DreamyHook</h3>
+        <p>
+            Building beautiful, performant UI components with vanilla JavaScript.
+            No frameworks, no dependencies, just pure creativity and code.
+        </p>
+    </footer>
+
+    <!-- JavaScript for Wavy Animation -->
+    <script>
+        /**
+         * DreamyHook Wavy Text Animation
+         * Vanilla JavaScript implementation inspired by Framer Motion
+         */
+
+        class WavyTextAnimation {
+            constructor(containerSelector) {
+                this.container = document.querySelector(containerSelector);
+                this.items = this.container.querySelectorAll('.wavy-item');
+                this.wavyContainer = document.getElementById('wavyContainer');
+
+                // Configuration (matching the React component)
+                this.config = {
+                    baseOffsetFactor: 0.1,
+                    baseExtra: 0,
+                    baseAmplitude: 160,
+                    lengthEffect: 0.6,
+                    frequency: 35,
+                    progressScale: 6,
+                    phaseShiftDeg: -180,
+                };
+
+                // Calculate max length for scaling
+                this.maxLen = this.calculateMaxLength();
+
+                // Bind scroll event
+                this.handleScroll = this.handleScroll.bind(this);
+
+                // Initialize
+                this.init();
+            }
+
+            calculateMaxLength() {
+                let maxLength = 1;
+                this.items.forEach(item => {
+                    const text = item.querySelector('.wavy-text');
+                    if (text && text.textContent.length > maxLength) {
+                        maxLength = text.textContent.length;
+                    }
+                });
+                return maxLength;
+            }
+
+            toRadian(deg) {
+                return (deg * Math.PI) / 180;
+            }
+
+            calculateX(progress, index, windowWidth) {
+                const phase = this.config.progressScale * progress;
+                const width = windowWidth || window.innerWidth;
+                const baseOffset = this.config.baseOffsetFactor * width + this.config.baseExtra;
+
+                const lengthFactor = Math.min(1, Math.max(0, this.maxLen / (this.maxLen || 1)));
+                const amplitudeScale = 1 - this.config.lengthEffect * lengthFactor;
+                const amplitude = this.config.baseAmplitude * amplitudeScale;
+
+                const angle = this.toRadian(this.config.frequency * index) +
+                             phase +
+                             this.toRadian(this.config.phaseShiftDeg);
+
+                return baseOffset + amplitude * Math.cos(angle);
+            }
+
+            getScrollProgress() {
+                const containerRect = this.wavyContainer.getBoundingClientRect();
+                const containerTop = containerRect.top + window.scrollY;
+                const containerHeight = this.wavyContainer.offsetHeight;
+                const viewportHeight = window.innerHeight;
+
+                // Calculate progress based on scroll position
+                // Start: when container top hits viewport end
+                // End: when container end hits viewport start
+                const scrollStart = containerTop - viewportHeight;
+                const scrollEnd = containerTop + containerHeight;
+                const scrollRange = scrollEnd - scrollStart;
+
+                const currentScroll = window.scrollY;
+                const progress = (currentScroll - scrollStart) / scrollRange;
+
+                // Clamp between 0 and 1
+                return Math.max(0, Math.min(1, progress));
+            }
+
+            handleScroll() {
+                const progress = this.getScrollProgress();
+                const windowWidth = window.innerWidth;
+
+                this.items.forEach((item, index) => {
+                    const x = this.calculateX(progress, index, windowWidth);
+
+                    // Apply smooth transform
+                    item.style.transform = `translateX(${x}px)`;
+                });
+            }
+
+            init() {
+                // Set initial positions
+                this.handleScroll();
+
+                // Add scroll listener with throttling for performance
+                let ticking = false;
+                window.addEventListener('scroll', () => {
+                    if (!ticking) {
+                        window.requestAnimationFrame(() => {
+                            this.handleScroll();
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                });
+
+                // Handle resize
+                let resizeTimeout;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        this.handleScroll();
+                    }, 100);
+                });
+            }
+        }
+
+        // Initialize animation when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                new WavyTextAnimation('#wavyBlock');
+            });
+        } else {
+            new WavyTextAnimation('#wavyBlock');
+        }
+    </script>
+</body>
+</html>
