@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Modern Solutions for Customer Engagement</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Colors */
+            --color-error: #ef4444;
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+
+            /* Layout */
+            --header-height: 80px;
+            --transition-default: 0.3s cubic-bezier(0.65, 0.05, 0, 1);
+        }
+
+        /* ========================= Reset & Base ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            background-color: var(--color-neutral-200);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            font-weight: 700;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ========================= Header & Navigation ========================= */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0.5rem;
+        }
+
+        nav {
+            max-width: 1536px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            transition: all var(--transition-default);
+        }
+
+        nav.scrolled {
+            max-width: 1024px;
+            background-color: rgba(255, 254, 249, 0.5);
+            backdrop-filter: blur(16px);
+            border-radius: 1rem;
+            border: 1px solid rgba(252, 191, 73, 0.1);
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--color-secondary);
+        }
+
+        .logo svg {
+            height: 1.5rem;
+            width: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--color-neutral-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color var(--transition-default);
+        }
+
+        .nav-menu a:hover {
+            color: var(--color-secondary);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--color-secondary);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.625rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 0.75rem;
+            transition: all var(--transition-default);
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-secondary);
+            box-shadow: 0 4px 20px 0 rgba(252, 191, 73, 0.25);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 30px 0 rgba(252, 191, 73, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--color-neutral-300);
+            color: var(--color-secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-neutral-200);
+            border-color: var(--color-primary);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--color-neutral-600);
+        }
+
+        .btn-ghost:hover {
+            background: var(--color-neutral-200);
+            color: var(--color-secondary);
+        }
+
+        /* ========================= Hero Section ========================= */
+        .hero-section {
+            position: relative;
+            padding-top: 8rem;
+            padding-bottom: 4rem;
+            overflow: hidden;
+        }
+
+        .hero-bg-gradient {
+            position: absolute;
+            inset: 0;
+            z-index: -10;
+            background: radial-gradient(125% 125% at 50% 100%, transparent 0%, var(--color-neutral-200) 75%);
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 35rem;
+            height: 80rem;
+            top: -350px;
+            left: 0;
+            transform: rotate(-45deg);
+            border-radius: 50%;
+            background: radial-gradient(68.54% 68.72% at 55.02% 31.46%, rgba(252, 191, 73, 0.08) 0, rgba(252, 191, 73, 0.02) 50%, transparent 80%);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--color-neutral-300);
+            border: 1px solid rgba(252, 191, 73, 0.2);
+            border-radius: 9999px;
+            padding: 0.25rem 1rem 0.25rem 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.05);
+            transition: all var(--transition-default);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.2s forwards;
+        }
+
+        .hero-badge:hover {
+            background: var(--color-neutral-100);
+            box-shadow: 0 6px 30px 0 rgba(252, 191, 73, 0.15);
+        }
+
+        .hero-badge span {
+            font-size: 0.875rem;
+            color: var(--color-secondary);
+        }
+
+        .badge-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: var(--color-neutral-100);
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .badge-arrow {
+            display: flex;
+            width: 3rem;
+            transition: transform var(--transition-default);
+        }
+
+        .hero-badge:hover .badge-arrow {
+            transform: translateX(0.75rem);
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 5.25rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--color-secondary);
+            margin-bottom: 2rem;
+            max-width: 64rem;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.4s forwards;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--color-neutral-600);
+            max-width: 42rem;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.6s forwards;
+        }
+
+        .hero-cta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.8s forwards;
+        }
+
+        /* Hero Image */
+        .hero-image-container {
+            position: relative;
+            margin-top: 3rem;
+            padding: 0 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 1s forwards;
+        }
+
+        .hero-image-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            background: linear-gradient(to bottom, transparent 35%, var(--color-neutral-200) 100%);
+        }
+
+        .hero-image-wrapper {
+            max-width: 1152px;
+            margin: 0 auto;
+            background: var(--color-neutral-100);
+            border-radius: 1rem;
+            border: 1px solid rgba(252, 191, 73, 0.1);
+            padding: 1rem;
+            box-shadow: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            aspect-ratio: 15 / 8;
+            object-fit: cover;
+        }
+
+        /* ========================= Customers Section ========================= */
+        .customers-section {
+            padding: 4rem 0 8rem;
+            background: var(--color-neutral-200);
+        }
+
+        .customers-container {
+            position: relative;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .customers-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all var(--transition-default);
+        }
+
+        .customers-container:hover .customers-overlay {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .customers-link {
+            font-size: 0.875rem;
+            color: var(--color-secondary);
+            font-weight: 500;
+            transition: opacity var(--transition-default);
+        }
+
+        .customers-link:hover {
+            opacity: 0.75;
+        }
+
+        .customers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem 4rem;
+            max-width: 42rem;
+            margin: 0 auto;
+            transition: all var(--transition-default);
+        }
+
+        .customers-container:hover .customers-grid {
+            opacity: 0.5;
+            filter: blur(4px);
+        }
+
+        .customer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .customer-logo img {
+            max-height: 2rem;
+            width: auto;
+            opacity: 0.7;
+            transition: opacity var(--transition-default);
+            filter: grayscale(1);
+        }
+
+        .customer-logo:hover img {
+            opacity: 1;
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero-section {
+                padding-top: 6rem;
+            }
+
+            .customers-grid {
+                gap: 2rem 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .customers-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            nav.scrolled .nav-actions .btn-outline {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.75rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            background: var(--color-neutral-100);
+            border-bottom: 1px solid var(--color-neutral-300);
+            padding: 2rem 1.5rem;
+            z-index: 999;
+            box-shadow: 0 10px 40px 0 rgba(10, 17, 40, 0.1);
+        }
+
+        .mobile-menu.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-menu ul li {
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-menu ul a {
+            font-size: 1rem;
+            color: var(--color-neutral-600);
+            transition: color var(--transition-default);
+        }
+
+        .mobile-menu ul a:hover {
+            color: var(--color-secondary);
+        }
+
+        .mobile-menu-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        /* Utility Classes */
+        .glow-marigold {
+            box-shadow: 0 0 20px rgba(252, 191, 73, 0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav id="mainNav">
+            <div class="nav-container">
+                <a href="#" class="logo">
+                    <svg viewBox="0 0 78 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 0H5V18H3V0ZM13 0H15V18H13V0ZM18 3V5H0V3H18ZM0 15V13H18V15H0Z" fill="url(#logo-gradient)"/>
+                        <path d="M27.06 7.054V12.239C27.06 12.5903 27.1393 12.8453 27.298 13.004C27.468 13.1513 27.7513 13.225 28.148 13.225H29.338V14.84H27.808C26.9353 14.84 26.2667 14.636 25.802 14.228C25.3373 13.82 25.105 13.157 25.105 12.239V7.054H24V5.473H25.105V3.144H27.06V5.473H29.338V7.054H27.06ZM30.4782 10.114C30.4782 9.17333 30.6709 8.34033 31.0562 7.615C31.4529 6.88967 31.9855 6.32867 32.6542 5.932C33.3342 5.524 34.0822 5.32 34.8982 5.32C35.6349 5.32 36.2752 5.46733 36.8192 5.762C37.3745 6.04533 37.8165 6.40233 38.1452 6.833V5.473H40.1002V14.84H38.1452V13.446C37.8165 13.888 37.3689 14.2563 36.8022 14.551C36.2355 14.8457 35.5895 14.993 34.8642 14.993C34.0595 14.993 33.3229 14.789 32.6542 14.381C31.9855 13.9617 31.4529 13.3837 31.0562 12.647C30.6709 11.899 30.4782 11.0547 30.4782 10.114ZM38.1452 10.148C38.1452 9.502 38.0092 8.941 37.7372 8.465C37.4765 7.989 37.1309 7.62633 36.7002 7.377C36.2695 7.12767 35.8049 7.003 35.3062 7.003C34.8075 7.003 34.3429 7.12767 33.9122 7.377C33.4815 7.615 33.1302 7.972 32.8582 8.448C32.5975 8.91267 32.4672 9.468 32.4672 10.114C32.4672 10.76 32.5975 11.3267 32.8582 11.814C33.1302 12.3013 33.4815 12.6753 33.9122 12.936C34.3542 13.1853 34.8189 13.31 35.3062 13.31C35.8049 13.31 36.2695 13.1853 36.7002 12.936C37.1309 12.6867 37.4765 12.324 37.7372 11.848C38.0092 11.3607 38.1452 10.794 38.1452 10.148ZM43.6317 4.232C43.2803 4.232 42.9857 4.113 42.7477 3.875C42.5097 3.637 42.3907 3.34233 42.3907 2.991C42.3907 2.63967 42.5097 2.345 42.7477 2.107C42.9857 1.869 43.2803 1.75 43.6317 1.75C43.9717 1.75 44.2607 1.869 44.4987 2.107C44.7367 2.345 44.8557 2.63967 44.8557 2.991C44.8557 3.34233 44.7367 3.637 44.4987 3.875C44.2607 4.113 43.9717 4.232 43.6317 4.232ZM44.5837 5.473V14.84H42.6457V5.473H44.5837ZM49.0661 2.26V14.84H47.1281V2.26H49.0661ZM50.9645 10.114C50.9645 9.17333 51.1572 8.34033 51.5425 7.615C51.9392 6.88967 52.4719 6.32867 53.1405 5.932C53.8205 5.524 54.5685 5.32 55.3845 5.32C56.1212 5.32 56.7615 5.46733 57.3055 5.762C57.8609 6.04533 58.3029 6.40233 58.6315 6.833V5.473H60.5865V14.84H58.6315V13.446C58.3029 13.888 57.8552 14.2563 57.2885 14.551C56.7219 14.8457 56.0759 14.993 55.3505 14.993C54.5459 14.993 53.8092 14.789 53.1405 14.381C52.4719 13.9617 51.9392 13.3837 51.5425 12.647C51.1572 11.899 50.9645 11.0547 50.9645 10.114ZM58.6315 10.148C58.6315 9.502 58.4955 8.941 58.2235 8.465C57.9629 7.989 57.6172 7.62633 57.1865 7.377C56.7559 7.12767 56.2912 7.003 55.7925 7.003C55.2939 7.003 54.8292 7.12767 54.3985 7.377C53.9679 7.615 53.6165 7.972 53.3445 8.448C53.0839 8.91267 52.9535 9.468 52.9535 10.114C52.9535 10.76 53.0839 11.3267 53.3445 11.814C53.6165 12.3013 53.9679 12.6753 54.3985 12.936C54.8405 13.1853 55.3052 13.31 55.7925 13.31C56.2912 13.31 56.7559 13.1853 57.1865 12.936C57.6172 12.6867 57.9629 12.324 58.2235 11.848C58.4955 11.3607 58.6315 10.794 58.6315 10.148ZM65.07 6.833C65.3533 6.357 65.7273 5.98867 66.192 5.728C66.668 5.456 67.229 5.32 67.875 5.32V7.326H67.382C66.6227 7.326 66.0447 7.51867 65.648 7.904C65.2627 8.28933 65.07 8.958 65.07 9.91V14.84H63.132V5.473H65.07V6.833ZM73.3624 10.165L77.6804 14.84H75.0624L71.5944 10.811V14.84H69.6564V2.26H71.5944V9.57L74.9944 5.473H77.6804L73.3624 10.165Z" fill="currentColor"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="10" y1="0" x2="10" y2="20" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FCBF49"/>
+                                <stop offset="1" stop-color="#FFD23F"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </a>
+
+                <ul class="nav-menu">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#solution">Solution</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="#login" class="btn btn-outline">Login</a>
+                    <a href="#signup" class="btn btn-primary">Sign Up</a>
+                </div>
+
+                <button class="mobile-menu-toggle" aria-label="Toggle menu" id="menuToggle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="mobile-menu-actions">
+                <a href="#login" class="btn btn-outline">Login</a>
+                <a href="#signup" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-glow"></div>
+            <div class="hero-bg-gradient"></div>
+
+            <div class="container">
+                <div class="hero-content">
+                    <a href="#ai-models" class="hero-badge">
+                        <span>Introducing Support for AI Models</span>
+                        <div class="badge-icon">
+                            <div class="badge-arrow">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </a>
+
+                    <h1 class="hero-title">Modern Solutions for Customer Engagement</h1>
+
+                    <p class="hero-description">
+                        Highly customizable components for building modern websites and applications that look and feel the way you mean it.
+                    </p>
+
+                    <div class="hero-cta">
+                        <a href="#start" class="btn btn-primary">Start Building</a>
+                        <a href="#demo" class="btn btn-ghost">Request a demo</a>
+                    </div>
+                </div>
+
+                <div class="hero-image-container">
+                    <div class="hero-image-overlay"></div>
+                    <div class="hero-image-wrapper">
+                        <img
+                            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=2700&h=1440&fit=crop&q=80"
+                            alt="DreamyHook Dashboard Interface"
+                            class="hero-image"
+                        />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customers Section -->
+        <section class="customers-section">
+            <div class="customers-container">
+                <div class="customers-overlay">
+                    <a href="#customers" class="customers-link">
+                        Meet Our Customers
+                        <svg style="display: inline; width: 12px; height: 12px; margin-left: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="customers-grid">
+                    <div class="customer-logo">
+                        <img src="https://html.tailus.io/blocks/customers/nvidia.svg" alt="Nvidia Logo" height="20">
+                    </div>
+                    <div class="customer-logo">
+                        <img src="https://html.tailus.io/blocks/customers/column.svg" alt="Column Logo" height="16">
+                    </div>
+                    <div class="customer-logo">
+                        <img src="https://html.tailus.io/blocks/customers/github.svg" alt="GitHub Logo" height="16">
+                    </div>
+                    <div class="customer-logo">
+                        <img src="https://html.tailus.io/blocks/customers/nike.svg" alt="Nike Logo" height="20">
+                    </div>
+                    <div class="customer-logo">
+                        <img src="https://html.tailus.io/blocks/customers/lemonsqueezy.svg" alt="Lemon Squeezy Logo" height="20">
+                    </div>
+                    <div class="customer-logo">
+                        <img src="https://html.tailus.io/blocks/customers/laravel.svg" alt="Laravel Logo" height="16">
+                    </div>
+                    <div class="customer-logo">
+                        <img src="https://html.tailus.io/blocks/customers/lilly.svg" alt="Lilly Logo" height="28">
+                    </div>
+                    <div class="customer-logo">
+                        <img src="https://html.tailus.io/blocks/customers/openai.svg" alt="OpenAI Logo" height="24">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Scroll behavior for navigation
+        const nav = document.getElementById('mainNav');
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+
+        // Close mobile menu when clicking a link
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add intersection observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe customer logos for scroll animation
+        const customerLogos = document.querySelectorAll('.customer-logo');
+        customerLogos.forEach((logo, index) => {
+            logo.style.opacity = '0';
+            logo.style.transform = 'translateY(20px)';
+            logo.style.transition = `all 0.6s ease-out ${index * 0.1}s`;
+            observer.observe(logo);
+        });
+    </script>
+</body>
+</html>
