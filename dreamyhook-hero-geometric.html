@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Geometric Hero Component</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= Reset & Base Styles ========================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', 'ui-sans-serif', 'system-ui', sans-serif;
+            background-color: #fffef9;
+            color: #0A1128;
+            overflow-x: hidden;
+        }
+
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-white: #ffffff;
+            --color-warm-white: #fffef9;
+            --color-cream: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-700: #44403c;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+        }
+
+        /* ========================= Hero Container ========================= */
+        .hero-container {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+        }
+
+        /* Ambient Background Glow */
+        .ambient-glow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(252, 191, 73, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255, 107, 74, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(255, 210, 63, 0.05) 0%, transparent 70%);
+            filter: blur(60px);
+            pointer-events: none;
+        }
+
+        /* ========================= Geometric Shapes ========================= */
+        .shapes-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .elegant-shape {
+            position: absolute;
+            border-radius: 9999px;
+            backdrop-filter: blur(2px);
+            border: 2px solid rgba(252, 191, 73, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(252, 191, 73, 0.15);
+            opacity: 0;
+            animation: shapeEnter 2.4s cubic-bezier(0.23, 0.86, 0.39, 0.96) forwards,
+                       shapeFloat 12s ease-in-out infinite;
+        }
+
+        /* Shape Variants with DreamyHook Colors */
+        .shape-1 {
+            width: clamp(300px, 40vw, 600px);
+            height: clamp(70px, 10vw, 140px);
+            left: -5%;
+            top: 20%;
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.12) 0%, transparent 100%);
+            transform: rotate(12deg);
+            animation-delay: 0.3s;
+        }
+
+        .shape-2 {
+            width: clamp(250px, 35vw, 500px);
+            height: clamp(60px, 9vw, 120px);
+            right: 0%;
+            top: 75%;
+            background: linear-gradient(135deg, rgba(255, 107, 74, 0.12) 0%, transparent 100%);
+            transform: rotate(-15deg);
+            animation-delay: 0.5s;
+        }
+
+        .shape-3 {
+            width: clamp(150px, 20vw, 300px);
+            height: clamp(40px, 6vw, 80px);
+            left: 10%;
+            bottom: 10%;
+            background: linear-gradient(135deg, rgba(255, 210, 63, 0.12) 0%, transparent 100%);
+            transform: rotate(-8deg);
+            animation-delay: 0.4s;
+        }
+
+        .shape-4 {
+            width: clamp(100px, 15vw, 200px);
+            height: clamp(30px, 5vw, 60px);
+            right: 20%;
+            top: 15%;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, transparent 100%);
+            border-color: rgba(14, 165, 233, 0.2);
+            transform: rotate(20deg);
+            animation-delay: 0.6s;
+        }
+
+        .shape-5 {
+            width: clamp(75px, 12vw, 150px);
+            height: clamp(20px, 4vw, 40px);
+            left: 25%;
+            top: 10%;
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.15) 0%, transparent 100%);
+            transform: rotate(-25deg);
+            animation-delay: 0.7s;
+        }
+
+        /* Shape Inner Glow Effect */
+        .elegant-shape::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3), transparent 70%);
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes shapeEnter {
+            0% {
+                opacity: 0;
+                transform: translateY(-150px) rotate(var(--initial-rotate, 0deg));
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(var(--final-rotate, 0deg));
+            }
+        }
+
+        @keyframes shapeFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(var(--final-rotate, 0deg));
+            }
+            50% {
+                transform: translateY(15px) rotate(var(--final-rotate, 0deg));
+            }
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================= Content Styles ========================= */
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        /* Badge */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.08) 0%, rgba(255, 210, 63, 0.05) 100%);
+            border: 1px solid rgba(252, 191, 73, 0.2);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.25, 0.4, 0.25, 1) 0.5s forwards;
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.1);
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-coral) 0%, var(--color-primary) 100%);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        .badge-text {
+            font-size: 0.875rem;
+            color: var(--color-neutral-700);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        /* Headings */
+        .hero-heading {
+            font-family: 'Poppins', 'ui-sans-serif', 'system-ui', sans-serif;
+            font-size: clamp(2rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .heading-line-1 {
+            display: block;
+            background: linear-gradient(180deg, var(--color-secondary) 0%, rgba(10, 17, 40, 0.85) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.25, 0.4, 0.25, 1) 0.7s forwards;
+        }
+
+        .heading-line-2 {
+            display: block;
+            background: linear-gradient(135deg,
+                var(--color-primary) 0%,
+                var(--color-accent) 30%,
+                var(--color-coral) 70%,
+                var(--color-primary) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.25, 0.4, 0.25, 1) 0.7s forwards,
+                       gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Description */
+        .hero-description {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            line-height: 1.6;
+            color: var(--color-neutral-500);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.25, 0.4, 0.25, 1) 0.9s forwards;
+        }
+
+        /* CTA Buttons */
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.25, 0.4, 0.25, 1) 1.1s forwards;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.4, 0.25, 1);
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            color: var(--color-secondary);
+            box-shadow: 0 4px 20px rgba(252, 191, 73, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(252, 191, 73, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(252, 191, 73, 0.1);
+            color: var(--color-secondary);
+            border: 2px solid rgba(252, 191, 73, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(252, 191, 73, 0.15);
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Gradient Overlay */
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                rgba(255, 254, 249, 0.3) 0%,
+                transparent 30%,
+                transparent 70%,
+                rgba(255, 254, 249, 0.5) 100%);
+            pointer-events: none;
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media screen and (max-width: 768px) {
+            .hero-badge {
+                margin-bottom: 2rem;
+            }
+
+            .hero-heading {
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-description {
+                margin-bottom: 2rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .shape-1 { left: -10%; }
+            .shape-2 { right: -5%; }
+        }
+
+        @media screen and (max-width: 480px) {
+            .hero-content {
+                padding: 1.5rem 1rem;
+            }
+
+            .badge-text {
+                font-size: 0.75rem;
+            }
+
+            .btn {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ========================= Accessibility ========================= */
+        .btn:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .elegant-shape,
+            .hero-badge,
+            .heading-line-1,
+            .heading-line-2,
+            .hero-description,
+            .hero-cta {
+                animation: none;
+                opacity: 1;
+            }
+
+            .badge-dot {
+                animation: none;
+            }
+        }
+
+        /* Selection */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Geometric Component -->
+    <div class="hero-container">
+        <!-- Ambient Background Glow -->
+        <div class="ambient-glow"></div>
+
+        <!-- Geometric Shapes -->
+        <div class="shapes-container">
+            <div class="elegant-shape shape-1"></div>
+            <div class="elegant-shape shape-2"></div>
+            <div class="elegant-shape shape-3"></div>
+            <div class="elegant-shape shape-4"></div>
+            <div class="elegant-shape shape-5"></div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <!-- Badge -->
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                <span class="badge-text" id="badgeText">DreamyHook Design</span>
+            </div>
+
+            <!-- Heading -->
+            <h1 class="hero-heading">
+                <span class="heading-line-1" id="title1">Elevate Your Digital Vision</span>
+                <span class="heading-line-2" id="title2">Crafting Exceptional Websites</span>
+            </h1>
+
+            <!-- Description -->
+            <p class="hero-description" id="description">
+                Crafting exceptional digital experiences through innovative design and cutting-edge technology.
+            </p>
+
+            <!-- Call to Action Buttons -->
+            <div class="hero-cta">
+                <button class="btn btn-primary" onclick="handlePrimaryAction()">
+                    <span>Get Started</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+                <button class="btn btn-secondary" onclick="handleSecondaryAction()">
+                    <span>View Portfolio</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Gradient Overlay -->
+        <div class="gradient-overlay"></div>
+    </div>
+
+    <script>
+        // ========================= Configuration =========================
+        // You can customize these values to change the hero content
+        const config = {
+            badge: "DreamyHook Design",
+            title1: "Elevate Your Digital Vision",
+            title2: "Crafting Exceptional Websites",
+            description: "Crafting exceptional digital experiences through innovative design and cutting-edge technology."
+        };
+
+        // ========================= Initialize Content =========================
+        function initializeContent() {
+            document.getElementById('badgeText').textContent = config.badge;
+            document.getElementById('title1').textContent = config.title1;
+            document.getElementById('title2').textContent = config.title2;
+            document.getElementById('description').textContent = config.description;
+        }
+
+        // ========================= Action Handlers =========================
+        function handlePrimaryAction() {
+            console.log('Primary action clicked - Get Started');
+            // Add your primary action logic here
+            // Example: window.location.href = '/get-started';
+            alert('Get Started clicked! Add your navigation logic here.');
+        }
+
+        function handleSecondaryAction() {
+            console.log('Secondary action clicked - View Portfolio');
+            // Add your secondary action logic here
+            // Example: window.location.href = '/portfolio';
+            alert('View Portfolio clicked! Add your navigation logic here.');
+        }
+
+        // ========================= Dynamic Shape Animations =========================
+        function enhanceShapeAnimations() {
+            const shapes = document.querySelectorAll('.elegant-shape');
+
+            shapes.forEach((shape, index) => {
+                // Add random delay variation for more organic feel
+                const baseDelay = parseFloat(getComputedStyle(shape).animationDelay) || 0;
+                const randomDelay = baseDelay + (Math.random() * 0.2);
+                shape.style.animationDelay = `${randomDelay}s`;
+
+                // Add hover interaction for shapes
+                shape.addEventListener('mouseenter', function() {
+                    this.style.transform = `scale(1.05) ${this.style.transform}`;
+                    this.style.transition = 'transform 0.3s ease';
+                });
+
+                shape.addEventListener('mouseleave', function() {
+                    this.style.transform = `scale(1) ${this.style.transform}`;
+                });
+            });
+        }
+
+        // ========================= Parallax Effect =========================
+        function initParallax() {
+            const shapes = document.querySelectorAll('.elegant-shape');
+
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+
+                shapes.forEach((shape, index) => {
+                    const speed = (index + 1) * 0.5;
+                    const x = (mouseX - 0.5) * speed * 20;
+                    const y = (mouseY - 0.5) * speed * 20;
+
+                    shape.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            });
+        }
+
+        // ========================= Scroll Animations =========================
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            // Observe elements if you add more sections below
+            const animatedElements = document.querySelectorAll('.hero-content > *');
+            animatedElements.forEach(el => observer.observe(el));
+        }
+
+        // ========================= Resize Handler =========================
+        function handleResize() {
+            // Add any resize-specific logic here
+            const heroContainer = document.querySelector('.hero-container');
+            const viewportHeight = window.innerHeight;
+            heroContainer.style.minHeight = `${viewportHeight}px`;
+        }
+
+        // ========================= Initialize Application =========================
+        function init() {
+            initializeContent();
+            enhanceShapeAnimations();
+
+            // Optional: Enable parallax effect (comment out if not needed for performance)
+            // initParallax();
+
+            initScrollAnimations();
+
+            // Handle window resize
+            window.addEventListener('resize', handleResize);
+            handleResize();
+
+            // Log initialization
+            console.log('DreamyHook Hero Geometric Component initialized!');
+            console.log('Customize the content by editing the config object in the script section.');
+        }
+
+        // ========================= Run on DOM Load =========================
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // ========================= Customization Guide =========================
+        /*
+
+        HOW TO CUSTOMIZE THIS COMPONENT:
+
+        1. CHANGE CONTENT:
+           - Edit the 'config' object at the top of the script section
+           - Modify badge, title1, title2, and description values
+
+        2. CHANGE COLORS:
+           - Edit CSS variables in the :root section
+           - Main brand colors: --color-primary, --color-secondary, --color-accent
+
+        3. ADD/REMOVE SHAPES:
+           - Add more <div class="elegant-shape shape-X"></div> in HTML
+           - Create corresponding .shape-X styles in CSS
+           - Customize position, size, color, rotation, and animation-delay
+
+        4. MODIFY ANIMATIONS:
+           - Edit @keyframes in CSS for different animation effects
+           - Adjust animation-duration and animation-delay for timing
+
+        5. BUTTON ACTIONS:
+           - Modify handlePrimaryAction() and handleSecondaryAction() functions
+           - Add your navigation or custom logic
+
+        6. ENABLE PARALLAX:
+           - Uncomment the initParallax() call in the init() function
+           - Shapes will follow mouse movement for interactive effect
+
+        7. RESPONSIVE BREAKPOINTS:
+           - Edit @media queries in CSS to adjust mobile/tablet layouts
+           - Current breakpoints: 768px (tablet), 480px (mobile)
+
+        */
+    </script>
+</body>
+</html>
