@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DreamyHook Feature Steps - An elegant, animated showcase component">
+    <title>DreamyHook - Feature Steps Showcase</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== DreamyHook Theme Variables ==================== */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-white: #ffffff;
+            --color-warm-white: #fffef9;
+            --color-cream: #fffdf0;
+            --color-light-cream: #fef9e7;
+            --color-gray-500: #78716c;
+            --color-gray-600: #57534e;
+            --color-gray-700: #44403c;
+            --color-gray-800: #292524;
+            --color-gray-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-error: #ef4444;
+            --color-warning: #f59e0b;
+
+            /* Typography */
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-golden: 0 0 20px rgba(252, 191, 73, 0.3);
+            --shadow-golden-hover: 0 0 30px rgba(252, 191, 73, 0.5);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --spacing-2xl: 4rem;
+
+            /* Border Radius */
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 1.5rem;
+            --radius-xl: 2rem;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-default: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        /* ==================== Reset & Base Styles ==================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--color-warm-white) 0%, var(--color-light-cream) 100%);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            padding: var(--spacing-lg);
+        }
+
+        /* ==================== Typography ==================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--color-secondary);
+        }
+
+        /* ==================== Feature Steps Container ==================== */
+        .feature-steps-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-lg);
+        }
+
+        .feature-steps-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .feature-steps-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .feature-steps-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--color-gray-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ==================== Main Grid Layout ==================== */
+        .feature-steps-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-2xl);
+            align-items: center;
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* ==================== Steps Panel (Left) ==================== */
+        .steps-panel {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-default);
+            opacity: 0.4;
+        }
+
+        .step-item.active {
+            opacity: 1;
+            background: linear-gradient(135deg, rgba(252, 191, 73, 0.05) 0%, rgba(255, 210, 63, 0.05) 100%);
+            transform: translateX(8px);
+        }
+
+        .step-item:hover {
+            opacity: 0.8;
+            transform: translateX(4px);
+        }
+
+        .step-item.active:hover {
+            opacity: 1;
+        }
+
+        .step-indicator {
+            flex-shrink: 0;
+            width: 3rem;
+            height: 3rem;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+            border: 2px solid var(--color-gray-600);
+            background: var(--color-white);
+            color: var(--color-gray-600);
+            transition: all var(--transition-default);
+            position: relative;
+        }
+
+        .step-item.active .step-indicator {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            border-color: var(--color-primary);
+            color: var(--color-secondary);
+            box-shadow: var(--shadow-golden);
+            transform: scale(1.1);
+        }
+
+        .step-item.completed .step-indicator {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .step-indicator .checkmark {
+            display: none;
+            font-size: 1.5rem;
+        }
+
+        .step-item.completed .step-indicator .checkmark {
+            display: block;
+        }
+
+        .step-item.completed .step-indicator .step-number {
+            display: none;
+        }
+
+        /* Progress Ring */
+        .step-indicator svg {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: calc(100% + 8px);
+            height: calc(100% + 8px);
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring {
+            fill: transparent;
+            stroke: var(--color-accent);
+            stroke-width: 3;
+            stroke-dasharray: 160;
+            stroke-dashoffset: 160;
+            transition: stroke-dashoffset var(--transition-slow);
+        }
+
+        .step-item.active .progress-ring {
+            stroke-dashoffset: 0;
+        }
+
+        /* Step Content */
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-xs);
+            transition: color var(--transition-default);
+        }
+
+        .step-item.active .step-title {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warning) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .step-description {
+            font-size: 1rem;
+            color: var(--color-gray-600);
+            line-height: 1.6;
+        }
+
+        /* ==================== Image Panel (Right) ==================== */
+        .image-panel {
+            position: relative;
+            height: 500px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-hard);
+        }
+
+        .image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity var(--transition-slow);
+        }
+
+        .image-container.active {
+            opacity: 1;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(10, 17, 40, 0.7) 0%, transparent 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: var(--spacing-lg);
+        }
+
+        .image-caption {
+            color: var(--color-white);
+            font-size: 1.25rem;
+            font-weight: 600;
+            font-family: var(--font-heading);
+        }
+
+        /* ==================== Animations ==================== */
+        @keyframes slideIn {
+            from {
+                transform: translateY(30px) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(252, 191, 73, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(252, 191, 73, 0.6);
+            }
+        }
+
+        .step-item.active .step-indicator {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* ==================== Responsive Design ==================== */
+        @media screen and (max-width: 991px) {
+            .feature-steps-container {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-xl);
+            }
+
+            .image-panel {
+                height: 400px;
+                order: -1;
+            }
+
+            .steps-panel {
+                gap: var(--spacing-md);
+            }
+
+            .step-indicator {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 1rem;
+            }
+
+            .step-title {
+                font-size: 1.25rem;
+            }
+
+            .step-description {
+                font-size: 0.9375rem;
+            }
+        }
+
+        @media screen and (max-width: 767px) {
+            body {
+                padding: var(--spacing-sm);
+            }
+
+            .feature-steps-wrapper {
+                padding: var(--spacing-lg) var(--spacing-sm);
+            }
+
+            .feature-steps-container {
+                padding: var(--spacing-lg);
+            }
+
+            .image-panel {
+                height: 300px;
+            }
+
+            .step-item {
+                padding: var(--spacing-sm);
+            }
+
+            .step-indicator {
+                width: 2rem;
+                height: 2rem;
+                font-size: 0.875rem;
+            }
+
+            .step-title {
+                font-size: 1.125rem;
+            }
+
+            .step-description {
+                font-size: 0.875rem;
+            }
+
+            .image-caption {
+                font-size: 1rem;
+            }
+        }
+
+        @media screen and (max-width: 479px) {
+            .feature-steps-title {
+                font-size: 1.75rem;
+            }
+
+            .feature-steps-subtitle {
+                font-size: 0.9375rem;
+            }
+
+            .image-panel {
+                height: 250px;
+            }
+
+            .steps-panel {
+                gap: var(--spacing-sm);
+            }
+        }
+
+        /* ==================== Accessibility ==================== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .step-item:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* ==================== Selection ==================== */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+    </style>
+</head>
+<body>
+    <div class="feature-steps-wrapper">
+        <div class="feature-steps-header">
+            <h1 class="feature-steps-title">How to Get Started</h1>
+            <p class="feature-steps-subtitle">Follow these simple steps to begin your journey with us</p>
+        </div>
+
+        <div class="feature-steps-container">
+            <!-- Steps Panel (Left) -->
+            <div class="steps-panel" id="stepsPanel">
+                <!-- Steps will be dynamically inserted here -->
+            </div>
+
+            <!-- Image Panel (Right) -->
+            <div class="image-panel" id="imagePanel">
+                <!-- Images will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== Feature Steps Data ====================
+        const features = [
+            {
+                step: 'Step 1',
+                title: 'Learn the Basics',
+                content: 'Start your Web3 journey by learning the basics of blockchain technology and cryptocurrency fundamentals.',
+                image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&q=80'
+            },
+            {
+                step: 'Step 2',
+                title: 'Deep Dive into Development',
+                content: 'Dive deep into blockchain fundamentals and smart contract development with hands-on tutorials.',
+                image: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?w=1200&q=80'
+            },
+            {
+                step: 'Step 3',
+                title: 'Build Real Projects',
+                content: 'Graduate with hands-on Web3 experience through building decentralized applications and real-world projects.',
+                image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80'
+            },
+        ];
+
+        // ==================== State Management ====================
+        let currentStep = 0;
+        let autoPlayTimer = null;
+        let progressTimer = null;
+        let isAutoPlaying = true;
+        const AUTO_PLAY_INTERVAL = 4000; // 4 seconds
+        const PROGRESS_UPDATE_INTERVAL = 50; // Update every 50ms
+
+        // ==================== DOM Elements ====================
+        const stepsPanel = document.getElementById('stepsPanel');
+        const imagePanel = document.getElementById('imagePanel');
+
+        // ==================== Initialize Component ====================
+        function init() {
+            renderSteps();
+            renderImages();
+            setActiveStep(0);
+            startAutoPlay();
+        }
+
+        // ==================== Render Steps ====================
+        function renderSteps() {
+            features.forEach((feature, index) => {
+                const stepItem = document.createElement('div');
+                stepItem.className = 'step-item';
+                stepItem.setAttribute('tabindex', '0');
+                stepItem.setAttribute('role', 'button');
+                stepItem.setAttribute('aria-label', `${feature.title}: ${feature.content}`);
+                stepItem.dataset.index = index;
+
+                stepItem.innerHTML = `
+                    <div class="step-indicator">
+                        <svg>
+                            <circle class="progress-ring" cx="50%" cy="50%" r="50%" />
+                        </svg>
+                        <span class="step-number">${index + 1}</span>
+                        <span class="checkmark">✓</span>
+                    </div>
+                    <div class="step-content">
+                        <h3 class="step-title">${feature.title}</h3>
+                        <p class="step-description">${feature.content}</p>
+                    </div>
+                `;
+
+                // Click handler
+                stepItem.addEventListener('click', () => {
+                    stopAutoPlay();
+                    setActiveStep(index);
+                    // Resume auto-play after 8 seconds of inactivity
+                    setTimeout(() => {
+                        if (!isAutoPlaying) {
+                            startAutoPlay();
+                        }
+                    }, 8000);
+                });
+
+                // Keyboard navigation
+                stepItem.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        stepItem.click();
+                    }
+                });
+
+                stepsPanel.appendChild(stepItem);
+            });
+        }
+
+        // ==================== Render Images ====================
+        function renderImages() {
+            features.forEach((feature, index) => {
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'image-container';
+                imageContainer.dataset.index = index;
+
+                imageContainer.innerHTML = `
+                    <img src="${feature.image}" alt="${feature.title}" loading="lazy">
+                    <div class="image-overlay">
+                        <div class="image-caption">${feature.title}</div>
+                    </div>
+                `;
+
+                imagePanel.appendChild(imageContainer);
+            });
+        }
+
+        // ==================== Set Active Step ====================
+        function setActiveStep(index) {
+            currentStep = index;
+
+            // Update steps
+            const stepItems = stepsPanel.querySelectorAll('.step-item');
+            stepItems.forEach((item, i) => {
+                item.classList.remove('active', 'completed');
+                if (i === index) {
+                    item.classList.add('active');
+                } else if (i < index) {
+                    item.classList.add('completed');
+                }
+            });
+
+            // Update images
+            const imageContainers = imagePanel.querySelectorAll('.image-container');
+            imageContainers.forEach((container, i) => {
+                container.classList.remove('active');
+                if (i === index) {
+                    container.classList.add('active');
+                }
+            });
+        }
+
+        // ==================== Auto-Play Functions ====================
+        function startAutoPlay() {
+            if (isAutoPlaying) return;
+
+            isAutoPlaying = true;
+            autoPlayTimer = setInterval(() => {
+                const nextStep = (currentStep + 1) % features.length;
+                setActiveStep(nextStep);
+            }, AUTO_PLAY_INTERVAL);
+        }
+
+        function stopAutoPlay() {
+            isAutoPlaying = false;
+            if (autoPlayTimer) {
+                clearInterval(autoPlayTimer);
+                autoPlayTimer = null;
+            }
+        }
+
+        // ==================== Pause on Visibility Change ====================
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoPlay();
+            } else {
+                setTimeout(() => {
+                    if (!isAutoPlaying) {
+                        startAutoPlay();
+                    }
+                }, 1000);
+            }
+        });
+
+        // ==================== Keyboard Navigation ====================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                stopAutoPlay();
+                const prevStep = (currentStep - 1 + features.length) % features.length;
+                setActiveStep(prevStep);
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                stopAutoPlay();
+                const nextStep = (currentStep + 1) % features.length;
+                setActiveStep(nextStep);
+            }
+        });
+
+        // ==================== Initialize on Load ====================
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
