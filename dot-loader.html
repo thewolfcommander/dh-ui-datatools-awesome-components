@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DotLoader - DreamyHook Component</title>
+
+    <!-- Google Fonts - Inter & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===============================================
+           DreamyHook - DotLoader Component Styles
+           Brand Colors: Marigold Yellow, Midnight Blue, Buttercup Yellow
+           =============================================== */
+
+        /* ------------------------- Theme Variables ------------------------- */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors - Warm Palette */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Typography */
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+            --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+            --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-yellow-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+        }
+
+        /* ------------------------- Reset & Base Styles ------------------------- */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Selection */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ------------------------- Container & Layout ------------------------- */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--color-neutral-100);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hard);
+            transform: translateY(-2px);
+        }
+
+        /* ------------------------- Typography ------------------------- */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: var(--color-neutral-600);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--color-neutral-500);
+            margin-bottom: 2rem;
+        }
+
+        /* ------------------------- DotLoader Component ------------------------- */
+        .dot-loader-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 1.25rem;
+            background: var(--color-secondary);
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+        }
+
+        .dot-loader-container:hover {
+            box-shadow: var(--shadow-marigold-glow);
+        }
+
+        .dot-loader {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.125rem;
+            width: fit-content;
+        }
+
+        .dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            border-radius: 0.125rem;
+            background-color: rgba(255, 255, 255, 0.15);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .dot.active {
+            background-color: var(--color-neutral-100);
+            transform: scale(1.1);
+        }
+
+        .loader-label {
+            color: var(--color-neutral-100);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            letter-spacing: 0.025em;
+        }
+
+        /* ------------------------- Demo Section ------------------------- */
+        .demo-section {
+            margin-top: 3rem;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .demo-item {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 254, 249, 0.95) 100%);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(252, 191, 73, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .demo-item:hover {
+            box-shadow: var(--shadow-warm);
+            border-color: rgba(252, 191, 73, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .demo-item h3 {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .demo-item p {
+            font-size: 0.875rem;
+            color: var(--color-neutral-500);
+            margin-bottom: 1.5rem;
+        }
+
+        /* ------------------------- Variations ------------------------- */
+
+        /* Marigold Variant */
+        .dot-loader-marigold {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+        }
+
+        .dot-loader-marigold .dot {
+            background-color: rgba(10, 17, 40, 0.15);
+        }
+
+        .dot-loader-marigold .dot.active {
+            background-color: var(--color-secondary);
+        }
+
+        .dot-loader-marigold .loader-label {
+            color: var(--color-secondary);
+        }
+
+        /* Coral Variant */
+        .dot-loader-coral {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-coral) 100%);
+        }
+
+        .dot-loader-coral .dot {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .dot-loader-coral .dot.active {
+            background-color: var(--color-neutral-100);
+        }
+
+        .dot-loader-coral .loader-label {
+            color: var(--color-neutral-100);
+        }
+
+        /* Sky Variant */
+        .dot-loader-sky {
+            background: linear-gradient(135deg, #38bdf8 0%, var(--color-sky) 100%);
+        }
+
+        .dot-loader-sky .dot {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .dot-loader-sky .dot.active {
+            background-color: var(--color-neutral-100);
+        }
+
+        .dot-loader-sky .loader-label {
+            color: var(--color-neutral-100);
+        }
+
+        /* ------------------------- Controls ------------------------- */
+        .controls {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--color-neutral-200);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(252, 191, 73, 0.2);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-group label {
+            font-weight: 500;
+            color: var(--color-secondary);
+            min-width: 120px;
+        }
+
+        .btn {
+            padding: 0.625rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-secondary);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-marigold-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-neutral-100);
+        }
+
+        .btn-secondary:hover {
+            background: #1a2445;
+            transform: translateY(-2px);
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, var(--color-accent), var(--color-primary));
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color-secondary);
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color-secondary);
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .value-display {
+            font-weight: 600;
+            color: var(--color-primary);
+            min-width: 60px;
+            text-align: right;
+        }
+
+        /* ------------------------- Responsive Design ------------------------- */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .control-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .control-group label {
+                min-width: auto;
+            }
+
+            input[type="range"] {
+                width: 100%;
+            }
+        }
+
+        /* ------------------------- Animations ------------------------- */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .demo-item {
+            animation: fadeIn 0.8s ease-out backwards;
+        }
+
+        .demo-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .demo-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .demo-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>DotLoader Component</h1>
+            <p class="subtitle">Animated dot matrix loader with DreamyHook branding</p>
+
+            <!-- Main Demo -->
+            <div style="display: flex; justify-content: center; margin: 2rem 0;">
+                <div id="mainLoader" class="dot-loader-container">
+                    <div class="dot-loader"></div>
+                    <span class="loader-label">Playing</span>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <h2 style="margin-top: 0;">Animation Controls</h2>
+
+                <div class="control-group">
+                    <label for="speedControl">Speed (ms):</label>
+                    <input type="range" id="speedControl" min="50" max="500" value="100" step="10">
+                    <span class="value-display" id="speedValue">100ms</span>
+                </div>
+
+                <div class="control-group">
+                    <button id="playPauseBtn" class="btn btn-primary">Pause</button>
+                    <button id="resetBtn" class="btn btn-secondary">Reset</button>
+                </div>
+            </div>
+
+            <!-- Demo Section -->
+            <div class="demo-section">
+                <h2>Color Variants</h2>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <h3>Midnight Blue (Default)</h3>
+                        <p>Classic dark background with white dots</p>
+                        <div style="display: flex; justify-content: center;">
+                            <div id="loader1" class="dot-loader-container">
+                                <div class="dot-loader"></div>
+                                <span class="loader-label">Loading</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <h3>Marigold Gradient</h3>
+                        <p>Warm golden gradient with dark dots</p>
+                        <div style="display: flex; justify-content: center;">
+                            <div id="loader2" class="dot-loader-container dot-loader-marigold">
+                                <div class="dot-loader"></div>
+                                <span class="loader-label">Processing</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <h3>Coral Sunrise</h3>
+                        <p>Vibrant coral gradient with white dots</p>
+                        <div style="display: flex; justify-content: center;">
+                            <div id="loader3" class="dot-loader-container dot-loader-coral">
+                                <div class="dot-loader"></div>
+                                <span class="loader-label">Uploading</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="demo-item">
+                        <h3>Sky Blue</h3>
+                        <p>Fresh sky blue gradient with white dots</p>
+                        <div style="display: flex; justify-content: center;">
+                            <div id="loader4" class="dot-loader-container dot-loader-sky">
+                                <div class="dot-loader"></div>
+                                <span class="loader-label">Syncing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * DotLoader - Vanilla JavaScript Implementation
+         * DreamyHook Component Library
+         *
+         * Creates an animated 7x7 grid of dots that animates through frames
+         */
+
+        class DotLoader {
+            constructor(container, options = {}) {
+                this.container = container;
+                this.frames = options.frames || [];
+                this.duration = options.duration || 100;
+                this.isPlaying = options.isPlaying !== undefined ? options.isPlaying : true;
+                this.repeatCount = options.repeatCount || -1; // -1 for infinite
+                this.onComplete = options.onComplete || null;
+
+                this.currentIndex = 0;
+                this.repeats = 0;
+                this.interval = null;
+                this.dots = [];
+
+                this.init();
+            }
+
+            init() {
+                // Find or create the dot grid
+                let grid = this.container.querySelector('.dot-loader');
+                if (!grid) {
+                    grid = document.createElement('div');
+                    grid.className = 'dot-loader';
+                    this.container.appendChild(grid);
+                }
+
+                // Create 49 dots (7x7 grid)
+                for (let i = 0; i < 49; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'dot';
+                    grid.appendChild(dot);
+                    this.dots.push(dot);
+                }
+
+                if (this.isPlaying && this.frames.length > 0) {
+                    this.play();
+                }
+            }
+
+            applyFrame(frameIndex) {
+                const frame = this.frames[frameIndex];
+                if (!frame) return;
+
+                this.dots.forEach((dot, index) => {
+                    if (frame.includes(index)) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+
+            play() {
+                if (this.interval) {
+                    clearInterval(this.interval);
+                }
+
+                this.isPlaying = true;
+
+                this.interval = setInterval(() => {
+                    this.applyFrame(this.currentIndex);
+
+                    if (this.currentIndex + 1 >= this.frames.length) {
+                        if (this.repeatCount !== -1 && this.repeats + 1 >= this.repeatCount) {
+                            this.stop();
+                            if (this.onComplete) {
+                                this.onComplete();
+                            }
+                            return;
+                        }
+                        this.repeats++;
+                    }
+
+                    this.currentIndex = (this.currentIndex + 1) % this.frames.length;
+                }, this.duration);
+            }
+
+            pause() {
+                this.isPlaying = false;
+                if (this.interval) {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+            }
+
+            stop() {
+                this.pause();
+                this.currentIndex = 0;
+                this.repeats = 0;
+                this.applyFrame(0);
+            }
+
+            reset() {
+                this.stop();
+                if (this.frames.length > 0) {
+                    this.play();
+                }
+            }
+
+            setSpeed(duration) {
+                this.duration = duration;
+                if (this.isPlaying) {
+                    this.pause();
+                    this.play();
+                }
+            }
+
+            destroy() {
+                this.stop();
+                this.dots = [];
+            }
+        }
+
+        // Animation frames - snake-like pattern
+        const gameFrames = [
+            [14, 7, 0, 8, 6, 13, 20],
+            [14, 7, 13, 20, 16, 27, 21],
+            [14, 20, 27, 21, 34, 24, 28],
+            [27, 21, 34, 28, 41, 32, 35],
+            [34, 28, 41, 35, 48, 40, 42],
+            [34, 28, 41, 35, 48, 42, 46],
+            [34, 28, 41, 35, 48, 42, 38],
+            [34, 28, 41, 35, 48, 30, 21],
+            [34, 28, 41, 48, 21, 22, 14],
+            [34, 28, 41, 21, 14, 16, 27],
+            [34, 28, 21, 14, 10, 20, 27],
+            [28, 21, 14, 4, 13, 20, 27],
+            [28, 21, 14, 12, 6, 13, 20],
+            [28, 21, 14, 6, 13, 20, 11],
+            [28, 21, 14, 6, 13, 20, 10],
+            [14, 6, 13, 20, 9, 7, 21],
+        ];
+
+        // Initialize all loaders
+        const mainLoader = new DotLoader(
+            document.getElementById('mainLoader'),
+            { frames: gameFrames, duration: 100 }
+        );
+
+        const loader1 = new DotLoader(
+            document.getElementById('loader1'),
+            { frames: gameFrames, duration: 120 }
+        );
+
+        const loader2 = new DotLoader(
+            document.getElementById('loader2'),
+            { frames: gameFrames, duration: 150 }
+        );
+
+        const loader3 = new DotLoader(
+            document.getElementById('loader3'),
+            { frames: gameFrames, duration: 100 }
+        );
+
+        const loader4 = new DotLoader(
+            document.getElementById('loader4'),
+            { frames: gameFrames, duration: 130 }
+        );
+
+        // Controls
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const speedControl = document.getElementById('speedControl');
+        const speedValue = document.getElementById('speedValue');
+
+        playPauseBtn.addEventListener('click', () => {
+            if (mainLoader.isPlaying) {
+                mainLoader.pause();
+                playPauseBtn.textContent = 'Play';
+                playPauseBtn.classList.remove('btn-primary');
+                playPauseBtn.classList.add('btn-secondary');
+            } else {
+                mainLoader.play();
+                playPauseBtn.textContent = 'Pause';
+                playPauseBtn.classList.remove('btn-secondary');
+                playPauseBtn.classList.add('btn-primary');
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            mainLoader.reset();
+            playPauseBtn.textContent = 'Pause';
+            playPauseBtn.classList.remove('btn-secondary');
+            playPauseBtn.classList.add('btn-primary');
+        });
+
+        speedControl.addEventListener('input', (e) => {
+            const speed = parseInt(e.target.value);
+            speedValue.textContent = `${speed}ms`;
+            mainLoader.setSpeed(speed);
+        });
+    </script>
+</body>
+</html>
