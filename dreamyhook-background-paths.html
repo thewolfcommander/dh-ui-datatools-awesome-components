@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Background Paths Component</title>
+
+    <!-- Import DreamyHook Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* DreamyHook Theme Variables */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Theme Background */
+            --theme-background: #fffef9;
+
+            /* Fonts */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* Reset and Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-neutral-200);
+            color: var(--color-secondary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Selection - Marigold yellow background */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* Container */
+        .background-paths-container {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+        }
+
+        /* SVG Background Layer */
+        .svg-background {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .svg-background svg {
+            width: 100%;
+            height: 100%;
+            color: var(--color-secondary);
+        }
+
+        /* Content Layer */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        /* Hero Title */
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 3rem;
+            letter-spacing: -0.05em;
+            line-height: 1.1;
+        }
+
+        .word {
+            display: inline-block;
+            margin-right: 1rem;
+        }
+
+        .word:last-child {
+            margin-right: 0;
+        }
+
+        .letter {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, rgba(10, 17, 40, 0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transform: translateY(100px);
+            animation: letterSlideIn 0.8s cubic-bezier(0.65, 0.05, 0, 1) forwards;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: inline-block;
+            position: relative;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+            padding: 1px;
+            border-radius: 1rem;
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.5s forwards;
+        }
+
+        .button-container:hover {
+            box-shadow: 0 10px 40px 0 rgba(10, 17, 40, 0.15),
+                        0 0 30px 0 rgba(252, 191, 73, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 2rem;
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--color-secondary);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: calc(1rem - 1px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            backdrop-filter: blur(8px);
+        }
+
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .button-text {
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .cta-button:hover .button-text {
+            opacity: 1;
+        }
+
+        .button-arrow {
+            margin-left: 0.75rem;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-button:hover .button-arrow {
+            opacity: 1;
+            transform: translateX(6px);
+        }
+
+        /* Animations */
+        @keyframes letterSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pathAnimate {
+            0% {
+                stroke-dashoffset: 0;
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                stroke-dashoffset: 1000;
+                opacity: 0.3;
+            }
+        }
+
+        /* SVG Path Animation */
+        .animated-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 0;
+            animation: pathAnimate linear infinite;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .content-wrapper {
+                padding: 1.5rem 1rem;
+            }
+
+            .hero-title {
+                margin-bottom: 2rem;
+            }
+
+            .word {
+                margin-right: 0.5rem;
+            }
+
+            .cta-button {
+                padding: 1.25rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .word {
+                display: block;
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-paths-container">
+        <!-- SVG Background -->
+        <div class="svg-background" id="svgBackground"></div>
+
+        <!-- Content -->
+        <div class="content-wrapper">
+            <h1 class="hero-title" id="heroTitle">Background Paths</h1>
+
+            <div class="button-container">
+                <a href="#" class="cta-button">
+                    <span class="button-text">Discover Excellence</span>
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            title: 'Background Paths',
+            pathCount: 36,
+            baseDelay: 100,
+            letterDelay: 30
+        };
+
+        // Initialize SVG Background
+        function createSVGBackground() {
+            const container = document.getElementById('svgBackground');
+
+            // Create two sets of paths (mirrored)
+            createFloatingPaths(container, 1);
+            createFloatingPaths(container, -1);
+        }
+
+        function createFloatingPaths(container, position) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 696 316');
+            svg.setAttribute('fill', 'none');
+            svg.style.width = '100%';
+            svg.style.height = '100%';
+            svg.style.position = 'absolute';
+            svg.style.top = '0';
+            svg.style.left = '0';
+
+            // Create paths
+            for (let i = 0; i < CONFIG.pathCount; i++) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+                // Calculate path data
+                const d = `M-${380 - i * 5 * position} -${189 + i * 6}C-${380 - i * 5 * position} -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${152 - i * 5 * position} ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${684 - i * 5 * position} ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`;
+
+                path.setAttribute('d', d);
+                path.setAttribute('stroke', 'currentColor');
+                path.setAttribute('stroke-width', (0.5 + i * 0.03).toString());
+                path.setAttribute('stroke-opacity', (0.1 + i * 0.03).toString());
+                path.setAttribute('class', 'animated-path');
+                path.style.animationDuration = `${20 + Math.random() * 10}s`;
+                path.style.animationDelay = `${Math.random() * 5}s`;
+
+                svg.appendChild(path);
+            }
+
+            container.appendChild(svg);
+        }
+
+        // Animate Title Letters
+        function animateTitle() {
+            const titleElement = document.getElementById('heroTitle');
+            const titleText = CONFIG.title;
+            const words = titleText.split(' ');
+
+            titleElement.innerHTML = '';
+
+            words.forEach((word, wordIndex) => {
+                const wordSpan = document.createElement('span');
+                wordSpan.className = 'word';
+
+                word.split('').forEach((letter, letterIndex) => {
+                    const letterSpan = document.createElement('span');
+                    letterSpan.className = 'letter';
+                    letterSpan.textContent = letter;
+
+                    const delay = (wordIndex * CONFIG.baseDelay) + (letterIndex * CONFIG.letterDelay);
+                    letterSpan.style.animationDelay = `${delay}ms`;
+
+                    wordSpan.appendChild(letterSpan);
+                });
+
+                titleElement.appendChild(wordSpan);
+            });
+        }
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', () => {
+            createSVGBackground();
+            animateTitle();
+        });
+
+        // Handle CTA Button Click
+        document.querySelector('.cta-button').addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('Discover Excellence clicked!');
+            // Add your custom action here
+        });
+    </script>
+</body>
+</html>
