@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Upgrade Banner Component</title>
+
+    <!-- Import Google Fonts - Inter & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= Reset & Base Styles ========================= */
+        *,
+        *:after,
+        *:before {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        html,
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Color Assignments */
+            --color-light: var(--color-neutral-200);
+            --color-dark: var(--color-secondary);
+            --color-white: var(--color-neutral-100);
+            --color-black: var(--color-neutral-900);
+
+            /* Functional Colors */
+            --color-error: #ef4444;
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+
+            /* Theme-Specific Colors */
+            --theme-primary: #FCBF49;
+            --theme-secondary: #0A1128;
+            --theme-accent: #FFD23F;
+            --theme-background: #fffef9;
+
+            /* Animation & Timing */
+            --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+            --duration-default: 0.735s;
+            --animation-default: var(--duration-default) var(--cubic-default);
+
+            /* Layout Variables */
+            --gap: 2em;
+            --container-padding: 2em;
+        }
+
+        /* ========================= Body Styles ========================= */
+        body {
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-dark);
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* ========================= Demo Container ========================= */
+        .demo-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .demo-description {
+            font-size: 1.125rem;
+            color: var(--color-neutral-600);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        /* ========================= Upgrade Banner Component ========================= */
+        .upgrade-banner-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .upgrade-banner {
+            position: relative;
+            opacity: 0;
+            transform: translateX(30px);
+            animation: slideInFromRight 0.4s ease-out forwards;
+        }
+
+        .upgrade-banner-content {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            height: 35px;
+            border-radius: 6px;
+            border: 1px solid rgba(252, 191, 73, 0.3);
+            background: linear-gradient(145deg, rgba(255, 254, 249, 0.95) 0%, rgba(254, 249, 231, 0.98) 100%);
+            padding: 0 0.25rem 0 0.625rem;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 15px 0 rgba(252, 191, 73, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .upgrade-banner-content:hover {
+            box-shadow: 0 4px 25px 0 rgba(252, 191, 73, 0.2);
+            border-color: rgba(252, 191, 73, 0.5);
+        }
+
+        /* Settings Icon Styles */
+        .settings-icon {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            color: var(--color-primary);
+            width: 16px;
+            height: 16px;
+            transition: all 0.3s ease-out;
+        }
+
+        .settings-icon-top-left {
+            left: 4px;
+            top: 2px;
+        }
+
+        .settings-icon-bottom-right {
+            bottom: 2px;
+            left: 6rem;
+        }
+
+        .upgrade-banner.hovered .settings-icon-top-left {
+            opacity: 1;
+            transform: translate(-10px, -10px) rotate(360deg);
+        }
+
+        .upgrade-banner.hovered .settings-icon-bottom-right {
+            opacity: 1;
+            transform: translate(10px, 10px) rotate(360deg);
+        }
+
+        /* Button Styles */
+        .upgrade-button {
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            padding: 0.25rem 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--color-secondary);
+            text-decoration: underline;
+            text-decoration-color: rgba(252, 191, 73, 0.4);
+            text-underline-offset: 5px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .upgrade-button:hover {
+            color: var(--color-primary);
+            text-decoration-color: rgba(252, 191, 73, 0.7);
+        }
+
+        .upgrade-button:focus-visible {
+            box-shadow: 0 0 0 2px var(--color-accent);
+            border-radius: 2px;
+        }
+
+        /* Description Text */
+        .upgrade-description {
+            font-size: 0.8125rem;
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        /* Close Button */
+        .close-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-radius: 4px;
+            background: transparent;
+            color: var(--color-primary);
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .close-button:hover {
+            background: rgba(252, 191, 73, 0.15);
+        }
+
+        .close-button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Show Banner Button */
+        .show-banner-button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+            color: var(--color-secondary);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px 0 rgba(252, 191, 73, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .show-banner-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px 0 rgba(252, 191, 73, 0.5);
+        }
+
+        .show-banner-button:active {
+            transform: translateY(0);
+        }
+
+        /* Hidden State */
+        .hidden {
+            display: none;
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media screen and (max-width: 767px) {
+            .demo-title {
+                font-size: 2rem;
+            }
+
+            .demo-description {
+                font-size: 1rem;
+            }
+
+            .upgrade-banner-content {
+                font-size: 0.75rem;
+                padding: 0 0.5rem;
+            }
+
+            .upgrade-button,
+            .upgrade-description {
+                font-size: 0.75rem;
+            }
+
+            .settings-icon-bottom-right {
+                left: 4rem;
+            }
+        }
+
+        @media screen and (max-width: 479px) {
+            .demo-title {
+                font-size: 1.5rem;
+            }
+
+            body {
+                padding: 1rem;
+            }
+
+            .demo-container {
+                padding: 1rem;
+            }
+        }
+
+        /* ========================= Selection Styles ========================= */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 class="demo-title">DreamyHook Upgrade Banner</h1>
+        <p class="demo-description">
+            A beautiful, animated upgrade banner component styled with the DreamyHook brand theme.
+            Features smooth animations, golden glow effects, and responsive design.
+        </p>
+
+        <!-- Show Banner Button (initially hidden) -->
+        <div id="showBannerContainer" class="hidden">
+            <button onclick="showBanner()" class="show-banner-button">
+                Show Banner
+            </button>
+        </div>
+
+        <!-- Upgrade Banner Component -->
+        <div id="upgradeBanner" class="upgrade-banner-wrapper">
+            <div class="upgrade-banner" id="bannerElement">
+                <!-- Animated Settings Icons -->
+                <svg class="settings-icon settings-icon-top-left" viewBox="0 0 16 16" fill="currentColor">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.49999 0H6.49999L6.22628 1.45975C6.1916 1.64472 6.05544 1.79299 5.87755 1.85441C5.6298 1.93996 5.38883 2.04007 5.15568 2.15371C4.98644 2.2362 4.78522 2.22767 4.62984 2.12136L3.40379 1.28249L1.28247 3.40381L2.12135 4.62986C2.22766 4.78524 2.23619 4.98646 2.1537 5.15569C2.04005 5.38885 1.93995 5.62981 1.8544 5.87756C1.79297 6.05545 1.6447 6.19162 1.45973 6.2263L0 6.5V9.5L1.45973 9.7737C1.6447 9.80838 1.79297 9.94455 1.8544 10.1224C1.93995 10.3702 2.04006 10.6112 2.1537 10.8443C2.23619 11.0136 2.22767 11.2148 2.12136 11.3702L1.28249 12.5962L3.40381 14.7175L4.62985 13.8786C4.78523 13.7723 4.98645 13.7638 5.15569 13.8463C5.38884 13.9599 5.6298 14.06 5.87755 14.1456C6.05544 14.207 6.1916 14.3553 6.22628 14.5403L6.49999 16H9.49999L9.77369 14.5403C9.80837 14.3553 9.94454 14.207 10.1224 14.1456C10.3702 14.06 10.6111 13.9599 10.8443 13.8463C11.0135 13.7638 11.2147 13.7723 11.3701 13.8786L12.5962 14.7175L14.7175 12.5962L13.8786 11.3701C13.7723 11.2148 13.7638 11.0135 13.8463 10.8443C13.9599 10.6112 14.06 10.3702 14.1456 10.1224C14.207 9.94455 14.3553 9.80839 14.5402 9.7737L16 9.5V6.5L14.5402 6.2263C14.3553 6.19161 14.207 6.05545 14.1456 5.87756C14.06 5.62981 13.9599 5.38885 13.8463 5.1557C13.7638 4.98647 13.7723 4.78525 13.8786 4.62987L14.7175 3.40381L12.5962 1.28249L11.3701 2.12137C11.2148 2.22768 11.0135 2.2362 10.8443 2.15371C10.6111 2.04007 10.3702 1.93996 10.1224 1.85441C9.94454 1.79299 9.80837 1.64472 9.77369 1.45974L9.49999 0ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z"></path>
+                </svg>
+                <svg class="settings-icon settings-icon-bottom-right" viewBox="0 0 16 16" fill="currentColor">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.49999 0H6.49999L6.22628 1.45975C6.1916 1.64472 6.05544 1.79299 5.87755 1.85441C5.6298 1.93996 5.38883 2.04007 5.15568 2.15371C4.98644 2.2362 4.78522 2.22767 4.62984 2.12136L3.40379 1.28249L1.28247 3.40381L2.12135 4.62986C2.22766 4.78524 2.23619 4.98646 2.1537 5.15569C2.04005 5.38885 1.93995 5.62981 1.8544 5.87756C1.79297 6.05545 1.6447 6.19162 1.45973 6.2263L0 6.5V9.5L1.45973 9.7737C1.6447 9.80838 1.79297 9.94455 1.8544 10.1224C1.93995 10.3702 2.04006 10.6112 2.1537 10.8443C2.23619 11.0136 2.22767 11.2148 2.12136 11.3702L1.28249 12.5962L3.40381 14.7175L4.62985 13.8786C4.78523 13.7723 4.98645 13.7638 5.15569 13.8463C5.38884 13.9599 5.6298 14.06 5.87755 14.1456C6.05544 14.207 6.1916 14.3553 6.22628 14.5403L6.49999 16H9.49999L9.77369 14.5403C9.80837 14.3553 9.94454 14.207 10.1224 14.1456C10.3702 14.06 10.6111 13.9599 10.8443 13.8463C11.0135 13.7638 11.2147 13.7723 11.3701 13.8786L12.5962 14.7175L14.7175 12.5962L13.8786 11.3701C13.7723 11.2148 13.7638 11.0135 13.8463 10.8443C13.9599 10.6112 14.06 10.3702 14.1456 10.1224C14.207 9.94455 14.3553 9.80839 14.5402 9.7737L16 9.5V6.5L14.5402 6.2263C14.3553 6.19161 14.207 6.05545 14.1456 5.87756C14.06 5.62981 13.9599 5.38885 13.8463 5.1557C13.7638 4.98647 13.7723 4.78525 13.8786 4.62987L14.7175 3.40381L12.5962 1.28249L11.3701 2.12137C11.2148 2.22768 11.0135 2.2362 10.8443 2.15371C10.6111 2.04007 10.3702 1.93996 10.1224 1.85441C9.94454 1.79299 9.80837 1.64472 9.77369 1.45974L9.49999 0ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z"></path>
+                </svg>
+
+                <div class="upgrade-banner-content">
+                    <button
+                        class="upgrade-button"
+                        onmouseenter="handleHover(true)"
+                        onmouseleave="handleHover(false)"
+                        onclick="handleUpgradeClick()"
+                    >
+                        Upgrade to Pro
+                    </button>
+                    <span class="upgrade-description">
+                        for 2x more CPUs and faster builds
+                    </span>
+                    <button class="close-button" onclick="closeBanner()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding: 1.5rem; background: rgba(255, 254, 249, 0.8); border-radius: 12px; border: 1px solid rgba(252, 191, 73, 0.2);">
+            <h3 style="font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--color-secondary); margin-bottom: 1rem;">Component Features:</h3>
+            <ul style="text-align: left; color: var(--color-neutral-700); line-height: 1.8; list-style-position: inside;">
+                <li>Smooth slide-in animation on load</li>
+                <li>Animated rotating settings icons on hover</li>
+                <li>DreamyHook brand colors (Marigold Yellow, Midnight Blue, Buttercup Yellow)</li>
+                <li>Golden glow effects and warm gradients</li>
+                <li>Fully responsive design</li>
+                <li>Accessible with keyboard navigation support</li>
+                <li>Single file implementation (HTML + CSS + JavaScript)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // ========================= JavaScript for Upgrade Banner =========================
+
+        // Handle hover state for animated icons
+        function handleHover(isHovered) {
+            const bannerElement = document.getElementById('bannerElement');
+            if (isHovered) {
+                bannerElement.classList.add('hovered');
+            } else {
+                bannerElement.classList.remove('hovered');
+            }
+        }
+
+        // Handle upgrade button click
+        function handleUpgradeClick() {
+            console.log('Upgrade to Pro clicked!');
+            alert('Redirecting to upgrade page...\n\nIn a real application, this would navigate to your pricing or checkout page.');
+        }
+
+        // Close banner with fade-out animation
+        function closeBanner() {
+            const banner = document.getElementById('upgradeBanner');
+            const bannerElement = document.getElementById('bannerElement');
+            const showButton = document.getElementById('showBannerContainer');
+
+            // Add fade-out animation
+            bannerElement.classList.add('fade-out');
+
+            // Wait for animation to complete, then hide and show button
+            setTimeout(() => {
+                banner.classList.add('hidden');
+                showButton.classList.remove('hidden');
+            }, 300);
+        }
+
+        // Show banner again
+        function showBanner() {
+            const banner = document.getElementById('upgradeBanner');
+            const bannerElement = document.getElementById('bannerElement');
+            const showButton = document.getElementById('showBannerContainer');
+
+            // Remove fade-out class and hidden class
+            bannerElement.classList.remove('fade-out');
+            banner.classList.remove('hidden');
+            showButton.classList.add('hidden');
+
+            // Trigger animation by removing and re-adding the banner
+            bannerElement.style.animation = 'none';
+            setTimeout(() => {
+                bannerElement.style.animation = '';
+            }, 10);
+        }
+
+        // Log component initialization
+        console.log('DreamyHook Upgrade Banner Component initialized successfully!');
+        console.log('Brand Theme: Marigold Yellow (#FCBF49), Midnight Blue (#0A1128), Buttercup Yellow (#FFD23F)');
+    </script>
+</body>
+</html>
