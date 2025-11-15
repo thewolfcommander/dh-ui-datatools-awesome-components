@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Journey Timeline</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Typography */
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-colored: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-neutral-200);
+            color: var(--color-neutral-700);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* ========================= Container ========================= */
+        .timeline-container {
+            width: 100%;
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+
+        .timeline-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 1rem;
+        }
+
+        /* ========================= Header ========================= */
+        .timeline-header {
+            max-width: 800px;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .timeline-header h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .timeline-header p {
+            font-size: clamp(0.875rem, 2vw, 1.125rem);
+            color: var(--color-neutral-600);
+            max-width: 600px;
+        }
+
+        /* ========================= Timeline ========================= */
+        .timeline {
+            position: relative;
+            padding-bottom: 4rem;
+        }
+
+        /* Progress Line Background */
+        .timeline-line {
+            position: absolute;
+            left: 2rem;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                rgba(252, 191, 73, 0.2) 5%,
+                rgba(252, 191, 73, 0.2) 95%,
+                transparent 100%
+            );
+        }
+
+        /* Animated Progress Line */
+        .timeline-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2px;
+            height: 0%;
+            background: linear-gradient(
+                to bottom,
+                var(--color-accent) 0%,
+                var(--color-primary) 50%,
+                var(--color-coral) 100%
+            );
+            box-shadow: 0 0 10px rgba(252, 191, 73, 0.5);
+            transition: height 0.1s linear;
+        }
+
+        /* Timeline Entry */
+        .timeline-entry {
+            position: relative;
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 8rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .timeline-entry.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Timeline Dot */
+        .timeline-dot-container {
+            position: relative;
+            flex-shrink: 0;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .timeline-dot-outer {
+            position: sticky;
+            top: 8rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: var(--color-neutral-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-warm);
+            z-index: 10;
+        }
+
+        .timeline-dot {
+            width: 1rem;
+            height: 1rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(252, 191, 73, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Content */
+        .timeline-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .timeline-year {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 3vw, 3rem);
+            font-weight: 700;
+            color: var(--color-neutral-500);
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .timeline-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.25rem, 2.5vw, 2rem);
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-description {
+            font-size: clamp(0.875rem, 1.5vw, 1rem);
+            color: var(--color-neutral-600);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        /* Image Grid */
+        .timeline-images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .timeline-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-medium);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-image:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-colored);
+        }
+
+        /* Checklist */
+        .timeline-checklist {
+            margin-bottom: 2rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: var(--color-neutral-600);
+            font-size: clamp(0.875rem, 1.5vw, 1rem);
+        }
+
+        .checklist-item::before {
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-neutral-100);
+            border-radius: 0.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(252, 191, 73, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(252, 191, 73, 0.7);
+            }
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media (max-width: 768px) {
+            .timeline-wrapper {
+                padding: 2rem 0.5rem;
+            }
+
+            .timeline-header {
+                margin-bottom: 2rem;
+            }
+
+            .timeline-line {
+                left: 1.25rem;
+            }
+
+            .timeline-entry {
+                gap: 1rem;
+                margin-bottom: 4rem;
+            }
+
+            .timeline-dot-container {
+                width: 2.5rem;
+            }
+
+            .timeline-dot-outer {
+                width: 2rem;
+                height: 2rem;
+            }
+
+            .timeline-dot {
+                width: 0.75rem;
+                height: 0.75rem;
+            }
+
+            .timeline-year {
+                font-size: 1.5rem;
+            }
+
+            .timeline-images {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .timeline-image {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .timeline-container {
+                padding: 1rem 0.5rem;
+            }
+
+            .timeline-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .timeline-year {
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* ========================= Print Styles ========================= */
+        @media print {
+            .timeline-progress {
+                height: 100% !important;
+            }
+
+            .timeline-entry {
+                opacity: 1 !important;
+                transform: none !important;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timeline-container">
+        <div class="timeline-wrapper">
+            <!-- Header -->
+            <div class="timeline-header">
+                <h1>Our Journey</h1>
+                <p>We've been building DreamyHook for the past few years. Here's a timeline of our journey, milestones, and the incredible moments that shaped us.</p>
+            </div>
+
+            <!-- Timeline -->
+            <div class="timeline">
+                <!-- Progress Line -->
+                <div class="timeline-line">
+                    <div class="timeline-progress" id="timelineProgress"></div>
+                </div>
+
+                <!-- Timeline Entry 1 -->
+                <div class="timeline-entry" data-entry="1">
+                    <div class="timeline-dot-container">
+                        <div class="timeline-dot-outer">
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2024</div>
+                        <h3 class="timeline-title">Launched DreamyHook Platform</h3>
+                        <p class="timeline-description">
+                            Built and launched DreamyHook from scratch. A complete design system with modern components,
+                            beautiful animations, and a focus on developer experience. We created over 50 reusable components
+                            and established our unique brand identity with Marigold Yellow and Midnight Blue.
+                        </p>
+                        <div class="timeline-images">
+                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=500&h=500&fit=crop" alt="Team collaboration" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=500&h=500&fit=crop" alt="Product launch" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=500&h=500&fit=crop" alt="Startup office" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=500&h=500&fit=crop" alt="Technology" class="timeline-image" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Entry 2 -->
+                <div class="timeline-entry" data-entry="2">
+                    <div class="timeline-dot-container">
+                        <div class="timeline-dot-outer">
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">Early 2023</div>
+                        <h3 class="timeline-title">Built Core Features & Design System</h3>
+                        <p class="timeline-description">
+                            We focused on building the foundation. Created our comprehensive design system with color palettes,
+                            typography scales, spacing systems, and animation libraries. Developed core components including
+                            navigation, forms, cards, and data visualization tools.
+                        </p>
+                        <p class="timeline-description">
+                            This phase was crucial for establishing design consistency and creating reusable patterns that would
+                            scale across the entire platform. We iterated on feedback and refined our component architecture.
+                        </p>
+                        <div class="timeline-images">
+                            <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500&h=500&fit=crop" alt="Design process" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=500&h=500&fit=crop" alt="Development" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=500&fit=crop" alt="Team meeting" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=500&h=500&fit=crop" alt="Planning" class="timeline-image" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Entry 3 -->
+                <div class="timeline-entry" data-entry="3">
+                    <div class="timeline-dot-container">
+                        <div class="timeline-dot-outer">
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2022</div>
+                        <h3 class="timeline-title">Major Milestone Achievements</h3>
+                        <p class="timeline-description">
+                            A year of incredible growth and achievements. We deployed multiple new features and expanded our
+                            component library significantly. Here's what we accomplished:
+                        </p>
+                        <div class="timeline-checklist">
+                            <div class="checklist-item">Responsive grid system with auto-fit layouts</div>
+                            <div class="checklist-item">Advanced animation library with custom keyframes</div>
+                            <div class="checklist-item">Accessibility-first component architecture</div>
+                            <div class="checklist-item">Dark mode support with theme switching</div>
+                            <div class="checklist-item">Comprehensive documentation and examples</div>
+                            <div class="checklist-item">Performance optimization achieving 95+ Lighthouse scores</div>
+                        </div>
+                        <div class="timeline-images">
+                            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=500&h=500&fit=crop" alt="Success" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=500&h=500&fit=crop" alt="Achievement" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&h=500&fit=crop" alt="Collaboration" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=500&h=500&fit=crop" alt="Growth" class="timeline-image" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Entry 4 -->
+                <div class="timeline-entry" data-entry="4">
+                    <div class="timeline-dot-container">
+                        <div class="timeline-dot-outer">
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2021</div>
+                        <h3 class="timeline-title">Started the Journey</h3>
+                        <p class="timeline-description">
+                            The beginning of DreamyHook. We started with a vision to create a design system that combines
+                            beautiful aesthetics with practical functionality. Our founders came together with expertise in
+                            design, development, and user experience to build something special.
+                        </p>
+                        <p class="timeline-description">
+                            We researched the market, studied user needs, and laid the groundwork for what would become
+                            DreamyHook. The warm golden palette and midnight blue were chosen to evoke feelings of optimism,
+                            professionalism, and creativity.
+                        </p>
+                        <div class="timeline-images">
+                            <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500&h=500&fit=crop" alt="Beginning" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500&h=500&fit=crop" alt="Foundation" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=500&h=500&fit=crop" alt="Vision" class="timeline-image" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?w=500&h=500&fit=crop" alt="Innovation" class="timeline-image" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================= Scroll Progress Animation =========================
+        function updateScrollProgress() {
+            const timeline = document.querySelector('.timeline');
+            const progressBar = document.getElementById('timelineProgress');
+
+            if (!timeline || !progressBar) return;
+
+            const timelineRect = timeline.getBoundingClientRect();
+            const timelineTop = timelineRect.top + window.pageYOffset;
+            const timelineHeight = timelineRect.height;
+            const windowHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset;
+
+            // Calculate progress
+            const startScroll = timelineTop - windowHeight * 0.1;
+            const endScroll = timelineTop + timelineHeight - windowHeight * 0.5;
+            const scrollRange = endScroll - startScroll;
+            const currentScroll = scrollTop - startScroll;
+
+            let progress = (currentScroll / scrollRange) * 100;
+            progress = Math.max(0, Math.min(100, progress));
+
+            progressBar.style.height = progress + '%';
+        }
+
+        // ========================= Intersection Observer for Entries =========================
+        function initIntersectionObserver() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        // Add delay based on entry index for staggered animation
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 100);
+                    }
+                });
+            }, observerOptions);
+
+            const timelineEntries = document.querySelectorAll('.timeline-entry');
+            timelineEntries.forEach(entry => {
+                observer.observe(entry);
+            });
+        }
+
+        // ========================= Throttle Function for Performance =========================
+        function throttle(func, delay) {
+            let lastCall = 0;
+            return function(...args) {
+                const now = new Date().getTime();
+                if (now - lastCall < delay) {
+                    return;
+                }
+                lastCall = now;
+                return func(...args);
+            };
+        }
+
+        // ========================= Initialize =========================
+        function init() {
+            // Initial progress update
+            updateScrollProgress();
+
+            // Initialize Intersection Observer
+            initIntersectionObserver();
+
+            // Throttled scroll listener for progress bar
+            window.addEventListener('scroll', throttle(updateScrollProgress, 16));
+
+            // Update on resize
+            window.addEventListener('resize', throttle(() => {
+                updateScrollProgress();
+            }, 100));
+        }
+
+        // ========================= Run on DOM Ready =========================
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // ========================= Image Loading Optimization =========================
+        // Add smooth fade-in for images as they load
+        document.querySelectorAll('.timeline-image').forEach(img => {
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.4s ease-in';
+
+            img.addEventListener('load', function() {
+                this.style.opacity = '1';
+            });
+
+            // If image is already cached
+            if (img.complete) {
+                img.style.opacity = '1';
+            }
+        });
+    </script>
+</body>
+</html>
