@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook CodeBlock Component</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Prism.js for Syntax Highlighting -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+
+    <style>
+        /* ======================= CSS VARIABLES ======================= */
+        :root {
+            /* Brand Colors - DreamyHook Theme */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;
+            --color-neutral-300: #fffdf0;
+            --color-neutral-400: #fef9e7;
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-error: #ef4444;
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+            --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-buttercup-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+        }
+
+        /* ======================= RESET & BASE STYLES ======================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--color-neutral-800);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--color-neutral-600);
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin: 3rem 0 1rem;
+        }
+
+        /* ======================= CODEBLOCK COMPONENT STYLES ======================= */
+        .dreamyhook-codeblock {
+            background: linear-gradient(135deg, #0d1630 0%, #0A1128 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-warm);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .dreamyhook-codeblock:hover {
+            box-shadow: var(--shadow-marigold-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Header Section */
+        .codeblock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(252, 191, 73, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .codeblock-filename {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--color-accent);
+            font-weight: 500;
+        }
+
+        .codeblock-copy-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: 1px solid var(--color-accent);
+            color: var(--color-accent);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .codeblock-copy-btn:hover {
+            background: var(--color-accent);
+            color: var(--color-secondary);
+            box-shadow: var(--shadow-buttercup-glow);
+            transform: translateY(-1px);
+        }
+
+        .codeblock-copy-btn.copied {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: white;
+        }
+
+        .codeblock-copy-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Tabs Section */
+        .codeblock-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(252, 191, 73, 0.2);
+        }
+
+        .codeblock-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .codeblock-tabs::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+
+        .codeblock-tabs::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 2px;
+        }
+
+        .codeblock-tab {
+            background: transparent;
+            border: none;
+            color: var(--color-neutral-500);
+            padding: 0.5rem 1rem;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .codeblock-tab:hover {
+            color: var(--color-accent);
+            background: rgba(255, 210, 63, 0.1);
+        }
+
+        .codeblock-tab.active {
+            color: var(--color-primary);
+            background: rgba(252, 191, 73, 0.15);
+            font-weight: 600;
+        }
+
+        .codeblock-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-primary);
+        }
+
+        /* Code Content */
+        .codeblock-content {
+            position: relative;
+            overflow-x: auto;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+        }
+
+        .codeblock-content::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .codeblock-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .codeblock-content::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 4px;
+        }
+
+        .codeblock-content pre {
+            margin: 0;
+            padding: 0;
+            background: transparent !important;
+            font-family: var(--font-mono) !important;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        .codeblock-content code {
+            font-family: var(--font-mono) !important;
+            background: transparent !important;
+        }
+
+        /* Line Numbers */
+        .codeblock-content .line-numbers-rows {
+            border-right: 1px solid rgba(252, 191, 73, 0.2);
+            padding-right: 1rem;
+            margin-right: 1rem;
+        }
+
+        /* Highlighted Lines */
+        .codeblock-content .highlight-line {
+            background: rgba(252, 191, 73, 0.15);
+            display: block;
+            margin: 0 -1rem;
+            padding: 0 1rem;
+            border-left: 3px solid var(--color-primary);
+        }
+
+        /* Custom Prism Theme Override for DreamyHook */
+        .codeblock-content .token.comment,
+        .codeblock-content .token.prolog,
+        .codeblock-content .token.doctype,
+        .codeblock-content .token.cdata {
+            color: #78716c;
+        }
+
+        .codeblock-content .token.punctuation {
+            color: #d6d3d1;
+        }
+
+        .codeblock-content .token.property,
+        .codeblock-content .token.tag,
+        .codeblock-content .token.boolean,
+        .codeblock-content .token.number,
+        .codeblock-content .token.constant,
+        .codeblock-content .token.symbol,
+        .codeblock-content .token.deleted {
+            color: #FF6B4A;
+        }
+
+        .codeblock-content .token.selector,
+        .codeblock-content .token.attr-name,
+        .codeblock-content .token.string,
+        .codeblock-content .token.char,
+        .codeblock-content .token.builtin,
+        .codeblock-content .token.inserted {
+            color: #FFD23F;
+        }
+
+        .codeblock-content .token.operator,
+        .codeblock-content .token.entity,
+        .codeblock-content .token.url,
+        .codeblock-content .language-css .token.string,
+        .codeblock-content .style .token.string {
+            color: #FCBF49;
+        }
+
+        .codeblock-content .token.atrule,
+        .codeblock-content .token.attr-value,
+        .codeblock-content .token.keyword {
+            color: #0ea5e9;
+        }
+
+        .codeblock-content .token.function,
+        .codeblock-content .token.class-name {
+            color: #22c55e;
+        }
+
+        .codeblock-content .token.regex,
+        .codeblock-content .token.important,
+        .codeblock-content .token.variable {
+            color: #f59e0b;
+        }
+
+        /* ======================= RESPONSIVE STYLES ======================= */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .dreamyhook-codeblock {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+
+            .codeblock-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .codeblock-copy-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .codeblock-content pre {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .section-title {
+                font-size: 1.25rem;
+            }
+
+            .dreamyhook-codeblock {
+                padding: 0.75rem;
+            }
+
+            .codeblock-content pre {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ======================= UTILITY CLASSES ======================= */
+        .glow-marigold {
+            box-shadow: var(--shadow-marigold-glow);
+        }
+
+        .glow-buttercup {
+            box-shadow: var(--shadow-buttercup-glow);
+        }
+
+        .demo-description {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-soft);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .demo-description h3 {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .demo-description p {
+            color: var(--color-neutral-600);
+            font-size: 0.9375rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DreamyHook CodeBlock Component</h1>
+        <p class="subtitle">Beautiful syntax-highlighted code blocks with DreamyHook brand theme - Vanilla HTML, CSS & JavaScript</p>
+
+        <!-- Demo 1: Single Code Block -->
+        <div class="demo-description">
+            <h3>Demo 1: Single Code Block with Line Highlighting</h3>
+            <p>A React component example with specific lines highlighted (9, 13, 14, 18)</p>
+        </div>
+        <div id="code-demo-1"></div>
+
+        <!-- Demo 2: Multi-Tab Code Block -->
+        <div class="demo-description">
+            <h3>Demo 2: Multi-Tab Code Block</h3>
+            <p>Multiple files in one code block with tab navigation</p>
+        </div>
+        <div id="code-demo-2"></div>
+
+        <!-- Demo 3: CSS Example -->
+        <div class="demo-description">
+            <h3>Demo 3: CSS Code Block</h3>
+            <p>DreamyHook CSS variables and styling</p>
+        </div>
+        <div id="code-demo-3"></div>
+    </div>
+
+    <!-- Prism.js Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-jsx.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+
+    <script>
+        /* ======================= CODEBLOCK CLASS ======================= */
+        class CodeBlock {
+            constructor(options) {
+                this.containerId = options.containerId;
+                this.language = options.language || 'javascript';
+                this.filename = options.filename;
+                this.code = options.code;
+                this.tabs = options.tabs || [];
+                this.highlightLines = options.highlightLines || [];
+                this.activeTab = 0;
+                this.copied = false;
+
+                this.container = document.getElementById(this.containerId);
+                if (!this.container) {
+                    console.error(`Container with id "${this.containerId}" not found`);
+                    return;
+                }
+
+                this.render();
+                this.attachEventListeners();
+            }
+
+            /**
+             * Generate SVG icons for copy and check
+             */
+            getIcons() {
+                return {
+                    copy: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`,
+                    check: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+                };
+            }
+
+            /**
+             * Render the complete code block structure
+             */
+            render() {
+                const hasMultipleTabs = this.tabs.length > 0;
+                const icons = this.getIcons();
+
+                let html = '<div class="dreamyhook-codeblock">';
+
+                // Render tabs if they exist
+                if (hasMultipleTabs) {
+                    html += '<div class="codeblock-tabs">';
+                    this.tabs.forEach((tab, index) => {
+                        const activeClass = index === this.activeTab ? 'active' : '';
+                        html += `<button class="codeblock-tab ${activeClass}" data-tab-index="${index}">${tab.name}</button>`;
+                    });
+                    html += '</div>';
+                }
+
+                // Render header with filename and copy button
+                if (!hasMultipleTabs && this.filename) {
+                    html += `
+                        <div class="codeblock-header">
+                            <div class="codeblock-filename">${this.filename}</div>
+                            <button class="codeblock-copy-btn">
+                                ${icons.copy}
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    `;
+                } else if (hasMultipleTabs) {
+                    html += `
+                        <div class="codeblock-header">
+                            <div class="codeblock-filename">${this.tabs[this.activeTab].name}</div>
+                            <button class="codeblock-copy-btn">
+                                ${icons.copy}
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                // Render code content
+                html += '<div class="codeblock-content">';
+                html += this.renderCode();
+                html += '</div>';
+
+                html += '</div>';
+
+                this.container.innerHTML = html;
+            }
+
+            /**
+             * Render the code with syntax highlighting and line numbers
+             */
+            renderCode() {
+                const hasMultipleTabs = this.tabs.length > 0;
+                let code, language, highlightLines;
+
+                if (hasMultipleTabs) {
+                    const activeTabData = this.tabs[this.activeTab];
+                    code = activeTabData.code;
+                    language = activeTabData.language || this.language;
+                    highlightLines = activeTabData.highlightLines || [];
+                } else {
+                    code = this.code;
+                    language = this.language;
+                    highlightLines = this.highlightLines;
+                }
+
+                // Prepare code with highlighted lines
+                const lines = code.split('\n');
+                const processedCode = lines.map((line, index) => {
+                    const lineNumber = index + 1;
+                    if (highlightLines.includes(lineNumber)) {
+                        return `<span class="highlight-line">${line}</span>`;
+                    }
+                    return line;
+                }).join('\n');
+
+                // Use Prism to highlight
+                const highlighted = Prism.highlight(processedCode, Prism.languages[language] || Prism.languages.javascript, language);
+
+                return `<pre class="line-numbers language-${language}"><code class="language-${language}">${highlighted}</code></pre>`;
+            }
+
+            /**
+             * Attach event listeners to interactive elements
+             */
+            attachEventListeners() {
+                // Copy button
+                const copyBtn = this.container.querySelector('.codeblock-copy-btn');
+                if (copyBtn) {
+                    copyBtn.addEventListener('click', () => this.copyToClipboard());
+                }
+
+                // Tab buttons
+                const tabButtons = this.container.querySelectorAll('.codeblock-tab');
+                tabButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const tabIndex = parseInt(e.currentTarget.getAttribute('data-tab-index'));
+                        this.switchTab(tabIndex);
+                    });
+                });
+            }
+
+            /**
+             * Copy code to clipboard and show feedback
+             */
+            async copyToClipboard() {
+                const hasMultipleTabs = this.tabs.length > 0;
+                const textToCopy = hasMultipleTabs ? this.tabs[this.activeTab].code : this.code;
+
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+                    this.showCopyFeedback();
+                } catch (err) {
+                    console.error('Failed to copy:', err);
+                    // Fallback method
+                    this.fallbackCopy(textToCopy);
+                }
+            }
+
+            /**
+             * Show visual feedback when code is copied
+             */
+            showCopyFeedback() {
+                const copyBtn = this.container.querySelector('.codeblock-copy-btn');
+                const icons = this.getIcons();
+
+                if (copyBtn) {
+                    copyBtn.classList.add('copied');
+                    copyBtn.innerHTML = `${icons.check}<span>Copied!</span>`;
+
+                    setTimeout(() => {
+                        copyBtn.classList.remove('copied');
+                        copyBtn.innerHTML = `${icons.copy}<span>Copy</span>`;
+                    }, 2000);
+                }
+            }
+
+            /**
+             * Fallback copy method for browsers without clipboard API
+             */
+            fallbackCopy(text) {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+
+                try {
+                    document.execCommand('copy');
+                    this.showCopyFeedback();
+                } catch (err) {
+                    console.error('Fallback copy failed:', err);
+                }
+
+                document.body.removeChild(textArea);
+            }
+
+            /**
+             * Switch to a different tab
+             */
+            switchTab(index) {
+                this.activeTab = index;
+                this.render();
+                this.attachEventListeners();
+            }
+        }
+
+        /* ======================= DEMO INITIALIZATION ======================= */
+
+        // Demo 1: Single code block with highlighting
+        const demo1Code = `const DummyComponent = () => {
+  const [count, setCount] = React.useState(0);
+
+  const handleClick = () => {
+    setCount(prev => prev + 1);
+  };
+
+  return (
+    <div className="p-4 border rounded-lg">
+      <h2 className="text-xl font-bold mb-4">Fights Counter</h2>
+      <p className="mb-2">Fight Club Fights Count: {count}</p>
+      <button
+        onClick={handleClick}
+        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Increment
+      </button>
+    </div>
+  );
+};`;
+
+        new CodeBlock({
+            containerId: 'code-demo-1',
+            language: 'jsx',
+            filename: 'DummyComponent.jsx',
+            code: demo1Code,
+            highlightLines: [9, 13, 14, 18]
+        });
+
+        // Demo 2: Multi-tab code block
+        new CodeBlock({
+            containerId: 'code-demo-2',
+            filename: 'Multi-file Example',
+            tabs: [
+                {
+                    name: 'component.jsx',
+                    code: `import React from 'react';
+import { CodeBlock } from '@/components/ui/code-block';
+
+export function CodeBlockDemo() {
+  const sampleCode = \`console.log('Hello DreamyHook!');\`;
+
+  return (
+    <div className="container">
+      <h1>DreamyHook CodeBlock</h1>
+      <CodeBlock
+        language="javascript"
+        filename="example.js"
+        code={sampleCode}
+      />
+    </div>
+  );
+}`,
+                    language: 'jsx',
+                    highlightLines: [2, 10, 11, 12, 13]
+                },
+                {
+                    name: 'styles.css',
+                    code: `.dreamyhook-codeblock {
+  background: linear-gradient(135deg, #0d1630 0%, #0A1128 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+}
+
+.codeblock-copy-btn:hover {
+  background: var(--color-accent);
+  color: var(--color-secondary);
+  box-shadow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+}`,
+                    language: 'css',
+                    highlightLines: [2, 5, 11]
+                },
+                {
+                    name: 'config.ts',
+                    code: `export interface CodeBlockConfig {
+  language: string;
+  filename: string;
+  code?: string;
+  tabs?: TabConfig[];
+  highlightLines?: number[];
+}
+
+export interface TabConfig {
+  name: string;
+  code: string;
+  language?: string;
+  highlightLines?: number[];
+}
+
+export const defaultConfig: CodeBlockConfig = {
+  language: 'javascript',
+  filename: 'example.js',
+  highlightLines: []
+};`,
+                    language: 'typescript',
+                    highlightLines: [1, 9, 16]
+                }
+            ]
+        });
+
+        // Demo 3: CSS Variables
+        new CodeBlock({
+            containerId: 'code-demo-3',
+            language: 'css',
+            filename: 'dreamyhook-theme.css',
+            code: `:root {
+  /* Brand Colors - DreamyHook Theme */
+  --color-primary: #FCBF49;        /* Marigold Yellow */
+  --color-secondary: #0A1128;      /* Midnight Blue */
+  --color-accent: #FFD23F;         /* Buttercup Yellow */
+  --color-coral: #FF6B4A;          /* Coral */
+  --color-sky: #0ea5e9;            /* Sky Blue */
+
+  /* Shadows */
+  --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+  --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+  --shadow-buttercup-glow: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+
+  /* Typography */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}`,
+            highlightLines: [3, 4, 5, 11, 12]
+        });
+    </script>
+</body>
+</html>
