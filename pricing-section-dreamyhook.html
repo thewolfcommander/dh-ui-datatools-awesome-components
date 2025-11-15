@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook Pricing - Simple & Transparent Plans</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Animation & Timing */
+            --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+            --duration-default: 0.735s;
+
+            /* Layout Variables */
+            --gap: 2em;
+            --section-padding: calc(3.5em + (var(--gap) * 2));
+            --container-padding: 2em;
+
+            /* Typography */
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-colored: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+            --shadow-glow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-glow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--color-secondary);
+            background: linear-gradient(135deg, var(--color-neutral-200) 0%, var(--color-neutral-400) 100%);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ========================= Background Pattern ========================= */
+        .background-pattern {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .background-pattern::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(79, 79, 79, 0.18) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(79, 79, 79, 0.18) 1px, transparent 1px);
+            background-size: 35px 35px;
+            opacity: 0.3;
+            mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%);
+        }
+
+        /* ========================= Container ========================= */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: var(--container-padding);
+        }
+
+        /* ========================= Pricing Section ========================= */
+        .pricing-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2.5rem;
+            padding: 2.5rem 0;
+            min-height: 100vh;
+            justify-content: center;
+        }
+
+        /* ========================= Header ========================= */
+        .pricing-header {
+            text-align: center;
+            space-y: 1.75rem;
+        }
+
+        .pricing-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            animation: slideDown 0.8s var(--cubic-default) forwards;
+        }
+
+        .pricing-subtitle {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            color: var(--color-neutral-500);
+            margin-bottom: 2rem;
+            animation: fadeIn 0.6s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        /* ========================= Tab Toggle ========================= */
+        .tab-container {
+            display: inline-flex;
+            background: var(--color-neutral-300);
+            border-radius: 9999px;
+            padding: 0.25rem;
+            position: relative;
+            margin-top: 1rem;
+            animation: scaleIn 0.5s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .tab-button {
+            position: relative;
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--color-secondary);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            cursor: pointer;
+            border-radius: 9999px;
+            transition: color 0.3s ease;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+
+        .tab-button:hover {
+            color: var(--color-primary);
+        }
+
+        .tab-button.active {
+            color: var(--color-secondary);
+        }
+
+        .tab-indicator {
+            position: absolute;
+            top: 0.25rem;
+            left: 0.25rem;
+            height: calc(100% - 0.5rem);
+            background: var(--color-neutral-100);
+            border-radius: 9999px;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1;
+        }
+
+        .discount-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.625rem;
+            background: var(--color-accent);
+            color: var(--color-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            white-space: nowrap;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .tab-button.active .discount-badge {
+            background: var(--color-neutral-300);
+        }
+
+        /* ========================= Pricing Grid ========================= */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+            animation: fadeIn 0.8s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+
+        /* ========================= Pricing Card ========================= */
+        .pricing-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--color-neutral-100);
+            border: 1px solid rgba(10, 17, 40, 0.1);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            animation: slideUp 0.8s var(--cubic-default) forwards;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hard);
+        }
+
+        .pricing-card.popular {
+            border: 2px solid var(--color-primary);
+            box-shadow: var(--shadow-colored);
+        }
+
+        .pricing-card.popular::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 80% at 50% -20%, rgba(252, 191, 73, 0.1), rgba(255, 255, 255, 0));
+            pointer-events: none;
+        }
+
+        .pricing-card.highlighted {
+            background: var(--color-secondary);
+            color: var(--color-neutral-100);
+            border-color: var(--color-secondary);
+        }
+
+        .pricing-card.highlighted::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(79, 79, 79, 0.18) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(79, 79, 79, 0.18) 1px, transparent 1px);
+            background-size: 45px 45px;
+            mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%);
+            pointer-events: none;
+        }
+
+        .pricing-card:hover .pricing-card-glow {
+            opacity: 1;
+        }
+
+        /* ========================= Card Header ========================= */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .popular-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            background: var(--color-primary);
+            color: var(--color-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            box-shadow: var(--shadow-soft);
+            z-index: 10;
+            position: relative;
+        }
+
+        /* ========================= Card Price ========================= */
+        .card-price-container {
+            position: relative;
+            height: 4rem;
+        }
+
+        .card-price {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .card-price-detail {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .pricing-card.highlighted .card-price-detail {
+            color: var(--color-neutral-300);
+        }
+
+        /* ========================= Card Content ========================= */
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-card.highlighted .card-description {
+            color: var(--color-neutral-200);
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-neutral-500);
+        }
+
+        .pricing-card.highlighted .feature-item {
+            color: var(--color-neutral-200);
+        }
+
+        .feature-icon {
+            flex-shrink: 0;
+            width: 1rem;
+            height: 1rem;
+            color: var(--color-success);
+        }
+
+        .pricing-card.highlighted .feature-icon {
+            color: var(--color-accent);
+        }
+
+        /* ========================= Card Button ========================= */
+        .card-button {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            color: var(--color-secondary);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .card-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow-marigold);
+        }
+
+        .card-button:active {
+            transform: translateY(0);
+        }
+
+        .pricing-card.highlighted .card-button {
+            background: var(--color-neutral-100);
+            color: var(--color-secondary);
+        }
+
+        .pricing-card.highlighted .card-button:hover {
+            background: var(--color-accent);
+            box-shadow: var(--shadow-glow-buttercup);
+        }
+
+        .button-icon {
+            width: 1rem;
+            height: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card-button:hover .button-icon {
+            transform: translateX(4px);
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* ========================= Responsive Design ========================= */
+
+        /* Desktop (Large screens) */
+        @media screen and (min-width: 1200px) {
+            .pricing-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Tablet */
+        @media screen and (max-width: 991px) {
+            :root {
+                --container-padding: 1.5rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 800px;
+            }
+
+            .pricing-section {
+                padding: 2rem 0;
+            }
+        }
+
+        /* Mobile Landscape */
+        @media screen and (max-width: 767px) {
+            :root {
+                --container-padding: 1rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .tab-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.8125rem;
+            }
+
+            .pricing-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Mobile Portrait */
+        @media screen and (max-width: 479px) {
+            .pricing-title {
+                font-size: 1.75rem;
+            }
+
+            .pricing-subtitle {
+                font-size: 0.9375rem;
+            }
+
+            .tab-container {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .tab-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .card-price {
+                font-size: 2rem;
+            }
+        }
+
+        /* ========================= Utility Classes ========================= */
+        .text-gradient-golden {
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Pattern -->
+    <div class="background-pattern"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <section class="pricing-section">
+            <!-- Pricing Header -->
+            <div class="pricing-header">
+                <h1 class="pricing-title">Simple Pricing</h1>
+                <p class="pricing-subtitle">Choose the best plan for your needs</p>
+
+                <!-- Frequency Toggle -->
+                <div class="tab-container" id="tabContainer">
+                    <div class="tab-indicator" id="tabIndicator"></div>
+                    <button class="tab-button active" data-frequency="monthly">
+                        <span>Monthly</span>
+                    </button>
+                    <button class="tab-button" data-frequency="yearly">
+                        <span>Yearly</span>
+                        <span class="discount-badge">Save 35%</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pricing Grid -->
+            <div class="pricing-grid" id="pricingGrid">
+                <!-- Pricing cards will be dynamically generated here -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ========================= Pricing Data =========================
+        const PRICING_DATA = {
+            tiers: [
+                {
+                    id: 'individuals',
+                    name: 'Individuals',
+                    price: {
+                        monthly: 'Free',
+                        yearly: 'Free'
+                    },
+                    description: 'For your hobby projects',
+                    features: [
+                        'Free email alerts',
+                        '3-minute checks',
+                        'Automatic data enrichment',
+                        '10 monitors',
+                        'Up to 3 seats'
+                    ],
+                    cta: 'Get started',
+                    popular: false,
+                    highlighted: false
+                },
+                {
+                    id: 'teams',
+                    name: 'Teams',
+                    price: {
+                        monthly: 90,
+                        yearly: 75
+                    },
+                    description: 'Great for small businesses',
+                    features: [
+                        'Unlimited phone calls',
+                        '30 second checks',
+                        'Single-user account',
+                        '20 monitors',
+                        'Up to 6 seats'
+                    ],
+                    cta: 'Get started',
+                    popular: true,
+                    highlighted: false
+                },
+                {
+                    id: 'organizations',
+                    name: 'Organizations',
+                    price: {
+                        monthly: 120,
+                        yearly: 100
+                    },
+                    description: 'Great for large businesses',
+                    features: [
+                        'Unlimited phone calls',
+                        '15 second checks',
+                        'Single-user account',
+                        '50 monitors',
+                        'Up to 10 seats'
+                    ],
+                    cta: 'Get started',
+                    popular: false,
+                    highlighted: false
+                },
+                {
+                    id: 'enterprise',
+                    name: 'Enterprise',
+                    price: {
+                        monthly: 'Custom',
+                        yearly: 'Custom'
+                    },
+                    description: 'For multiple teams',
+                    features: [
+                        'Everything in Organizations',
+                        'Up to 5 team members',
+                        '100 monitors',
+                        '15 status pages',
+                        '200+ integrations'
+                    ],
+                    cta: 'Contact Us',
+                    popular: false,
+                    highlighted: true
+                }
+            ]
+        };
+
+        // ========================= State Management =========================
+        let currentFrequency = 'monthly';
+
+        // ========================= SVG Icons =========================
+        const ICONS = {
+            checkCircle: `<svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+            arrowRight: `<svg class="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>`
+        };
+
+        // ========================= Helper Functions =========================
+
+        function formatPrice(price) {
+            if (typeof price === 'number') {
+                return `$${price}`;
+            }
+            return price;
+        }
+
+        function createFeaturesList(features) {
+            return features.map(feature => `
+                <li class="feature-item">
+                    ${ICONS.checkCircle}
+                    <span>${feature}</span>
+                </li>
+            `).join('');
+        }
+
+        function createPricingCard(tier) {
+            const price = tier.price[currentFrequency];
+            const cardClasses = ['pricing-card'];
+            if (tier.popular) cardClasses.push('popular');
+            if (tier.highlighted) cardClasses.push('highlighted');
+
+            const priceDetail = typeof price === 'number' ? '<p class="card-price-detail">Per month/user</p>' : '';
+            const popularBadge = tier.popular ? '<span class="popular-badge">🔥 Most Popular</span>' : '';
+
+            return `
+                <div class="${cardClasses.join(' ')}" data-tier="${tier.id}">
+                    <div class="card-header">
+                        <h2 class="card-title">${tier.name}</h2>
+                        ${popularBadge}
+                    </div>
+
+                    <div class="card-price-container">
+                        <div class="card-price" data-price-display>${formatPrice(price)}</div>
+                        ${priceDetail}
+                    </div>
+
+                    <div class="card-content">
+                        <h3 class="card-description">${tier.description}</h3>
+                        <ul class="features-list">
+                            ${createFeaturesList(tier.features)}
+                        </ul>
+                    </div>
+
+                    <button class="card-button">
+                        ${tier.cta}
+                        ${ICONS.arrowRight}
+                    </button>
+                </div>
+            `;
+        }
+
+        // ========================= Render Functions =========================
+
+        function renderPricingCards() {
+            const gridElement = document.getElementById('pricingGrid');
+            gridElement.innerHTML = PRICING_DATA.tiers.map(tier => createPricingCard(tier)).join('');
+        }
+
+        function updatePrices(frequency) {
+            PRICING_DATA.tiers.forEach(tier => {
+                const cardElement = document.querySelector(`[data-tier="${tier.id}"]`);
+                const priceDisplay = cardElement.querySelector('[data-price-display]');
+                const newPrice = tier.price[frequency];
+
+                // Animate price change
+                priceDisplay.style.opacity = '0';
+                priceDisplay.style.transform = 'translateY(-10px)';
+
+                setTimeout(() => {
+                    priceDisplay.textContent = formatPrice(newPrice);
+                    priceDisplay.style.opacity = '1';
+                    priceDisplay.style.transform = 'translateY(0)';
+                }, 200);
+            });
+        }
+
+        function updateTabIndicator(button) {
+            const indicator = document.getElementById('tabIndicator');
+            const container = document.getElementById('tabContainer');
+            const buttons = container.querySelectorAll('.tab-button');
+
+            // Find button index
+            let index = 0;
+            buttons.forEach((btn, idx) => {
+                if (btn === button) index = idx;
+            });
+
+            // Calculate position and width
+            const buttonWidth = button.offsetWidth;
+            const buttonLeft = button.offsetLeft;
+
+            indicator.style.width = `${buttonWidth}px`;
+            indicator.style.transform = `translateX(${buttonLeft}px)`;
+        }
+
+        // ========================= Event Handlers =========================
+
+        function handleTabClick(event) {
+            const button = event.currentTarget;
+            const frequency = button.dataset.frequency;
+
+            if (frequency === currentFrequency) return;
+
+            // Update active state
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+
+            // Update indicator
+            updateTabIndicator(button);
+
+            // Update prices
+            currentFrequency = frequency;
+            updatePrices(frequency);
+        }
+
+        // ========================= Initialization =========================
+
+        function init() {
+            // Render initial cards
+            renderPricingCards();
+
+            // Setup tab switching
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', handleTabClick);
+            });
+
+            // Initialize tab indicator position
+            const activeButton = document.querySelector('.tab-button.active');
+            if (activeButton) {
+                updateTabIndicator(activeButton);
+            }
+
+            // Add smooth transitions to price displays
+            document.querySelectorAll('[data-price-display]').forEach(element => {
+                element.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            });
+        }
+
+        // Run initialization when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // Handle window resize for tab indicator
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const activeButton = document.querySelector('.tab-button.active');
+                if (activeButton) {
+                    updateTabIndicator(activeButton);
+                }
+            }, 250);
+        });
+    </script>
+</body>
+</html>
