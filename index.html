@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DreamyHook - Beautiful, accessible UI components for modern web applications">
+  <title>DreamyHook UI Components</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/components/announcement.css">
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin: 0 0 1.5rem 0;
+      background: linear-gradient(135deg, #FCBF49 0%, #FF6B4A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--color-neutral-600);
+      max-width: 600px;
+      margin: 0 0 2rem 0;
+      line-height: 1.6;
+    }
+
+    .hero-announcements {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 9999px;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 25px rgba(252, 191, 73, 0.25);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(252, 191, 73, 0.35);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 3rem auto 0;
+      padding: 0 2rem;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 2px 15px rgba(10, 17, 40, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(10, 17, 40, 0.1);
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-secondary);
+      margin: 0 0 0.75rem 0;
+    }
+
+    .feature-card p {
+      color: var(--color-neutral-600);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--color-neutral-600);
+      background: white;
+      border-top: 1px solid rgba(10, 17, 40, 0.1);
+      margin-top: 4rem;
+    }
+
+    @media (max-width: 768px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>DreamyHook UI Components</h1>
+    <p>Beautiful, accessible, and lightweight components built with vanilla HTML, CSS, and JavaScript</p>
+
+    <div class="hero-announcements">
+      <div class="announcement" data-variant="default">
+        <div class="announcement-tag">NEW</div>
+        <div class="announcement-title">
+          <span>Announcement component available</span>
+          <svg class="announcement-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 7h10v10M7 17L17 7"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="announcement" data-variant="coral">
+        <div class="announcement-tag">DEMO</div>
+        <div class="announcement-title">
+          <a href="demo/announcement-demo.html" style="color: inherit; text-decoration: none;">View interactive demo</a>
+          <svg class="announcement-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 7h10v10M7 17L17 7"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <a href="demo/announcement-demo.html" class="cta-button">Explore Components</a>
+
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h3>Lightweight</h3>
+        <p>Zero dependencies. Pure vanilla JavaScript, HTML, and CSS. Fast and performant.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7"/>
+            <path d="M15 7h6v6"/>
+          </svg>
+        </div>
+        <h3>Accessible</h3>
+        <p>Built with accessibility in mind. WCAG compliant with keyboard navigation support.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <h3>Easy to Use</h3>
+        <p>Simple API with extensive documentation. Copy, paste, and customize in minutes.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.4 4.4l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.4-4.4l4.2-4.2"/>
+          </svg>
+        </div>
+        <h3>Customizable</h3>
+        <p>DreamyHook brand theme with multiple variants. Easy to adapt to your design system.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <h3>Modular</h3>
+        <p>Use components individually or together. No bloat, just what you need.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <h3>Well Documented</h3>
+        <p>Comprehensive guides, code examples, and interactive demos to get you started.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 DreamyHook. Built with care for beautiful web experiences.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/components/announcement.js"></script>
+
+</body>
+</html>
