@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Animated Gradient Background</title>
+
+    <!-- Google Fonts - DreamyHook Brand Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+            /* Animation */
+            --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+            --duration-default: 0.735s;
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-neutral-200);
+            color: var(--color-secondary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Selection - Marigold yellow background with white text */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ========================= Animated Gradient Background ========================= */
+        .gradient-container {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+            opacity: 0;
+            transform: scale(1.5);
+            animation: fadeInScale 2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+
+        .gradient-background {
+            position: absolute;
+            inset: 0;
+            transition: background 0.1s ease;
+        }
+
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ========================= Content Styles ========================= */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            padding-top: 8rem;
+            text-align: center;
+        }
+
+        .lottie-container {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpFade 0.9s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s forwards;
+        }
+
+        @keyframes slideUpFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: var(--color-neutral-100);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 0 4px 20px rgba(10, 17, 40, 0.3);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--color-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--color-neutral-300);
+            max-width: 32rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+            text-shadow: 0 2px 10px rgba(10, 17, 40, 0.2);
+        }
+
+        .feature-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            color: var(--color-neutral-100);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media screen and (max-width: 768px) {
+            .content-wrapper {
+                padding-top: 4rem;
+            }
+
+            .lottie-container {
+                max-width: 350px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .content-wrapper {
+                padding-top: 3rem;
+            }
+
+            .lottie-container {
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Gradient Background -->
+    <div class="gradient-container">
+        <div class="gradient-background" id="gradientBg"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <!-- Lottie Animation -->
+        <div class="lottie-container">
+            <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+            <dotlottie-player
+                src="https://lottie.host/8cf4ba71-e5fb-44f3-8134-178c4d389417/0CCsdcgNIP.json"
+                background="transparent"
+                speed="1"
+                style="width: 100%; height: auto;"
+                loop
+                autoplay>
+            </dotlottie-player>
+        </div>
+
+        <!-- Hero Text -->
+        <h1>
+            <span class="text-gradient">DreamyHook</span> Animated Gradient
+        </h1>
+
+        <p>
+            A customizable animated radial gradient background with a subtle breathing effect,
+            crafted with DreamyHook's signature warm and golden color palette.
+        </p>
+
+        <div class="feature-badge">
+            Powered by Vanilla JavaScript
+        </div>
+    </div>
+
+    <!-- JavaScript for Animated Gradient -->
+    <script>
+        /**
+         * AnimatedGradientBackground
+         *
+         * Configuration object for the animated gradient background
+         * Adapted for DreamyHook brand theme with Marigold Yellow, Buttercup Yellow, and Midnight Blue
+         */
+        const gradientConfig = {
+            // Initial size of the radial gradient
+            startingGap: 125,
+
+            // Enable breathing animation effect
+            breathing: true,
+
+            // DreamyHook brand colors
+            gradientColors: [
+                '#0A1128',  // Midnight Blue (secondary)
+                '#243b53',  // Dark blue variant
+                '#486581',  // Medium blue
+                '#0ea5e9',  // Sky Blue
+                '#FFD23F',  // Buttercup Yellow (accent)
+                '#FCBF49',  // Marigold Yellow (primary)
+                '#FF6B4A'   // Coral (warm accent)
+            ],
+
+            // Gradient stop percentages
+            gradientStops: [35, 50, 60, 70, 80, 90, 100],
+
+            // Animation speed
+            animationSpeed: 0.02,
+
+            // Breathing range in percentage points
+            breathingRange: 5,
+
+            // Top offset for gradient positioning
+            topOffset: 0
+        };
+
+        /**
+         * Initialize and animate the gradient background
+         */
+        function initAnimatedGradient() {
+            const gradientBg = document.getElementById('gradientBg');
+
+            // Validation: Ensure gradientStops and gradientColors lengths match
+            if (gradientConfig.gradientColors.length !== gradientConfig.gradientStops.length) {
+                throw new Error(
+                    `GradientColors and GradientStops must have the same length. ` +
+                    `Received gradientColors length: ${gradientConfig.gradientColors.length}, ` +
+                    `gradientStops length: ${gradientConfig.gradientStops.length}`
+                );
+            }
+
+            let width = gradientConfig.startingGap;
+            let directionWidth = 1;
+            let animationFrameId;
+
+            function animateGradient() {
+                // Breathing effect logic
+                if (width >= gradientConfig.startingGap + gradientConfig.breathingRange) {
+                    directionWidth = -1;
+                }
+                if (width <= gradientConfig.startingGap - gradientConfig.breathingRange) {
+                    directionWidth = 1;
+                }
+
+                // Disable breathing if config is false
+                if (!gradientConfig.breathing) {
+                    directionWidth = 0;
+                }
+
+                width += directionWidth * gradientConfig.animationSpeed;
+
+                // Build gradient stops string
+                const gradientStopsString = gradientConfig.gradientStops
+                    .map((stop, index) => `${gradientConfig.gradientColors[index]} ${stop}%`)
+                    .join(', ');
+
+                // Apply radial gradient
+                const gradient = `radial-gradient(${width}% ${width + gradientConfig.topOffset}% at 50% 20%, ${gradientStopsString})`;
+
+                if (gradientBg) {
+                    gradientBg.style.background = gradient;
+                }
+
+                animationFrameId = requestAnimationFrame(animateGradient);
+            }
+
+            // Start animation
+            animationFrameId = requestAnimationFrame(animateGradient);
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                }
+            });
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAnimatedGradient);
+        } else {
+            initAnimatedGradient();
+        }
+    </script>
+</body>
+</html>
