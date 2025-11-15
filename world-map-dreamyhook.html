@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - World Map Connectivity</title>
+
+    <!-- Google Fonts - Inter & Poppins -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap">
+
+    <style>
+        /* DreamyHook Theme Variables */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+
+            /* Theme */
+            --theme-background: #fffef9;
+            --theme-text: #0A1128;
+
+            /* Typography */
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+            color: var(--theme-text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+        }
+
+        /* Container */
+        .world-map-container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header Section */
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .main-title {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .title-highlight {
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+
+        .connectivity-text {
+            color: var(--color-neutral-500);
+            display: inline-block;
+        }
+
+        .connectivity-text span {
+            display: inline-block;
+            opacity: 0;
+            animation: letterFadeIn 0.5s forwards;
+        }
+
+        @keyframes letterFadeIn {
+            from {
+                transform: translateX(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--color-neutral-500);
+            max-width: 42rem;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* World Map Wrapper */
+        .world-map-wrapper {
+            width: 100%;
+            aspect-ratio: 2 / 1;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 254, 249, 0.98) 100%);
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1),
+                        0 0 30px 0 rgba(252, 191, 73, 0.15);
+        }
+
+        /* SVG Container */
+        .map-svg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .background-dots {
+            opacity: 0.25;
+        }
+
+        /* Animation for paths */
+        @keyframes drawPath {
+            from {
+                stroke-dashoffset: 1000;
+            }
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .animated-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawPath 1s ease-out forwards;
+        }
+
+        /* Pulsing dots animation */
+        @keyframes pulse {
+            0% {
+                r: 2;
+                opacity: 0.5;
+            }
+            100% {
+                r: 8;
+                opacity: 0;
+            }
+        }
+
+        .pulse-circle {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .world-map-container {
+                padding: 2rem 1rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .main-title {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 0.875rem;
+            }
+
+            body {
+                padding: 1rem;
+            }
+        }
+
+        /* Glow effects */
+        .glow-marigold {
+            filter: drop-shadow(0 0 20px rgba(252, 191, 73, 0.3));
+            transition: filter 0.3s ease;
+        }
+
+        .glow-marigold:hover {
+            filter: drop-shadow(0 0 30px rgba(252, 191, 73, 0.5));
+        }
+    </style>
+</head>
+<body>
+    <div class="world-map-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1 class="main-title">
+                Remote
+                <span class="connectivity-text" id="connectivityText"></span>
+            </h1>
+            <p class="subtitle">
+                Break free from traditional boundaries. Work from anywhere, at the
+                comfort of your own studio apartment. Perfect for Nomads and
+                Travellers.
+            </p>
+        </div>
+
+        <!-- World Map -->
+        <div class="world-map-wrapper glow-marigold">
+            <svg class="map-svg" viewBox="0 0 800 400" id="worldMapSvg">
+                <defs>
+                    <!-- Gradient for paths using DreamyHook colors -->
+                    <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="white" stop-opacity="0" />
+                        <stop offset="5%" stop-color="#FCBF49" stop-opacity="1" />
+                        <stop offset="50%" stop-color="#FFD23F" stop-opacity="1" />
+                        <stop offset="95%" stop-color="#FCBF49" stop-opacity="1" />
+                        <stop offset="100%" stop-color="white" stop-opacity="0" />
+                    </linearGradient>
+
+                    <!-- Radial gradient for dots -->
+                    <radialGradient id="dotGradient">
+                        <stop offset="0%" stop-color="#FFD23F" stop-opacity="1" />
+                        <stop offset="100%" stop-color="#FCBF49" stop-opacity="0.8" />
+                    </radialGradient>
+                </defs>
+
+                <!-- Background dots group -->
+                <g id="backgroundDots" class="background-dots"></g>
+
+                <!-- Connection paths group -->
+                <g id="connectionPaths"></g>
+
+                <!-- Connection points group -->
+                <g id="connectionPoints"></g>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        // DreamyHook World Map - Vanilla JavaScript Implementation
+
+        // Configuration
+        const CONFIG = {
+            lineColor: '#FCBF49',        // Marigold Yellow
+            accentColor: '#FFD23F',       // Buttercup Yellow
+            secondaryColor: '#0A1128',    // Midnight Blue
+            coralColor: '#FF6B4A',        // Coral
+            dotColor: '#00000040',        // Semi-transparent black for light theme
+            backgroundColor: '#ffffff'
+        };
+
+        // Connection data
+        const connections = [
+            {
+                start: { lat: 64.2008, lng: -149.4937 },  // Alaska (Fairbanks)
+                end: { lat: 34.0522, lng: -118.2437 }     // Los Angeles
+            },
+            {
+                start: { lat: 64.2008, lng: -149.4937 },  // Alaska (Fairbanks)
+                end: { lat: -15.7975, lng: -47.8919 }     // Brazil (Brasília)
+            },
+            {
+                start: { lat: -15.7975, lng: -47.8919 },  // Brazil (Brasília)
+                end: { lat: 38.7223, lng: -9.1393 }       // Lisbon
+            },
+            {
+                start: { lat: 51.5074, lng: -0.1278 },    // London
+                end: { lat: 28.6139, lng: 77.209 }        // New Delhi
+            },
+            {
+                start: { lat: 28.6139, lng: 77.209 },     // New Delhi
+                end: { lat: 43.1332, lng: 131.9113 }      // Vladivostok
+            },
+            {
+                start: { lat: 28.6139, lng: 77.209 },     // New Delhi
+                end: { lat: -1.2921, lng: 36.8219 }       // Nairobi
+            }
+        ];
+
+        // Project lat/lng to SVG coordinates
+        function projectPoint(lat, lng) {
+            const x = (lng + 180) * (800 / 360);
+            const y = (90 - lat) * (400 / 180);
+            return { x, y };
+        }
+
+        // Create curved path between two points
+        function createCurvedPath(start, end) {
+            const midX = (start.x + end.x) / 2;
+            const midY = Math.min(start.y, end.y) - 50;
+            return `M ${start.x} ${start.y} Q ${midX} ${midY} ${end.x} ${end.y}`;
+        }
+
+        // Generate background dots (simplified dotted map)
+        function generateBackgroundDots() {
+            const dotsGroup = document.getElementById('backgroundDots');
+            const dotSpacing = 8;
+            const dotRadius = 0.8;
+
+            // Create a grid of dots
+            for (let x = 0; x < 800; x += dotSpacing) {
+                for (let y = 0; y < 400; y += dotSpacing) {
+                    // Create diagonal pattern by offsetting alternate rows
+                    const offsetX = (y / dotSpacing) % 2 === 0 ? 0 : dotSpacing / 2;
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.setAttribute('cx', x + offsetX);
+                    circle.setAttribute('cy', y);
+                    circle.setAttribute('r', dotRadius);
+                    circle.setAttribute('fill', CONFIG.dotColor);
+                    dotsGroup.appendChild(circle);
+                }
+            }
+        }
+
+        // Create connection paths
+        function createConnectionPaths() {
+            const pathsGroup = document.getElementById('connectionPaths');
+            const pointsGroup = document.getElementById('connectionPoints');
+
+            connections.forEach((connection, index) => {
+                const startPoint = projectPoint(connection.start.lat, connection.start.lng);
+                const endPoint = projectPoint(connection.end.lat, connection.end.lng);
+                const pathData = createCurvedPath(startPoint, endPoint);
+
+                // Create path
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', pathData);
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke', 'url(#pathGradient)');
+                path.setAttribute('stroke-width', '2');
+                path.classList.add('animated-path');
+                path.style.animationDelay = `${index * 0.5}s`;
+                pathsGroup.appendChild(path);
+
+                // Create start point
+                createPoint(pointsGroup, startPoint, index * 0.2);
+
+                // Create end point
+                createPoint(pointsGroup, endPoint, index * 0.2 + 0.1);
+            });
+        }
+
+        // Create animated point
+        function createPoint(group, point, delay) {
+            // Main dot
+            const mainCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            mainCircle.setAttribute('cx', point.x);
+            mainCircle.setAttribute('cy', point.y);
+            mainCircle.setAttribute('r', '3');
+            mainCircle.setAttribute('fill', 'url(#dotGradient)');
+            group.appendChild(mainCircle);
+
+            // Pulsing circle
+            const pulseCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            pulseCircle.setAttribute('cx', point.x);
+            pulseCircle.setAttribute('cy', point.y);
+            pulseCircle.setAttribute('r', '2');
+            pulseCircle.setAttribute('fill', CONFIG.accentColor);
+            pulseCircle.setAttribute('opacity', '0.5');
+            pulseCircle.classList.add('pulse-circle');
+            pulseCircle.style.animationDelay = `${delay}s`;
+            group.appendChild(pulseCircle);
+        }
+
+        // Animate "Connectivity" text letter by letter
+        function animateConnectivityText() {
+            const text = 'Connectivity';
+            const container = document.getElementById('connectivityText');
+
+            text.split('').forEach((letter, index) => {
+                const span = document.createElement('span');
+                span.textContent = letter;
+                span.style.animationDelay = `${index * 0.04}s`;
+                container.appendChild(span);
+            });
+        }
+
+        // Initialize the map
+        function initMap() {
+            generateBackgroundDots();
+            createConnectionPaths();
+            animateConnectivityText();
+        }
+
+        // Run on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initMap);
+        } else {
+            initMap();
+        }
+    </script>
+</body>
+</html>
