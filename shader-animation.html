@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DreamyHook - Stunning shader animation with WebGL and Three.js">
+    <title>DreamyHook Shader Animation</title>
+
+    <!-- Google Fonts - DreamyHook Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-white: #ffffff;
+            --color-warm-white: #fffef9;
+            --color-cream: #fffdf0;
+            --color-neutral-900: #1c1917;
+
+            /* Typography */
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Animation */
+            --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+            --duration-default: 0.735s;
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========================= Shader Animation Container ========================= */
+        #shader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-secondary);
+            z-index: 1;
+        }
+
+        /* ========================= Content Overlay ========================= */
+        .content-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            pointer-events: none;
+            background: linear-gradient(
+                135deg,
+                rgba(10, 17, 40, 0.1) 0%,
+                rgba(10, 17, 40, 0.05) 100%
+            );
+        }
+
+        /* ========================= Heading with Golden Glow ========================= */
+        .shader-heading {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 8vw, 7rem);
+            font-weight: 700;
+            color: var(--color-white);
+            text-align: center;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            white-space: pre-wrap;
+            padding: 2rem;
+            text-shadow:
+                0 0 20px rgba(252, 191, 73, 0.6),
+                0 0 40px rgba(252, 191, 73, 0.4),
+                0 0 60px rgba(252, 191, 73, 0.3),
+                0 4px 20px rgba(10, 17, 40, 0.5);
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        /* ========================= Subtitle ========================= */
+        .shader-subtitle {
+            font-family: var(--font-body);
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-weight: 400;
+            color: var(--color-warm-white);
+            text-align: center;
+            margin-top: 1rem;
+            opacity: 0.9;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            text-shadow:
+                0 2px 10px rgba(10, 17, 40, 0.7),
+                0 0 30px rgba(255, 210, 63, 0.3);
+        }
+
+        /* ========================= Branding Badge ========================= */
+        .branding-badge {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            box-shadow:
+                0 4px 25px rgba(252, 191, 73, 0.3),
+                0 0 40px rgba(252, 191, 73, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .branding-badge-text {
+            font-family: var(--font-heading);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            letter-spacing: 0.05em;
+        }
+
+        .branding-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(252, 191, 73, 0.6);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes glow-pulse {
+            0%, 100% {
+                text-shadow:
+                    0 0 20px rgba(252, 191, 73, 0.6),
+                    0 0 40px rgba(252, 191, 73, 0.4),
+                    0 0 60px rgba(252, 191, 73, 0.3),
+                    0 4px 20px rgba(10, 17, 40, 0.5);
+            }
+            50% {
+                text-shadow:
+                    0 0 30px rgba(252, 191, 73, 0.8),
+                    0 0 60px rgba(252, 191, 73, 0.6),
+                    0 0 90px rgba(252, 191, 73, 0.4),
+                    0 4px 20px rgba(10, 17, 40, 0.5);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0px);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(0.9);
+            }
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media screen and (max-width: 768px) {
+            .shader-heading {
+                font-size: clamp(1.5rem, 10vw, 3rem);
+                padding: 1.5rem;
+            }
+
+            .shader-subtitle {
+                font-size: clamp(0.75rem, 3vw, 1rem);
+                padding: 0 1rem;
+            }
+
+            .branding-badge {
+                bottom: 1rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .branding-badge-text {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .shader-heading {
+                font-size: clamp(1.25rem, 12vw, 2.5rem);
+            }
+
+            .content-overlay {
+                background: linear-gradient(
+                    135deg,
+                    rgba(10, 17, 40, 0.15) 0%,
+                    rgba(10, 17, 40, 0.1) 100%
+                );
+            }
+        }
+
+        /* ========================= Loading State ========================= */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            color: var(--color-primary);
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-shadow: 0 0 20px rgba(252, 191, 73, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- Shader Animation Container -->
+    <div id="shader-container"></div>
+
+    <!-- Loading State -->
+    <div class="loading" id="loading">Loading DreamyHook...</div>
+
+    <!-- Content Overlay -->
+    <div class="content-overlay">
+        <h1 class="shader-heading">DreamyHook
+Shader Animation</h1>
+        <p class="shader-subtitle">Powered by WebGL & Three.js</p>
+    </div>
+
+    <!-- Branding Badge -->
+    <div class="branding-badge">
+        <span class="branding-badge-dot"></span>
+        <span class="branding-badge-text">DREAMYHOOK</span>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Shader Animation Script -->
+    <script>
+        // ========================= DreamyHook Shader Animation =========================
+        // Brand Colors (converted to RGB 0-1 range for shaders)
+        const BRAND_COLORS = {
+            marigold: { r: 0.988, g: 0.749, b: 0.286 },    // #FCBF49
+            buttercup: { r: 1.0, g: 0.824, b: 0.247 },     // #FFD23F
+            coral: { r: 1.0, g: 0.420, b: 0.290 },         // #FF6B4A
+            sky: { r: 0.055, g: 0.647, b: 0.914 },         // #0ea5e9
+            midnight: { r: 0.039, g: 0.067, b: 0.157 }     // #0A1128
+        };
+
+        (function() {
+            const container = document.getElementById('shader-container');
+            const loading = document.getElementById('loading');
+
+            // Vertex Shader - Simple passthrough
+            const vertexShader = `
+                void main() {
+                    gl_Position = vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment Shader - DreamyHook Brand Colors
+            const fragmentShader = `
+                #define TWO_PI 6.2831853072
+                #define PI 3.14159265359
+
+                precision highp float;
+                uniform vec2 resolution;
+                uniform float time;
+
+                // DreamyHook Brand Colors (RGB in 0-1 range)
+                const vec3 marigold = vec3(0.988, 0.749, 0.286);   // #FCBF49
+                const vec3 buttercup = vec3(1.0, 0.824, 0.247);    // #FFD23F
+                const vec3 coral = vec3(1.0, 0.420, 0.290);        // #FF6B4A
+                const vec3 sky = vec3(0.055, 0.647, 0.914);        // #0ea5e9
+                const vec3 midnight = vec3(0.039, 0.067, 0.157);   // #0A1128
+
+                void main(void) {
+                    // Normalize coordinates
+                    vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
+                    float t = time * 0.05;
+                    float lineWidth = 0.002;
+
+                    // Create concentric ring patterns with brand colors
+                    vec3 color = midnight; // Start with midnight blue background
+
+                    // Layer 1: Marigold rings (primary brand color)
+                    for(int i = 0; i < 5; i++) {
+                        float intensity = lineWidth * float(i * i) /
+                            abs(fract(t + float(i) * 0.01) * 5.0 - length(uv) + mod(uv.x + uv.y, 0.2));
+                        color += marigold * intensity * 0.8;
+                    }
+
+                    // Layer 2: Buttercup accents
+                    for(int i = 0; i < 4; i++) {
+                        float intensity = lineWidth * float(i * i) /
+                            abs(fract(t - 0.02 + float(i) * 0.015) * 4.5 - length(uv) + mod(uv.x - uv.y, 0.15));
+                        color += buttercup * intensity * 0.6;
+                    }
+
+                    // Layer 3: Coral warmth
+                    for(int i = 0; i < 3; i++) {
+                        float intensity = lineWidth * float(i * i) /
+                            abs(fract(t - 0.03 + float(i) * 0.02) * 4.0 - length(uv) + mod(uv.y, 0.18));
+                        color += coral * intensity * 0.5;
+                    }
+
+                    // Layer 4: Sky blue highlights
+                    for(int i = 0; i < 3; i++) {
+                        float intensity = lineWidth * float(i * i) /
+                            abs(fract(t + 0.01 + float(i) * 0.025) * 3.5 - length(uv) + mod(uv.x, 0.25));
+                        color += sky * intensity * 0.4;
+                    }
+
+                    // Add subtle vignette effect
+                    float vignette = 1.0 - length(uv) * 0.3;
+                    color *= vignette;
+
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `;
+
+            // ========================= Three.js Scene Setup =========================
+            let camera, scene, renderer, uniforms, animationId;
+
+            function init() {
+                // Camera setup
+                camera = new THREE.Camera();
+                camera.position.z = 1;
+
+                // Scene setup
+                scene = new THREE.Scene();
+                const geometry = new THREE.PlaneGeometry(2, 2);
+
+                // Shader uniforms
+                uniforms = {
+                    time: { type: "f", value: 1.0 },
+                    resolution: { type: "v2", value: new THREE.Vector2() }
+                };
+
+                // Shader material
+                const material = new THREE.ShaderMaterial({
+                    uniforms: uniforms,
+                    vertexShader: vertexShader,
+                    fragmentShader: fragmentShader
+                });
+
+                // Mesh
+                const mesh = new THREE.Mesh(geometry, material);
+                scene.add(mesh);
+
+                // Renderer setup
+                renderer = new THREE.WebGLRenderer({
+                    antialias: true,
+                    alpha: false
+                });
+                renderer.setPixelRatio(window.devicePixelRatio);
+
+                container.appendChild(renderer.domElement);
+
+                // Initial resize
+                onWindowResize();
+
+                // Hide loading
+                loading.style.display = 'none';
+
+                // Start animation
+                animate();
+            }
+
+            // ========================= Window Resize Handler =========================
+            function onWindowResize() {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+
+                renderer.setSize(width, height);
+                uniforms.resolution.value.x = renderer.domElement.width;
+                uniforms.resolution.value.y = renderer.domElement.height;
+            }
+
+            // ========================= Animation Loop =========================
+            function animate() {
+                animationId = requestAnimationFrame(animate);
+                uniforms.time.value += 0.05;
+                renderer.render(scene, camera);
+            }
+
+            // ========================= Cleanup =========================
+            function cleanup() {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+
+                if (renderer) {
+                    if (container && renderer.domElement) {
+                        container.removeChild(renderer.domElement);
+                    }
+                    renderer.dispose();
+                }
+
+                window.removeEventListener('resize', onWindowResize);
+            }
+
+            // ========================= Event Listeners =========================
+            window.addEventListener('resize', onWindowResize, false);
+            window.addEventListener('beforeunload', cleanup);
+
+            // Initialize when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+</body>
+</html>
