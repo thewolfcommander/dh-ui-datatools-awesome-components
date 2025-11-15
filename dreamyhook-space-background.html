@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Space Background Component</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* DreamyHook Theme Variables */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;
+            --color-neutral-500: #78716c;
+            --color-neutral-900: #1c1917;
+
+            /* Typography */
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+            --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, var(--color-neutral-200) 0%, #fef9e7 100%);
+            color: var(--color-secondary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Canvas Styles */
+        #spaceCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Content Container */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Logo Container */
+        .logo-container {
+            margin-bottom: 3rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--color-secondary);
+            box-shadow: 0 10px 40px 0 rgba(252, 191, 73, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px 0 rgba(252, 191, 73, 0.5);
+        }
+
+        /* Heading Styles */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--color-neutral-500);
+            margin-bottom: 2rem;
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Feature Pills */
+        .features {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
+            animation: slideUp 1.2s ease-out forwards;
+        }
+
+        .feature-pill {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--color-primary);
+            border-radius: 2rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            box-shadow: 0 4px 15px rgba(252, 191, 73, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-pill:hover {
+            background: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(252, 191, 73, 0.4);
+        }
+
+        /* Control Panel */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(10, 17, 40, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .control-group {
+            margin-bottom: 1rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-secondary);
+            font-size: 0.875rem;
+        }
+
+        .control-group input[type="range"] {
+            width: 200px;
+            accent-color: var(--color-primary);
+        }
+
+        .control-group input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border: 2px solid var(--color-primary);
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes slideUp {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .logo {
+                width: 150px;
+                height: 150px;
+                font-size: 2.5rem;
+            }
+
+            .controls {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                padding: 1rem;
+            }
+
+            .control-group input[type="range"] {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 479px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .features {
+                gap: 0.5rem;
+            }
+
+            .feature-pill {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Space Background Canvas -->
+    <canvas id="spaceCanvas"></canvas>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="logo-container">
+            <div class="logo">DH</div>
+        </div>
+
+        <h1>DreamyHook Space Background</h1>
+        <p class="subtitle">Beautiful animated particle background with vanilla JavaScript</p>
+
+        <div class="features">
+            <div class="feature-pill">No Dependencies</div>
+            <div class="feature-pill">Pure JavaScript</div>
+            <div class="feature-pill">Responsive Design</div>
+            <div class="feature-pill">Auto Dark/Light Mode</div>
+            <div class="feature-pill">Performance Optimized</div>
+        </div>
+    </div>
+
+    <!-- Interactive Controls -->
+    <div class="controls">
+        <div class="control-group">
+            <label for="particleCount">Particle Count: <span id="countValue">450</span></label>
+            <input type="range" id="particleCount" min="100" max="1000" value="450" step="50">
+        </div>
+
+        <div class="control-group">
+            <label for="particleColor">Particle Color:</label>
+            <input type="color" id="particleColor" value="#FCBF49">
+        </div>
+    </div>
+
+    <script>
+        // =====================================================
+        // DreamyHook Space Background Component
+        // Vanilla JavaScript Implementation
+        // =====================================================
+
+        class SpaceBackground {
+            constructor(canvasId, options = {}) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.animationId = null;
+
+                // Configuration
+                this.config = {
+                    particleCount: options.particleCount || 450,
+                    particleColor: options.particleColor || '#FCBF49', // DreamyHook Marigold
+                    backgroundColor: options.backgroundColor || 'transparent',
+                };
+
+                // State
+                this.particles = [];
+                this.r = 120;
+                this.counter = 0;
+                this.ratio = window.innerHeight < 400 ? 0.6 : 1;
+                this.resolvedColor = null;
+
+                // Initialize
+                this.init();
+            }
+
+            // Utility: Parse RGB/Hex colors
+            parseRGB(cssColor) {
+                if (!cssColor) return null;
+                cssColor = cssColor.trim();
+
+                // Hex color
+                if (cssColor[0] === '#') {
+                    let hex = cssColor.slice(1);
+                    if (hex.length === 3) {
+                        hex = hex.split('').map(c => c + c).join('');
+                    }
+                    const r = parseInt(hex.slice(0, 2), 16);
+                    const g = parseInt(hex.slice(2, 4), 16);
+                    const b = parseInt(hex.slice(4, 6), 16);
+                    return [r, g, b];
+                }
+
+                // RGB/RGBA color
+                const m = cssColor.match(/rgba?\(([^)]+)\)/);
+                if (m) {
+                    const parts = m[1].split(',').map(s => parseFloat(s.trim()));
+                    return [parts[0], parts[1], parts[2]];
+                }
+
+                return null;
+            }
+
+            // Calculate luminance from RGB
+            luminanceFromRgb([r, g, b]) {
+                const srgb = [r / 255, g / 255, b / 255].map(v =>
+                    v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+                );
+                return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+            }
+
+            // Detect background color
+            detectBackgroundColor() {
+                if (this.config.backgroundColor && this.config.backgroundColor !== 'transparent') {
+                    return this.config.backgroundColor;
+                }
+
+                const candidates = [document.body, document.documentElement];
+                for (const el of candidates) {
+                    if (!el) continue;
+                    const cs = getComputedStyle(el);
+                    const bg = cs.backgroundColor || cs.background;
+                    if (!bg) continue;
+
+                    const rgb = this.parseRGB(bg);
+                    if (!rgb) continue;
+
+                    if (/rgba/.test(bg)) {
+                        const alpha = parseFloat(bg.split(',').pop() || '1');
+                        if (isNaN(alpha) || alpha === 0) continue;
+                    }
+                    return bg;
+                }
+
+                const media = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+                return media && media.matches ? 'black' : 'white';
+            }
+
+            // Compute high contrast particle color
+            computeParticleColor() {
+                if (this.config.particleColor) {
+                    this.resolvedColor = this.config.particleColor;
+                    return;
+                }
+
+                let bg = this.detectBackgroundColor();
+                if (!bg || bg === 'transparent') {
+                    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    bg = isDark ? 'black' : 'white';
+                }
+
+                const rgb = this.parseRGB(bg);
+                if (rgb) {
+                    const lum = this.luminanceFromRgb(rgb);
+                    // Improved opacity for visibility in light mode
+                    if (lum < 0.5) {
+                        this.resolvedColor = 'rgba(252, 191, 73, 0.85)'; // Dark bg → Marigold stars
+                    } else {
+                        this.resolvedColor = 'rgba(252, 191, 73, 0.85)'; // Light bg → Marigold stars
+                    }
+                } else {
+                    this.resolvedColor = 'rgba(252, 191, 73, 0.85)'; // Default Marigold
+                }
+            }
+
+            // Setup canvas dimensions
+            setupCanvas() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.ctx.setTransform(
+                    this.ratio, 0, 0,
+                    -this.ratio,
+                    this.canvas.width / 2,
+                    this.canvas.height / 2
+                );
+            }
+
+            // Create a particle
+            createParticle() {
+                return {
+                    color: this.resolvedColor,
+                    radius: Math.random() * 5,
+                    x: Math.cos(Math.random() * 7 + Math.PI) * this.r,
+                    y: Math.sin(Math.random() * 7 + Math.PI) * this.r,
+                    ring: Math.random() * this.r * 3,
+                    move: (Math.random() * 4 + 1) / 500,
+                    random: Math.random() * 7,
+                };
+            }
+
+            // Move particle
+            moveParticle(p) {
+                p.ring = Math.max(p.ring - 1, this.r);
+                p.random += p.move;
+                p.x = Math.cos(p.random + Math.PI) * p.ring;
+                p.y = Math.sin(p.random + Math.PI) * p.ring;
+            }
+
+            // Reset particle
+            resetParticle(p) {
+                p.ring = Math.random() * this.r * 3;
+                p.radius = Math.random() * 5;
+            }
+
+            // Particle disappear effect
+            disappear(p) {
+                if (p.radius < 0.8) this.resetParticle(p);
+                p.radius *= 0.994;
+            }
+
+            // Draw particle
+            draw(p) {
+                this.ctx.beginPath();
+                this.ctx.fillStyle = p.color;
+                this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+
+            // Animation loop
+            loop() {
+                this.ctx.clearRect(
+                    -this.canvas.width,
+                    -this.canvas.height,
+                    this.canvas.width * 2,
+                    this.canvas.height * 2
+                );
+
+                if (this.counter < this.particles.length) this.counter++;
+
+                for (let i = 0; i < this.counter; i++) {
+                    this.disappear(this.particles[i]);
+                    this.moveParticle(this.particles[i]);
+                    this.draw(this.particles[i]);
+                }
+
+                this.animationId = requestAnimationFrame(() => this.loop());
+            }
+
+            // Handle window resize
+            handleResize() {
+                this.ratio = window.innerHeight < 400 ? 0.6 : 1;
+                this.setupCanvas();
+            }
+
+            // Update particle count
+            updateParticleCount(count) {
+                this.config.particleCount = count;
+                this.particles = [];
+                this.counter = 0;
+
+                for (let i = 0; i < this.config.particleCount; i++) {
+                    this.particles.push(this.createParticle());
+                }
+            }
+
+            // Update particle color
+            updateParticleColor(color) {
+                this.config.particleColor = color;
+                this.resolvedColor = color;
+
+                // Update existing particles
+                this.particles.forEach(p => {
+                    p.color = this.resolvedColor;
+                });
+            }
+
+            // Initialize
+            init() {
+                this.computeParticleColor();
+                this.setupCanvas();
+
+                // Create particles
+                for (let i = 0; i < this.config.particleCount; i++) {
+                    this.particles.push(this.createParticle());
+                }
+
+                // Start animation
+                this.loop();
+
+                // Event listeners
+                window.addEventListener('resize', () => this.handleResize());
+
+                // Listen for theme changes
+                const media = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+                if (media && media.addEventListener) {
+                    media.addEventListener('change', () => this.computeParticleColor());
+                }
+            }
+
+            // Destroy instance
+            destroy() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+                window.removeEventListener('resize', () => this.handleResize());
+            }
+        }
+
+        // =====================================================
+        // Initialize Space Background
+        // =====================================================
+
+        let spaceBackground;
+
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSpaceBackground);
+        } else {
+            initSpaceBackground();
+        }
+
+        function initSpaceBackground() {
+            spaceBackground = new SpaceBackground('spaceCanvas', {
+                particleCount: 450,
+                particleColor: '#FCBF49', // DreamyHook Marigold Yellow
+            });
+
+            setupControls();
+        }
+
+        // =====================================================
+        // Interactive Controls
+        // =====================================================
+
+        function setupControls() {
+            const particleCountInput = document.getElementById('particleCount');
+            const particleColorInput = document.getElementById('particleColor');
+            const countValueDisplay = document.getElementById('countValue');
+
+            // Particle count control
+            particleCountInput.addEventListener('input', (e) => {
+                const count = parseInt(e.target.value);
+                countValueDisplay.textContent = count;
+                spaceBackground.updateParticleCount(count);
+            });
+
+            // Particle color control
+            particleColorInput.addEventListener('input', (e) => {
+                const color = e.target.value;
+                spaceBackground.updateParticleColor(color);
+            });
+        }
+    </script>
+</body>
+</html>
