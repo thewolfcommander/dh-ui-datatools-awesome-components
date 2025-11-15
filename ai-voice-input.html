@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Voice Input - DreamyHook</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================= DreamyHook Theme Variables ========================= */
+    :root {
+      /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+      --color-primary: #FCBF49;        /* Marigold Yellow */
+      --color-secondary: #0A1128;      /* Midnight Blue */
+      --color-accent: #FFD23F;         /* Buttercup Yellow */
+      --color-coral: #FF6B4A;          /* Coral */
+      --color-sky: #0ea5e9;            /* Sky Blue */
+
+      /* Neutral Colors */
+      --color-neutral-100: #ffffff;
+      --color-neutral-200: #fffef9;
+      --color-neutral-300: #fffdf0;
+      --color-neutral-400: #fef9e7;
+      --color-neutral-500: #78716c;
+      --color-neutral-600: #57534e;
+      --color-neutral-700: #44403c;
+      --color-neutral-800: #292524;
+      --color-neutral-900: #1c1917;
+
+      /* Semantic Colors */
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+
+      /* Typography */
+      --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+      --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+      /* Shadows */
+      --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+      --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+      --shadow-marigold: 0 4px 25px 0 rgba(252, 191, 73, 0.25);
+      --shadow-glow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+      --shadow-glow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+    }
+
+    /* ========================= Reset & Base Styles ========================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+      color: var(--color-secondary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+      text-shadow: none;
+    }
+
+    /* ========================= Container ========================= */
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 2rem;
+      padding: 3rem;
+      box-shadow: var(--shadow-medium);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(252, 191, 73, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: var(--color-neutral-600);
+      font-size: 1.125rem;
+    }
+
+    /* ========================= Voice Input Component ========================= */
+    .voice-input-wrapper {
+      width: 100%;
+      padding: 2rem 0;
+    }
+
+    .voice-input-container {
+      position: relative;
+      max-width: 40rem;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Mic Button */
+    .mic-button {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .mic-button:not(.recording):hover {
+      background: rgba(252, 191, 73, 0.1);
+      box-shadow: var(--shadow-glow-marigold);
+    }
+
+    .mic-button:not(.recording):active {
+      transform: scale(0.95);
+    }
+
+    /* Mic Icon (using SVG) */
+    .mic-icon {
+      width: 2rem;
+      height: 2rem;
+      stroke: var(--color-secondary);
+      stroke-width: 2;
+      fill: none;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+
+    .mic-button:hover .mic-icon {
+      opacity: 1;
+      stroke: var(--color-primary);
+    }
+
+    /* Spinning Square (Recording State) */
+    .recording-indicator {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 0.25rem;
+      background: var(--color-secondary);
+      animation: spin 3s linear infinite;
+      cursor: pointer;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Timer */
+    .timer {
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+    }
+
+    .timer.idle {
+      color: var(--color-neutral-400);
+    }
+
+    .timer.recording {
+      color: var(--color-secondary);
+      font-weight: 500;
+    }
+
+    /* Visualizer */
+    .visualizer {
+      height: 5rem;
+      width: 16rem;
+      display: flex;
+      items-align: center;
+      justify-content: center;
+      gap: 0.125rem;
+      padding: 1rem 0;
+    }
+
+    .visualizer-bar {
+      width: 0.125rem;
+      border-radius: 9999px;
+      transition: all 0.3s ease;
+      background: rgba(10, 17, 40, 0.1);
+      height: 0.25rem;
+    }
+
+    .visualizer-bar.active {
+      background: rgba(252, 191, 73, 0.7);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.5;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* Status Text */
+    .status-text {
+      height: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--color-secondary);
+      opacity: 0.7;
+      font-weight: 500;
+    }
+
+    /* ========================= Demo Controls ========================= */
+    .controls {
+      margin-top: 3rem;
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(252, 191, 73, 0.2);
+    }
+
+    .controls h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      color: var(--color-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FFD23F 0%, #FCBF49 100%);
+      color: var(--color-secondary);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn-primary:hover {
+      box-shadow: var(--shadow-glow-buttercup);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: rgba(252, 191, 73, 0.1);
+      color: var(--color-secondary);
+      border: 1px solid rgba(252, 191, 73, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(252, 191, 73, 0.2);
+      border-color: var(--color-primary);
+    }
+
+    /* ========================= Recording History ========================= */
+    .recordings-section {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 210, 63, 0.05);
+      border-radius: 1rem;
+      border: 1px solid rgba(252, 191, 73, 0.15);
+    }
+
+    .recordings-section h4 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      color: var(--color-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .recording-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .recording-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: white;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .recording-duration {
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .recording-timestamp {
+      color: var(--color-neutral-500);
+      font-size: 0.75rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--color-neutral-500);
+      font-size: 0.875rem;
+    }
+
+    /* ========================= Responsive Design ========================= */
+    @media (max-width: 768px) {
+      .card {
+        padding: 2rem 1.5rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .header p {
+        font-size: 1rem;
+      }
+
+      .visualizer {
+        width: 12rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem;
+      }
+
+      .card {
+        padding: 1.5rem 1rem;
+      }
+
+      .header h1 {
+        font-size: 1.75rem;
+      }
+
+      .mic-button {
+        width: 3.5rem;
+        height: 3.5rem;
+      }
+
+      .visualizer {
+        width: 10rem;
+        height: 4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <!-- Header -->
+      <div class="header">
+        <h1>AI Voice Input</h1>
+        <p>Click the microphone to start recording your voice</p>
+      </div>
+
+      <!-- Voice Input Component -->
+      <div class="voice-input-wrapper">
+        <div class="voice-input-container">
+          <!-- Mic Button -->
+          <button class="mic-button" id="micButton" type="button" aria-label="Toggle recording">
+            <!-- Mic Icon SVG -->
+            <svg class="mic-icon" id="micIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" x2="12" y1="19" y2="22"/>
+            </svg>
+            <!-- Recording Indicator (hidden by default) -->
+            <div class="recording-indicator" id="recordingIndicator" style="display: none;"></div>
+          </button>
+
+          <!-- Timer -->
+          <span class="timer idle" id="timer">00:00</span>
+
+          <!-- Visualizer -->
+          <div class="visualizer" id="visualizer">
+            <!-- Bars will be generated by JavaScript -->
+          </div>
+
+          <!-- Status Text -->
+          <p class="status-text" id="statusText">Click to speak</p>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <h3>Demo Controls</h3>
+        <div class="button-group">
+          <button class="btn btn-primary" id="startDemoBtn">
+            Start Demo Mode
+          </button>
+          <button class="btn btn-secondary" id="stopDemoBtn">
+            Stop Demo
+          </button>
+          <button class="btn btn-secondary" id="clearHistoryBtn">
+            Clear History
+          </button>
+        </div>
+      </div>
+
+      <!-- Recording History -->
+      <div class="recordings-section">
+        <h4>Recording History</h4>
+        <div class="recording-list" id="recordingList">
+          <div class="empty-state">No recordings yet. Click the microphone to start!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========================= Voice Input Component Logic =========================
+
+    class AIVoiceInput {
+      constructor(options = {}) {
+        // Configuration
+        this.visualizerBars = options.visualizerBars || 48;
+        this.demoInterval = options.demoInterval || 3000;
+        this.onStart = options.onStart || (() => {});
+        this.onStop = options.onStop || (() => {});
+
+        // State
+        this.isRecording = false;
+        this.isDemoMode = false;
+        this.time = 0;
+        this.timerInterval = null;
+        this.demoTimeout = null;
+        this.recordings = [];
+
+        // DOM Elements
+        this.micButton = document.getElementById('micButton');
+        this.micIcon = document.getElementById('micIcon');
+        this.recordingIndicator = document.getElementById('recordingIndicator');
+        this.timer = document.getElementById('timer');
+        this.visualizer = document.getElementById('visualizer');
+        this.statusText = document.getElementById('statusText');
+        this.recordingList = document.getElementById('recordingList');
+        this.startDemoBtn = document.getElementById('startDemoBtn');
+        this.stopDemoBtn = document.getElementById('stopDemoBtn');
+        this.clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+        // Initialize
+        this.init();
+      }
+
+      init() {
+        // Create visualizer bars
+        this.createVisualizerBars();
+
+        // Event listeners
+        this.micButton.addEventListener('click', () => this.toggleRecording());
+        this.startDemoBtn.addEventListener('click', () => this.startDemo());
+        this.stopDemoBtn.addEventListener('click', () => this.stopDemo());
+        this.clearHistoryBtn.addEventListener('click', () => this.clearHistory());
+
+        // Load recordings from localStorage
+        this.loadRecordings();
+      }
+
+      createVisualizerBars() {
+        this.visualizer.innerHTML = '';
+        for (let i = 0; i < this.visualizerBars; i++) {
+          const bar = document.createElement('div');
+          bar.className = 'visualizer-bar';
+          bar.dataset.index = i;
+          this.visualizer.appendChild(bar);
+        }
+      }
+
+      toggleRecording() {
+        if (this.isDemoMode) {
+          this.stopDemo();
+          return;
+        }
+
+        if (this.isRecording) {
+          this.stopRecording();
+        } else {
+          this.startRecording();
+        }
+      }
+
+      startRecording() {
+        this.isRecording = true;
+        this.time = 0;
+
+        // Update UI
+        this.micButton.classList.add('recording');
+        this.micIcon.style.display = 'none';
+        this.recordingIndicator.style.display = 'block';
+        this.timer.classList.remove('idle');
+        this.timer.classList.add('recording');
+        this.statusText.textContent = 'Listening...';
+
+        // Activate visualizer bars
+        this.animateVisualizer();
+
+        // Start timer
+        this.timerInterval = setInterval(() => {
+          this.time++;
+          this.updateTimer();
+        }, 1000);
+
+        // Callback
+        this.onStart();
+      }
+
+      stopRecording() {
+        this.isRecording = false;
+        const duration = this.time;
+
+        // Update UI
+        this.micButton.classList.remove('recording');
+        this.micIcon.style.display = 'block';
+        this.recordingIndicator.style.display = 'none';
+        this.timer.classList.remove('recording');
+        this.timer.classList.add('idle');
+        this.statusText.textContent = 'Click to speak';
+
+        // Reset timer
+        clearInterval(this.timerInterval);
+        this.time = 0;
+        this.updateTimer();
+
+        // Deactivate visualizer bars
+        this.resetVisualizer();
+
+        // Save recording
+        if (duration > 0) {
+          this.saveRecording(duration);
+        }
+
+        // Callback
+        this.onStop(duration);
+      }
+
+      animateVisualizer() {
+        const bars = this.visualizer.querySelectorAll('.visualizer-bar');
+        bars.forEach((bar, index) => {
+          if (this.isRecording || this.isDemoMode) {
+            bar.classList.add('active');
+            const height = 20 + Math.random() * 80;
+            bar.style.height = `${height}%`;
+            bar.style.animationDelay = `${index * 0.05}s`;
+
+            // Random height changes for animation
+            const randomizeHeight = () => {
+              if (this.isRecording || this.isDemoMode) {
+                const newHeight = 20 + Math.random() * 80;
+                bar.style.height = `${newHeight}%`;
+                setTimeout(randomizeHeight, 150 + Math.random() * 200);
+              }
+            };
+            setTimeout(randomizeHeight, index * 50);
+          }
+        });
+      }
+
+      resetVisualizer() {
+        const bars = this.visualizer.querySelectorAll('.visualizer-bar');
+        bars.forEach(bar => {
+          bar.classList.remove('active');
+          bar.style.height = '0.25rem';
+          bar.style.animationDelay = '';
+        });
+      }
+
+      updateTimer() {
+        const mins = Math.floor(this.time / 60);
+        const secs = this.time % 60;
+        this.timer.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      }
+
+      startDemo() {
+        this.isDemoMode = true;
+        this.runDemoLoop();
+      }
+
+      runDemoLoop() {
+        if (!this.isDemoMode) return;
+
+        // Start recording
+        this.startRecording();
+
+        // Stop after demo interval
+        this.demoTimeout = setTimeout(() => {
+          this.stopRecording();
+
+          // Start next cycle after 1 second
+          setTimeout(() => {
+            if (this.isDemoMode) {
+              this.runDemoLoop();
+            }
+          }, 1000);
+        }, this.demoInterval);
+      }
+
+      stopDemo() {
+        this.isDemoMode = false;
+        clearTimeout(this.demoTimeout);
+        if (this.isRecording) {
+          this.stopRecording();
+        }
+      }
+
+      saveRecording(duration) {
+        const recording = {
+          duration,
+          timestamp: new Date()
+        };
+
+        this.recordings.unshift(recording);
+
+        // Keep only last 5 recordings
+        if (this.recordings.length > 5) {
+          this.recordings = this.recordings.slice(0, 5);
+        }
+
+        // Save to localStorage
+        localStorage.setItem('voiceRecordings', JSON.stringify(this.recordings));
+
+        // Update UI
+        this.renderRecordings();
+      }
+
+      loadRecordings() {
+        const stored = localStorage.getItem('voiceRecordings');
+        if (stored) {
+          this.recordings = JSON.parse(stored).map(r => ({
+            duration: r.duration,
+            timestamp: new Date(r.timestamp)
+          }));
+          this.renderRecordings();
+        }
+      }
+
+      renderRecordings() {
+        if (this.recordings.length === 0) {
+          this.recordingList.innerHTML = '<div class="empty-state">No recordings yet. Click the microphone to start!</div>';
+          return;
+        }
+
+        this.recordingList.innerHTML = this.recordings.map(recording => {
+          const mins = Math.floor(recording.duration / 60);
+          const secs = recording.duration % 60;
+          const durationStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+          const timeStr = this.formatTimestamp(recording.timestamp);
+
+          return `
+            <div class="recording-item">
+              <span class="recording-duration">${durationStr}</span>
+              <span class="recording-timestamp">${timeStr}</span>
+            </div>
+          `;
+        }).join('');
+      }
+
+      formatTimestamp(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins} min ago`;
+
+        const diffHours = Math.floor(diffMins / 60);
+        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+
+      clearHistory() {
+        if (confirm('Are you sure you want to clear all recordings?')) {
+          this.recordings = [];
+          localStorage.removeItem('voiceRecordings');
+          this.renderRecordings();
+        }
+      }
+    }
+
+    // Initialize the voice input component
+    const voiceInput = new AIVoiceInput({
+      visualizerBars: 48,
+      demoInterval: 3000,
+      onStart: () => console.log('Recording started'),
+      onStop: (duration) => console.log('Recording stopped. Duration:', duration, 'seconds')
+    });
+  </script>
+</body>
+</html>
