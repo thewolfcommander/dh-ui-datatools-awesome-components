@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamyHook Display Cards</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* DreamyHook Theme Variables */
+    :root {
+      /* Brand Colors */
+      --color-primary: #FCBF49;        /* Marigold Yellow */
+      --color-secondary: #0A1128;      /* Midnight Blue */
+      --color-accent: #FFD23F;         /* Buttercup Yellow */
+      --color-coral: #FF6B4A;          /* Coral */
+      --color-sky: #0ea5e9;            /* Sky Blue */
+
+      /* Neutral Colors */
+      --color-neutral-100: #ffffff;    /* Pure white */
+      --color-neutral-200: #fffef9;    /* Warm white */
+      --color-neutral-300: #fffdf0;    /* Cream white */
+      --color-neutral-400: #fef9e7;    /* Light cream */
+      --color-neutral-500: #78716c;    /* Medium warm gray */
+      --color-neutral-600: #57534e;    /* Dark warm gray */
+      --color-neutral-700: #44403c;    /* Very dark warm gray */
+      --color-neutral-800: #292524;    /* Almost black */
+
+      /* Typography */
+      --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+      /* Shadows & Effects */
+      --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+      --shadow-marigold-glow: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+      --glow-marigold: 0 0 30px rgba(252, 191, 73, 0.5);
+      --glow-buttercup: 0 0 30px rgba(255, 210, 63, 0.5);
+
+      /* Animation */
+      --duration-default: 0.7s;
+      --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+    }
+
+    /* Reset & Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: linear-gradient(135deg, var(--color-neutral-200) 0%, var(--color-neutral-400) 100%);
+      color: var(--color-secondary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Section */
+    .display-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 500px;
+      padding: 3rem 0;
+    }
+
+    /* Header */
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-neutral-600);
+      font-weight: 400;
+    }
+
+    /* Cards Container */
+    .cards-container {
+      display: grid;
+      grid-template-areas: 'stack';
+      place-items: center;
+      opacity: 1;
+      animation: fadeIn 0.7s ease-out;
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 400px;
+    }
+
+    /* Individual Card */
+    .display-card {
+      grid-area: stack;
+      position: relative;
+      width: 22rem;
+      height: 9rem;
+      transform: skewY(-8deg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      background: rgba(255, 254, 249, 0.7);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(252, 191, 73, 0.2);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow-warm);
+      transition: all var(--duration-default) var(--cubic-default);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Card pseudo-elements for layering effect */
+    .display-card::after {
+      content: '';
+      position: absolute;
+      right: -0.25rem;
+      top: -5%;
+      height: 110%;
+      width: 20rem;
+      background: linear-gradient(to left, var(--color-neutral-200), transparent);
+      pointer-events: none;
+    }
+
+    .display-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 254, 249, 0.5);
+      background-blend-mode: overlay;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(252, 191, 73, 0.1);
+      transition: opacity var(--duration-default);
+      pointer-events: none;
+    }
+
+    /* Card Positioning */
+    .display-card:nth-child(1) {
+      z-index: 3;
+      filter: grayscale(100%);
+    }
+
+    .display-card:nth-child(2) {
+      transform: skewY(-8deg) translateX(4rem) translateY(2.5rem);
+      z-index: 2;
+      filter: grayscale(100%);
+    }
+
+    .display-card:nth-child(3) {
+      transform: skewY(-8deg) translateX(8rem) translateY(5rem);
+      z-index: 1;
+    }
+
+    /* Hover States */
+    .display-card:nth-child(1):hover {
+      transform: skewY(-8deg) translateY(-2.5rem);
+      filter: grayscale(0%);
+      border-color: rgba(252, 191, 73, 0.6);
+      box-shadow: var(--glow-marigold);
+    }
+
+    .display-card:nth-child(1):hover::before {
+      opacity: 0;
+    }
+
+    .display-card:nth-child(2):hover {
+      transform: skewY(-8deg) translateX(4rem) translateY(-0.25rem);
+      filter: grayscale(0%);
+      border-color: rgba(255, 210, 63, 0.6);
+      box-shadow: var(--glow-buttercup);
+    }
+
+    .display-card:nth-child(2):hover::before {
+      opacity: 0;
+    }
+
+    .display-card:nth-child(3):hover {
+      transform: skewY(-8deg) translateX(8rem) translateY(2.5rem);
+      border-color: rgba(252, 191, 73, 0.4);
+      box-shadow: var(--glow-marigold);
+    }
+
+    /* Card Content Sections */
+    .card-header,
+    .card-body,
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Icon Container */
+    .icon-container {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+      border-radius: 9999px;
+      box-shadow: 0 2px 8px rgba(252, 191, 73, 0.3);
+    }
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
+      stroke: var(--color-neutral-100);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* Card Title */
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Card Description */
+    .card-description {
+      font-size: 1.125rem;
+      font-weight: 400;
+      color: var(--color-secondary);
+      white-space: nowrap;
+    }
+
+    /* Card Date */
+    .card-date {
+      font-size: 0.875rem;
+      color: var(--color-neutral-500);
+      font-weight: 400;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .section-subtitle {
+        font-size: 1rem;
+      }
+
+      .cards-container {
+        max-width: 100%;
+        height: 350px;
+      }
+
+      .display-card {
+        width: 18rem;
+        height: 8rem;
+      }
+
+      .display-card:nth-child(2) {
+        transform: skewY(-8deg) translateX(3rem) translateY(2rem);
+      }
+
+      .display-card:nth-child(3) {
+        transform: skewY(-8deg) translateX(6rem) translateY(4rem);
+      }
+
+      .display-card:nth-child(2):hover {
+        transform: skewY(-8deg) translateX(3rem) translateY(-0.25rem);
+      }
+
+      .display-card:nth-child(3):hover {
+        transform: skewY(-8deg) translateX(6rem) translateY(2rem);
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      body {
+        padding: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.75rem;
+      }
+
+      .cards-container {
+        height: 300px;
+      }
+
+      .display-card {
+        width: 16rem;
+        height: 7rem;
+        padding: 0.875rem 1rem;
+      }
+
+      .display-card:nth-child(2) {
+        transform: skewY(-8deg) translateX(2.5rem) translateY(1.75rem);
+      }
+
+      .display-card:nth-child(3) {
+        transform: skewY(-8deg) translateX(5rem) translateY(3.5rem);
+      }
+
+      .card-title {
+        font-size: 1rem;
+      }
+
+      .card-description {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="display-section">
+      <!-- Header -->
+      <div class="section-header">
+        <h1 class="section-title">DreamyHook Display Cards</h1>
+        <p class="section-subtitle">Beautiful stacked card animations with warm golden hues</p>
+      </div>
+
+      <!-- Cards Container -->
+      <div class="cards-container">
+        <!-- Card 1: Featured -->
+        <div class="display-card">
+          <div class="card-header">
+            <span class="icon-container">
+              <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <p class="card-title">Featured</p>
+          </div>
+          <p class="card-description">Discover amazing content</p>
+          <p class="card-date">Just now</p>
+        </div>
+
+        <!-- Card 2: Popular -->
+        <div class="display-card">
+          <div class="card-header">
+            <span class="icon-container">
+              <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <p class="card-title">Popular</p>
+          </div>
+          <p class="card-description">Trending this week</p>
+          <p class="card-date">2 days ago</p>
+        </div>
+
+        <!-- Card 3: New -->
+        <div class="display-card">
+          <div class="card-header">
+            <span class="icon-container">
+              <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <p class="card-title">New</p>
+          </div>
+          <p class="card-description">Latest updates and features</p>
+          <p class="card-date">Today</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Optional: Add additional interactivity
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('.display-card');
+
+      // Add subtle parallax effect on mouse move
+      document.addEventListener('mousemove', function(e) {
+        const mouseX = e.clientX / window.innerWidth;
+        const mouseY = e.clientY / window.innerHeight;
+
+        cards.forEach((card, index) => {
+          const depth = (index + 1) * 2;
+          const moveX = (mouseX - 0.5) * depth;
+          const moveY = (mouseY - 0.5) * depth;
+
+          const currentTransform = window.getComputedStyle(card).transform;
+          if (!card.matches(':hover')) {
+            // Only apply parallax when not hovering
+            const baseTransforms = [
+              '',
+              'translateX(4rem) translateY(2.5rem)',
+              'translateX(8rem) translateY(5rem)'
+            ];
+            card.style.transform = `skewY(-8deg) ${baseTransforms[index]} translate(${moveX}px, ${moveY}px)`;
+          }
+        });
+      });
+
+      // Reset on mouse leave
+      document.addEventListener('mouseleave', function() {
+        cards.forEach((card, index) => {
+          const baseTransforms = [
+            '',
+            'translateX(4rem) translateY(2.5rem)',
+            'translateX(8rem) translateY(5rem)'
+          ];
+          card.style.transform = `skewY(-8deg) ${baseTransforms[index]}`;
+        });
+      });
+
+      console.log('%c✨ DreamyHook Display Cards Loaded! ✨', 'color: #FCBF49; font-size: 16px; font-weight: bold;');
+    });
+  </script>
+</body>
+</html>
