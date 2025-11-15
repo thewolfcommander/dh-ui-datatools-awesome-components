@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Interactive Hero Component</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors - Marigold Yellow, Buttercup Yellow, Midnight Blue */
+            --color-primary: #FCBF49;        /* Marigold Yellow - primary brand color */
+            --color-secondary: #0A1128;      /* Midnight Blue - secondary brand color */
+            --color-accent: #FFD23F;         /* Buttercup Yellow - bright accent */
+            --color-coral: #FF6B4A;          /* Coral - warm accent for CTAs */
+            --color-sky: #0ea5e9;            /* Sky Blue - fresh accent */
+
+            /* Neutral Colors - Warm Gray Palette for Light Theme */
+            --color-neutral-100: #ffffff;    /* Pure white */
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;    /* Medium warm gray */
+            --color-neutral-600: #57534e;    /* Dark warm gray */
+            --color-neutral-700: #44403c;    /* Very dark warm gray */
+            --color-neutral-800: #292524;    /* Almost black warm gray */
+            --color-neutral-900: #1c1917;    /* Near black warm */
+
+            /* Semantic Color Assignments */
+            --color-light: var(--color-neutral-200);
+            --color-dark: var(--color-secondary);
+            --color-white: var(--color-neutral-100);
+            --color-black: var(--color-neutral-900);
+
+            /* Functional Colors */
+            --color-error: #ef4444;
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+
+            /* Theme-Specific Colors */
+            --theme-background: #fffef9;
+
+            /* Typography */
+            --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+            --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+            /* Shadows */
+            --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+            --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+            --shadow-hard: 0 10px 40px 0 rgba(10, 17, 40, 0.15);
+            --shadow-marigold: 0 0 30px 0 rgba(252, 191, 73, 0.25);
+            --shadow-buttercup: 0 0 30px 0 rgba(255, 210, 63, 0.3);
+        }
+
+        /* ========================= Reset & Base Styles ========================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--theme-background);
+            color: var(--color-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ========================= Hero Section Styles ========================= */
+        #home {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        /* Announcement Banner */
+        .announcement {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-white);
+            border: 1px solid rgba(252, 191, 73, 0.2);
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+            color: var(--color-neutral-600);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+
+        .announcement:hover {
+            box-shadow: var(--shadow-marigold);
+            transform: translateY(-2px);
+        }
+
+        .announcement-icon {
+            width: 20px;
+            height: 20px;
+            stroke: var(--color-primary);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .announcement-link {
+            color: var(--color-primary);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-left: 0.25rem;
+            transition: color 0.3s ease;
+        }
+
+        .announcement-link:hover {
+            color: var(--color-accent);
+        }
+
+        .arrow-icon {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Main Hero Container */
+        .hero-main {
+            margin: 2rem 0;
+        }
+
+        .hero-box {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            border: 2px solid rgba(252, 191, 73, 0.15);
+            border-radius: 1rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 254, 249, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Corner Plus Icons */
+        .corner-icon {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            stroke: var(--color-primary);
+            stroke-width: 3;
+            fill: none;
+        }
+
+        .corner-icon.top-left { top: -16px; left: -16px; }
+        .corner-icon.top-right { top: -16px; right: -16px; }
+        .corner-icon.bottom-left { bottom: -16px; left: -16px; }
+        .corner-icon.bottom-right { bottom: -16px; right: -16px; }
+
+        /* Main Heading */
+        .hero-heading {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Status Indicator */
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .status-dot {
+            position: relative;
+            width: 12px;
+            height: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-ping {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-success);
+            border-radius: 50%;
+            opacity: 0.75;
+            animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        .status-dot-inner {
+            position: relative;
+            width: 8px;
+            height: 8px;
+            background-color: var(--color-success);
+            border-radius: 50%;
+        }
+
+        .status-text {
+            font-size: 0.75rem;
+            color: var(--color-success);
+            font-weight: 500;
+        }
+
+        /* Subheading & Description */
+        .hero-subheading {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+        }
+
+        .brand-name {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .hero-description {
+            font-size: clamp(0.875rem, 2vw, 1.125rem);
+            color: var(--color-neutral-600);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        /* CTA Buttons */
+        .cta-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font-body);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+            color: var(--color-dark);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-buttercup);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: var(--color-white);
+            color: var(--color-dark);
+            border: 2px solid var(--color-primary);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-primary);
+            box-shadow: var(--shadow-marigold);
+            transform: translateY(-2px);
+        }
+
+        /* Canvas */
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes ping {
+            75%, 100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media (max-width: 767px) {
+            .hero-box {
+                padding: 2rem 1rem;
+            }
+
+            .corner-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .corner-icon.top-left,
+            .corner-icon.top-right,
+            .corner-icon.bottom-left,
+            .corner-icon.bottom-right {
+                top: auto;
+                bottom: auto;
+                left: auto;
+                right: auto;
+            }
+
+            .corner-icon.top-left { top: -12px; left: -12px; }
+            .corner-icon.top-right { top: -12px; right: -12px; }
+            .corner-icon.bottom-left { bottom: -12px; left: -12px; }
+            .corner-icon.bottom-right { bottom: -12px; right: -12px; }
+
+            .cta-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 479px) {
+            #home {
+                padding: 1rem 0.5rem;
+            }
+
+            .announcement {
+                font-size: 0.75rem;
+                padding: 0.375rem 0.75rem;
+            }
+
+            .hero-description {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section id="home">
+        <div class="hero-content">
+            <!-- Announcement Banner -->
+            <div class="announcement">
+                <svg class="announcement-icon" viewBox="0 0 24 24">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                <span>Introducing DreamyHook.</span>
+                <a href="#products" class="announcement-link">
+                    Explore
+                    <svg class="arrow-icon" viewBox="0 0 24 24">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Main Hero Content -->
+            <div class="hero-main">
+                <div class="hero-box">
+                    <!-- Corner Plus Icons -->
+                    <svg class="corner-icon top-left" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <svg class="corner-icon top-right" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <svg class="corner-icon bottom-left" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <svg class="corner-icon bottom-right" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+
+                    <h1 class="hero-heading">
+                        Your complete platform for Design.
+                    </h1>
+
+                    <!-- Status Indicator -->
+                    <div class="status-container">
+                        <div class="status-dot">
+                            <span class="status-ping"></span>
+                            <span class="status-dot-inner"></span>
+                        </div>
+                        <p class="status-text">Available Now</p>
+                    </div>
+                </div>
+
+                <h2 class="hero-subheading">
+                    Welcome to my creative playground! I'm <span class="brand-name">DreamyHook</span>
+                </h2>
+
+                <p class="hero-description">
+                    I craft enchanting visuals for brands, and conjure design resources
+                    to empower others.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="cta-container">
+                    <a href="#dashboard" class="btn btn-primary">Start Project</a>
+                    <a href="https://cal.com/dreamyhook/consultation" target="_blank" class="btn btn-outline">Book a call</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Canvas -->
+        <canvas id="canvas"></canvas>
+    </section>
+
+    <script>
+        /* ========================= Canvas Animation Logic ========================= */
+
+        // Oscillator class for smooth sine wave animations
+        function Oscillator(config) {
+            this.phase = config.phase || 0;
+            this.offset = config.offset || 0;
+            this.frequency = config.frequency || 0.001;
+            this.amplitude = config.amplitude || 1;
+        }
+
+        Oscillator.prototype.update = function() {
+            this.phase += this.frequency;
+            return this.offset + Math.sin(this.phase) * this.amplitude;
+        };
+
+        // Node class for trail points
+        function Node() {
+            this.x = 0;
+            this.y = 0;
+            this.vx = 0;
+            this.vy = 0;
+        }
+
+        // Line class for creating animated trails
+        function Line(config) {
+            this.spring = config.spring + 0.1 * Math.random() - 0.05;
+            this.friction = settings.friction + 0.01 * Math.random() - 0.005;
+            this.nodes = [];
+
+            for (let i = 0; i < settings.size; i++) {
+                const node = new Node();
+                node.x = mousePos.x;
+                node.y = mousePos.y;
+                this.nodes.push(node);
+            }
+        }
+
+        Line.prototype.update = function() {
+            let spring = this.spring;
+            const firstNode = this.nodes[0];
+
+            firstNode.vx += (mousePos.x - firstNode.x) * spring;
+            firstNode.vy += (mousePos.y - firstNode.y) * spring;
+
+            for (let i = 0; i < this.nodes.length; i++) {
+                const node = this.nodes[i];
+
+                if (i > 0) {
+                    const prevNode = this.nodes[i - 1];
+                    node.vx += (prevNode.x - node.x) * spring;
+                    node.vy += (prevNode.y - node.y) * spring;
+                    node.vx += prevNode.vx * settings.dampening;
+                    node.vy += prevNode.vy * settings.dampening;
+                }
+
+                node.vx *= this.friction;
+                node.vy *= this.friction;
+                node.x += node.vx;
+                node.y += node.vy;
+                spring *= settings.tension;
+            }
+        };
+
+        Line.prototype.draw = function() {
+            let x = this.nodes[0].x;
+            let y = this.nodes[0].y;
+
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+
+            for (let i = 1; i < this.nodes.length - 2; i++) {
+                const node = this.nodes[i];
+                const nextNode = this.nodes[i + 1];
+                x = 0.5 * (node.x + nextNode.x);
+                y = 0.5 * (node.y + nextNode.y);
+                ctx.quadraticCurveTo(node.x, node.y, x, y);
+            }
+
+            const lastNode = this.nodes[this.nodes.length - 2];
+            const finalNode = this.nodes[this.nodes.length - 1];
+            ctx.quadraticCurveTo(lastNode.x, lastNode.y, finalNode.x, finalNode.y);
+            ctx.stroke();
+            ctx.closePath();
+        };
+
+        // Global variables
+        let ctx;
+        let colorOscillator;
+        let mousePos = { x: 0, y: 0 };
+        let lines = [];
+
+        const settings = {
+            friction: 0.5,
+            trails: 80,
+            size: 50,
+            dampening: 0.025,
+            tension: 0.99
+        };
+
+        // Initialize lines
+        function initLines() {
+            lines = [];
+            for (let i = 0; i < settings.trails; i++) {
+                lines.push(new Line({
+                    spring: 0.45 + (i / settings.trails) * 0.025
+                }));
+            }
+        }
+
+        // Mouse/Touch handlers
+        function handleMouseMove(e) {
+            if (e.touches) {
+                mousePos.x = e.touches[0].pageX;
+                mousePos.y = e.touches[0].pageY;
+            } else {
+                mousePos.x = e.clientX;
+                mousePos.y = e.clientY;
+            }
+            e.preventDefault();
+        }
+
+        function handleTouchStart(e) {
+            if (e.touches.length === 1) {
+                mousePos.x = e.touches[0].pageX;
+                mousePos.y = e.touches[0].pageY;
+            }
+        }
+
+        // Initialize mouse tracking
+        function initMouseTracking(e) {
+            document.removeEventListener('mousemove', initMouseTracking);
+            document.removeEventListener('touchstart', initMouseTracking);
+
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('touchmove', handleMouseMove);
+            document.addEventListener('touchstart', handleTouchStart);
+
+            handleMouseMove(e);
+            initLines();
+            render();
+        }
+
+        // Animation loop
+        function render() {
+            if (!ctx.running) return;
+
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.globalCompositeOperation = 'lighter';
+
+            // Use DreamyHook colors in HSL animation (golden/yellow hues)
+            ctx.strokeStyle = `hsla(${Math.round(colorOscillator.update())}, 100%, 50%, 0.025)`;
+            ctx.lineWidth = 10;
+
+            for (let i = 0; i < settings.trails; i++) {
+                const line = lines[i];
+                line.update();
+                line.draw();
+            }
+
+            ctx.frame++;
+            window.requestAnimationFrame(render);
+        }
+
+        // Resize handler
+        function resizeCanvas() {
+            ctx.canvas.width = window.innerWidth;
+            ctx.canvas.height = window.innerHeight;
+        }
+
+        // Initialize canvas
+        function initCanvas() {
+            const canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            ctx.running = true;
+            ctx.frame = 1;
+
+            // Initialize color oscillator with warm golden hues (30-60 degrees on HSL wheel)
+            colorOscillator = new Oscillator({
+                phase: Math.random() * 2 * Math.PI,
+                amplitude: 30,  // Vary between golden yellows and oranges
+                frequency: 0.002,
+                offset: 45  // Center around golden/yellow hue (45 degrees)
+            });
+
+            // Set up event listeners
+            document.addEventListener('mousemove', initMouseTracking);
+            document.addEventListener('touchstart', initMouseTracking);
+            window.addEventListener('resize', resizeCanvas);
+            window.addEventListener('orientationchange', resizeCanvas);
+
+            // Handle window focus/blur
+            window.addEventListener('focus', () => {
+                if (!ctx.running) {
+                    ctx.running = true;
+                    render();
+                }
+            });
+
+            window.addEventListener('blur', () => {
+                ctx.running = true;
+            });
+
+            resizeCanvas();
+        }
+
+        // Start everything when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCanvas);
+        } else {
+            initCanvas();
+        }
+    </script>
+</body>
+</html>
