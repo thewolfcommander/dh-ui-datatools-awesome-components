@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DreamyHook Typewriter Effect - Professional animated text component">
+  <title>DreamyHook Typewriter Effect</title>
+
+  <!-- Google Fonts - Inter & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==================== DreamyHook Theme Variables ==================== */
+    :root {
+      /* Brand Colors */
+      --color-primary: #FCBF49;        /* Marigold Yellow */
+      --color-secondary: #0A1128;      /* Midnight Blue */
+      --color-accent: #FFD23F;         /* Buttercup Yellow */
+      --color-coral: #FF6B4A;          /* Coral accent */
+      --color-sky: #0ea5e9;            /* Sky Blue */
+
+      /* Neutral Colors */
+      --color-white: #ffffff;
+      --color-warm-white: #fffef9;
+      --color-cream: #fffdf0;
+      --color-light-cream: #fef9e7;
+      --color-gray-500: #78716c;
+      --color-gray-600: #57534e;
+      --color-gray-700: #44403c;
+      --color-gray-800: #292524;
+      --color-gray-900: #1c1917;
+
+      /* Semantic Colors */
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+
+      /* Typography */
+      --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+      /* Animation */
+      --animation-duration: 0.3s;
+      --cursor-blink-duration: 0.8s;
+      --transition-ease: cubic-bezier(0.65, 0.05, 0, 1);
+
+      /* Spacing */
+      --gap: 2rem;
+      --container-padding: 2rem;
+    }
+
+    /* ==================== Reset & Base Styles ==================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: linear-gradient(135deg, var(--color-warm-white) 0%, var(--color-light-cream) 100%);
+      color: var(--color-secondary);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Selection styling with brand colors */
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    ::-moz-selection {
+      background-color: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    /* ==================== Container & Layout ==================== */
+    .page-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--container-padding);
+      gap: calc(var(--gap) * 2);
+    }
+
+    .demo-section {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--gap);
+      padding: calc(var(--gap) * 2);
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 2rem;
+      box-shadow: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+      transition: all 0.3s var(--transition-ease);
+    }
+
+    .demo-section:hover {
+      box-shadow: 0 10px 40px 0 rgba(252, 191, 73, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* ==================== Typography ==================== */
+    .subtitle {
+      font-family: var(--font-sans);
+      color: var(--color-gray-600);
+      font-size: 0.875rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-secondary);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    /* ==================== Typewriter Effect Styles ==================== */
+    .typewriter-container {
+      text-align: center;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: clamp(1.5rem, 5vw, 3rem);
+      color: var(--color-secondary);
+      min-height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .typewriter-word {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .typewriter-char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity var(--animation-duration) var(--transition-ease),
+                  transform var(--animation-duration) var(--transition-ease);
+    }
+
+    .typewriter-char.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Accent text styling */
+    .accent-text {
+      color: var(--color-accent);
+      text-shadow: 0 0 20px rgba(255, 210, 63, 0.3);
+    }
+
+    .primary-text {
+      color: var(--color-primary);
+    }
+
+    .coral-text {
+      color: var(--color-coral);
+    }
+
+    /* ==================== Typewriter Cursor ==================== */
+    .typewriter-cursor {
+      display: inline-block;
+      width: 4px;
+      height: 1em;
+      background-color: var(--color-primary);
+      border-radius: 2px;
+      margin-left: 0.25rem;
+      animation: blink var(--cursor-blink-duration) ease-in-out infinite;
+      vertical-align: text-bottom;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ==================== Smooth Typewriter Effect ==================== */
+    .typewriter-smooth-container {
+      text-align: center;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: clamp(1.5rem, 5vw, 3rem);
+      color: var(--color-secondary);
+      min-height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .typewriter-smooth-wrapper {
+      overflow: hidden;
+      max-width: 0;
+      white-space: nowrap;
+      animation: reveal 2s linear 1s forwards;
+    }
+
+    @keyframes reveal {
+      to {
+        max-width: 100%;
+      }
+    }
+
+    .typewriter-smooth-text {
+      display: inline-block;
+    }
+
+    /* ==================== Button Styles (DreamyHook Theme) ==================== */
+    .button-group {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border-radius: 0.75rem;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s var(--transition-ease);
+      text-decoration: none;
+      display: inline-block;
+      min-width: 10rem;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+      color: var(--color-secondary);
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(252, 191, 73, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+      box-shadow: 0 6px 25px rgba(252, 191, 73, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--color-white);
+      color: var(--color-secondary);
+      border-color: var(--color-secondary);
+      box-shadow: 0 2px 10px rgba(10, 17, 40, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-secondary);
+      color: var(--color-white);
+      box-shadow: 0 4px 20px rgba(10, 17, 40, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .btn-coral {
+      background: linear-gradient(135deg, var(--color-coral) 0%, #ff8a71 100%);
+      color: var(--color-white);
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(255, 107, 74, 0.3);
+    }
+
+    .btn-coral:hover {
+      background: linear-gradient(135deg, #ff8a71 0%, var(--color-coral) 100%);
+      box-shadow: 0 6px 25px rgba(255, 107, 74, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* ==================== Divider ==================== */
+    .divider {
+      width: 100%;
+      max-width: 800px;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--color-primary) 50%,
+        transparent 100%);
+      margin: 3rem 0;
+    }
+
+    /* ==================== Responsive Design ==================== */
+    @media screen and (max-width: 768px) {
+      :root {
+        --container-padding: 1.5rem;
+        --gap: 1.5rem;
+      }
+
+      .typewriter-container,
+      .typewriter-smooth-container {
+        font-size: clamp(1.25rem, 4vw, 2rem);
+      }
+
+      .demo-section {
+        padding: var(--gap);
+      }
+
+      .button-group {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      :root {
+        --container-padding: 1rem;
+        --gap: 1rem;
+      }
+
+      .subtitle {
+        font-size: 0.75rem;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+      }
+    }
+
+    /* ==================== Accessibility - Reduced Motion ==================== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .typewriter-char {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ==================== Loading State ==================== */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* ==================== Glow Effects ==================== */
+    .glow-marigold {
+      box-shadow: 0 0 20px rgba(252, 191, 73, 0.3);
+    }
+
+    .glow-buttercup {
+      box-shadow: 0 0 20px rgba(255, 210, 63, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+
+    <!-- Stagger Effect Demo -->
+    <section class="demo-section">
+      <h2 class="section-title">Typewriter Effect (Stagger Animation)</h2>
+      <p class="subtitle">Watch as each character appears one by one</p>
+
+      <div id="typewriter-stagger" class="typewriter-container">
+        <!-- Characters will be dynamically inserted here -->
+      </div>
+
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="restartStaggerAnimation()">
+          Restart Animation
+        </button>
+        <button class="btn btn-secondary" onclick="alert('Join now clicked!')">
+          Join Now
+        </button>
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Smooth Effect Demo -->
+    <section class="demo-section">
+      <h2 class="section-title">Typewriter Effect (Smooth Reveal)</h2>
+      <p class="subtitle">Continuous smooth reveal animation</p>
+
+      <div id="typewriter-smooth" class="typewriter-smooth-container">
+        <!-- Text will be dynamically inserted here -->
+      </div>
+
+      <div class="button-group">
+        <button class="btn btn-coral" onclick="restartSmoothAnimation()">
+          Restart Animation
+        </button>
+        <button class="btn btn-secondary" onclick="alert('Signup clicked!')">
+          Signup
+        </button>
+        <button class="btn btn-primary" onclick="alert('Learn more clicked!')">
+          Learn More
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    /* ==================== DreamyHook Typewriter Effect - Vanilla JavaScript ==================== */
+
+    // ==================== Configuration ====================
+    const config = {
+      stagger: {
+        characterDelay: 100,  // Delay between each character (ms)
+        observerThreshold: 0.5 // Percentage of element visible to trigger
+      },
+      smooth: {
+        revealDuration: 2000, // Total duration of reveal animation (ms)
+        revealDelay: 1000     // Delay before reveal starts (ms)
+      }
+    };
+
+    // ==================== Data ====================
+    const staggerWords = [
+      { text: "Build" },
+      { text: "awesome" },
+      { text: "apps" },
+      { text: "with" },
+      { text: "DreamyHook.", className: "accent-text" }
+    ];
+
+    const smoothWords = [
+      { text: "The" },
+      { text: "road" },
+      { text: "to" },
+      { text: "freedom" },
+      { text: "starts" },
+      { text: "from" },
+      { text: "here", className: "primary-text" }
+    ];
+
+    // ==================== Utility Functions ====================
+
+    /**
+     * Create a character span element
+     */
+    function createCharSpan(char, className = '') {
+      const span = document.createElement('span');
+      span.className = `typewriter-char ${className}`;
+      span.textContent = char;
+      return span;
+    }
+
+    /**
+     * Create a word container
+     */
+    function createWordContainer(word, className = '') {
+      const container = document.createElement('div');
+      container.className = `typewriter-word ${className}`;
+      return container;
+    }
+
+    /**
+     * Create cursor element
+     */
+    function createCursor() {
+      const cursor = document.createElement('span');
+      cursor.className = 'typewriter-cursor';
+      return cursor;
+    }
+
+    /**
+     * Animate characters with stagger effect
+     */
+    function animateCharacters(chars, delay = 100) {
+      return new Promise((resolve) => {
+        let index = 0;
+
+        function showNextChar() {
+          if (index < chars.length) {
+            chars[index].classList.add('visible');
+            index++;
+            setTimeout(showNextChar, delay);
+          } else {
+            resolve();
+          }
+        }
+
+        showNextChar();
+      });
+    }
+
+    // ==================== Typewriter Effect (Stagger) ====================
+
+    /**
+     * Create typewriter effect with stagger animation
+     */
+    function createTypewriterEffect(words, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      // Clear existing content
+      container.innerHTML = '';
+
+      const allChars = [];
+
+      // Build the DOM structure
+      words.forEach((word, wordIndex) => {
+        const wordContainer = createWordContainer(word.text, word.className || '');
+
+        // Split text into characters
+        const chars = word.text.split('');
+        chars.forEach((char) => {
+          const charSpan = createCharSpan(char, word.className || '');
+          wordContainer.appendChild(charSpan);
+          allChars.push(charSpan);
+        });
+
+        container.appendChild(wordContainer);
+
+        // Add space between words (except last word)
+        if (wordIndex < words.length - 1) {
+          container.appendChild(document.createTextNode(' '));
+        }
+      });
+
+      // Add cursor
+      const cursor = createCursor();
+      container.appendChild(cursor);
+
+      // Setup Intersection Observer for viewport-triggered animation
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // Start animation when element is in view
+              animateCharacters(allChars, config.stagger.characterDelay);
+              observer.unobserve(entry.target); // Only animate once
+            }
+          });
+        },
+        { threshold: config.stagger.observerThreshold }
+      );
+
+      observer.observe(container);
+
+      return { container, allChars, observer };
+    }
+
+    // ==================== Typewriter Effect (Smooth) ====================
+
+    /**
+     * Create typewriter effect with smooth reveal animation
+     */
+    function createTypewriterEffectSmooth(words, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      // Clear existing content
+      container.innerHTML = '';
+
+      // Create wrapper for reveal animation
+      const wrapper = document.createElement('div');
+      wrapper.className = 'typewriter-smooth-wrapper';
+
+      // Create text container
+      const textContainer = document.createElement('div');
+      textContainer.className = 'typewriter-smooth-text';
+
+      // Build the text with proper spacing and classes
+      words.forEach((word, index) => {
+        const span = document.createElement('span');
+        span.className = word.className || '';
+        span.textContent = word.text;
+        textContainer.appendChild(span);
+
+        // Add space between words (except last word)
+        if (index < words.length - 1) {
+          textContainer.appendChild(document.createTextNode(' '));
+        }
+      });
+
+      wrapper.appendChild(textContainer);
+      container.appendChild(wrapper);
+
+      // Add cursor
+      const cursor = createCursor();
+      container.appendChild(cursor);
+
+      // Setup Intersection Observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // Trigger CSS animation by adding class or resetting animation
+              wrapper.style.animation = 'none';
+              // Force reflow
+              void wrapper.offsetWidth;
+              wrapper.style.animation = `reveal ${config.smooth.revealDuration}ms linear ${config.smooth.revealDelay}ms forwards`;
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+
+      observer.observe(container);
+
+      return { container, wrapper, observer };
+    }
+
+    // ==================== Restart Functions ====================
+
+    let staggerInstance = null;
+    let smoothInstance = null;
+
+    function restartStaggerAnimation() {
+      if (staggerInstance && staggerInstance.observer) {
+        staggerInstance.observer.disconnect();
+      }
+      staggerInstance = createTypewriterEffect(staggerWords, 'typewriter-stagger');
+    }
+
+    function restartSmoothAnimation() {
+      if (smoothInstance && smoothInstance.observer) {
+        smoothInstance.observer.disconnect();
+      }
+      smoothInstance = createTypewriterEffectSmooth(smoothWords, 'typewriter-smooth');
+    }
+
+    // ==================== Initialize on Page Load ====================
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize both typewriter effects
+      staggerInstance = createTypewriterEffect(staggerWords, 'typewriter-stagger');
+      smoothInstance = createTypewriterEffectSmooth(smoothWords, 'typewriter-smooth');
+
+      console.log('DreamyHook Typewriter Effects initialized ✨');
+    });
+
+    // ==================== Fallback for Older Browsers ====================
+
+    // Check if IntersectionObserver is supported
+    if (!('IntersectionObserver' in window)) {
+      console.warn('IntersectionObserver not supported. Animations will appear immediately.');
+
+      // Fallback: show all characters immediately
+      document.addEventListener('DOMContentLoaded', () => {
+        const allChars = document.querySelectorAll('.typewriter-char');
+        allChars.forEach(char => char.classList.add('visible'));
+
+        const allWrappers = document.querySelectorAll('.typewriter-smooth-wrapper');
+        allWrappers.forEach(wrapper => {
+          wrapper.style.maxWidth = '100%';
+        });
+      });
+    }
+  </script>
+</body>
+</html>
