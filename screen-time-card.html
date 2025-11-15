@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen Time Card - DreamyHook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================= DreamyHook Theme Variables ========================= */
+    :root {
+      /* Brand Colors */
+      --color-primary: #FCBF49;        /* Marigold Yellow */
+      --color-secondary: #0A1128;      /* Midnight Blue */
+      --color-accent: #FFD23F;         /* Buttercup Yellow */
+      --color-coral: #FF6B4A;          /* Coral */
+      --color-sky: #0ea5e9;            /* Sky Blue */
+
+      /* Neutral Colors */
+      --color-neutral-100: #ffffff;
+      --color-neutral-200: #fffef9;
+      --color-neutral-300: #fffdf0;
+      --color-neutral-400: #fef9e7;
+      --color-neutral-500: #78716c;
+      --color-neutral-600: #57534e;
+      --color-neutral-700: #44403c;
+      --color-neutral-800: #292524;
+      --color-neutral-900: #1c1917;
+
+      /* Semantic Colors */
+      --color-light: var(--color-neutral-200);
+      --color-dark: var(--color-secondary);
+      --color-border: #e7e5e4;
+      --color-muted: var(--color-neutral-500);
+
+      /* Shadows */
+      --shadow-soft: 0 2px 15px 0 rgba(10, 17, 40, 0.05);
+      --shadow-medium: 0 4px 25px 0 rgba(10, 17, 40, 0.1);
+      --shadow-warm: 0 4px 20px 0 rgba(252, 191, 73, 0.15);
+      --shadow-marigold: 0 0 20px rgba(252, 191, 73, 0.3);
+      --shadow-marigold-hover: 0 0 30px rgba(252, 191, 73, 0.5);
+
+      /* Animation */
+      --cubic-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --cubic-smooth: cubic-bezier(0.65, 0.05, 0, 1);
+    }
+
+    /* ========================= Reset & Base Styles ========================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #fffef9 0%, #fef9e7 100%);
+      color: var(--color-dark);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-neutral-100);
+    }
+
+    /* ========================= Screen Time Card Component ========================= */
+    .screen-time-card {
+      width: 100%;
+      max-width: 28rem;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 254, 249, 0.98) 100%);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 1.5rem 1.75rem;
+      box-shadow: var(--shadow-warm);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .screen-time-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--color-coral) 100%);
+      opacity: 0.6;
+    }
+
+    .screen-time-card:hover {
+      box-shadow: var(--shadow-marigold);
+      transform: translateY(-2px);
+    }
+
+    .card-content {
+      display: flex;
+      gap: 3rem;
+    }
+
+    /* ========================= Left Section - Graph ========================= */
+    .graph-section {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .total-time {
+      font-size: 2rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      color: var(--color-dark);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .graph-container {
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Y-axis labels */
+    .y-axis {
+      position: absolute;
+      right: -2.75rem;
+      top: 0;
+      height: 8rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+    }
+
+    /* Horizontal guide lines */
+    .guide-lines {
+      position: absolute;
+      inset: 0;
+      height: 8rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .guide-line {
+      height: 1px;
+      border-top: 1px dashed rgba(10, 17, 40, 0.1);
+    }
+
+    /* Bar graph */
+    .bars-container {
+      height: 8rem;
+      display: flex;
+      align-items: flex-end;
+      gap: 0.2rem;
+      position: relative;
+      z-index: 10;
+      margin-bottom: 0.5rem;
+    }
+
+    .bar {
+      flex: 1;
+      background: rgba(120, 113, 108, 0.2);
+      border-radius: 0.2rem 0.2rem 0 0;
+      transform-origin: bottom;
+      transform: scaleY(0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .bar.highlighted {
+      background: linear-gradient(to top, var(--color-primary) 0%, var(--color-accent) 100%);
+    }
+
+    .bar:hover {
+      opacity: 0.8;
+      filter: brightness(1.1);
+    }
+
+    .bar.animated {
+      animation: barEnter 0.6s var(--cubic-spring) forwards;
+    }
+
+    @keyframes barEnter {
+      0% {
+        transform: scaleY(0);
+        opacity: 0;
+      }
+      100% {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+    }
+
+    /* X-axis labels */
+    .x-axis {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      padding-right: 0.5rem;
+    }
+
+    /* ========================= Vertical Divider ========================= */
+    .divider {
+      width: 1px;
+      background: var(--color-border);
+      align-self: stretch;
+      margin-left: 1.5rem;
+    }
+
+    /* ========================= Right Section - Top Apps ========================= */
+    .apps-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      justify-content: center;
+      min-width: 7rem;
+    }
+
+    .app-item {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      opacity: 0;
+      transform: translateX(20px);
+    }
+
+    .app-item.animated {
+      animation: appEnter 0.5s ease-out forwards;
+    }
+
+    @keyframes appEnter {
+      0% {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .app-icon {
+      width: 1.75rem;
+      height: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app-icon svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      stroke-width: 2.5;
+    }
+
+    .app-duration {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-dark);
+      white-space: nowrap;
+    }
+
+    /* ========================= Responsive Design ========================= */
+    @media screen and (max-width: 767px) {
+      body {
+        padding: 1rem;
+      }
+
+      .screen-time-card {
+        max-width: 100%;
+        padding: 1.25rem 1rem;
+      }
+
+      .card-content {
+        gap: 2rem;
+      }
+
+      .total-time {
+        font-size: 1.75rem;
+      }
+
+      .y-axis {
+        right: -2.5rem;
+      }
+
+      .divider {
+        margin-left: 1rem;
+      }
+
+      .apps-section {
+        min-width: 6rem;
+      }
+    }
+
+    @media screen and (max-width: 479px) {
+      .screen-time-card {
+        padding: 1rem 0.875rem;
+      }
+
+      .card-content {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .divider {
+        display: none;
+      }
+
+      .apps-section {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+        min-width: 100%;
+      }
+
+      .app-item {
+        flex: 1;
+        min-width: calc(50% - 0.5rem);
+      }
+    }
+
+    /* ========================= SVG Icons ========================= */
+    .icon-message { color: var(--color-sky); }
+    .icon-globe { color: var(--color-coral); }
+    .icon-smartphone { color: #a855f7; }
+    .icon-monitor { color: var(--color-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- Screen Time Card Component -->
+  <div class="screen-time-card" id="screenTimeCard">
+    <div class="card-content">
+      <!-- Left Section: Graph -->
+      <div class="graph-section">
+        <div class="total-time" id="totalTime">0h 0m</div>
+
+        <div class="graph-container">
+          <!-- Y-axis labels -->
+          <div class="y-axis">
+            <span>2h</span>
+            <span>1h</span>
+            <span>0</span>
+          </div>
+
+          <!-- Guide lines -->
+          <div class="guide-lines">
+            <div class="guide-line"></div>
+            <div class="guide-line"></div>
+            <div class="guide-line"></div>
+          </div>
+
+          <!-- Bars container -->
+          <div class="bars-container" id="barsContainer"></div>
+
+          <!-- X-axis labels -->
+          <div class="x-axis" id="xAxis">
+            <span>5 AM</span>
+            <span>11 AM</span>
+            <span>5 PM</span>
+            <span>0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vertical Divider -->
+      <div class="divider"></div>
+
+      <!-- Right Section: Top Apps -->
+      <div class="apps-section" id="appsSection"></div>
+    </div>
+  </div>
+
+  <script>
+    // ========================= Screen Time Card Configuration =========================
+    const screenTimeConfig = {
+      totalHours: 23,
+      totalMinutes: 2,
+      barData: [
+        20, 15, 10, 8, 12, 25, 35, 45, 60, 75, 80, 85,
+        70, 65, 55, 50, 60, 75, 80, 90, 85, 75, 60, 50
+      ],
+      timeLabels: ["5 AM", "11 AM", "5 PM"],
+      topApps: [
+        {
+          iconType: "message",
+          name: "Messages",
+          duration: "10h 1m",
+          color: "#0ea5e9"
+        },
+        {
+          iconType: "globe",
+          name: "Chrome",
+          duration: "4h 23m",
+          color: "#FF6B4A"
+        },
+        {
+          iconType: "smartphone",
+          name: "Social",
+          duration: "2h 38m",
+          color: "#a855f7"
+        },
+        {
+          iconType: "monitor",
+          name: "Other",
+          duration: "1h 29m",
+          color: "#78716c"
+        }
+      ]
+    };
+
+    // ========================= SVG Icon Templates =========================
+    const iconTemplates = {
+      message: (color) => `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      `,
+      globe: (color) => `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      `,
+      smartphone: (color) => `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+          <line x1="12" y1="18" x2="12.01" y2="18"></line>
+        </svg>
+      `,
+      monitor: (color) => `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+      `
+    };
+
+    // ========================= Initialize Component =========================
+    function initScreenTimeCard(config) {
+      // Set total time
+      const totalTimeEl = document.getElementById('totalTime');
+      totalTimeEl.textContent = `${config.totalHours}h ${config.totalMinutes}m`;
+
+      // Normalize bar data
+      const maxValue = Math.max(...config.barData);
+      const normalizedData = config.barData.map(value => value / maxValue);
+
+      // Generate bars
+      const barsContainer = document.getElementById('barsContainer');
+      barsContainer.innerHTML = '';
+
+      normalizedData.forEach((height, index) => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+
+        // Highlight bars with height > 60%
+        if (height > 0.6) {
+          bar.classList.add('highlighted');
+        }
+
+        // Set height
+        bar.style.height = `${height * 100}%`;
+
+        // Add staggered animation delay
+        bar.style.animationDelay = `${index * 20}ms`;
+
+        barsContainer.appendChild(bar);
+
+        // Trigger animation
+        setTimeout(() => {
+          bar.classList.add('animated');
+        }, 50);
+      });
+
+      // Update X-axis labels if provided
+      if (config.timeLabels && config.timeLabels.length > 0) {
+        const xAxis = document.getElementById('xAxis');
+        xAxis.innerHTML = config.timeLabels.map(label => `<span>${label}</span>`).join('') + '<span>0</span>';
+      }
+
+      // Generate top apps
+      const appsSection = document.getElementById('appsSection');
+      appsSection.innerHTML = '';
+
+      config.topApps.forEach((app, index) => {
+        const appItem = document.createElement('div');
+        appItem.className = 'app-item';
+        appItem.style.animationDelay = `${index * 100 + 300}ms`;
+
+        const iconHtml = iconTemplates[app.iconType]
+          ? iconTemplates[app.iconType](app.color)
+          : iconTemplates.monitor(app.color);
+
+        appItem.innerHTML = `
+          <div class="app-icon icon-${app.iconType}">
+            ${iconHtml}
+          </div>
+          <span class="app-duration">${app.duration}</span>
+        `;
+
+        appsSection.appendChild(appItem);
+
+        // Trigger animation
+        setTimeout(() => {
+          appItem.classList.add('animated');
+        }, 50);
+      });
+    }
+
+    // ========================= Initialize on Load =========================
+    document.addEventListener('DOMContentLoaded', () => {
+      initScreenTimeCard(screenTimeConfig);
+    });
+
+    // Optional: Re-initialize with new data
+    window.updateScreenTime = function(newConfig) {
+      initScreenTimeCard(newConfig);
+    };
+  </script>
+
+</body>
+</html>
