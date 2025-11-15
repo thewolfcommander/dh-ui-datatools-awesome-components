@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamyHook - Falling Pattern Background</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================= DreamyHook Theme Variables ========================= */
+        :root {
+            /* Brand Colors */
+            --color-primary: #FCBF49;        /* Marigold Yellow */
+            --color-secondary: #0A1128;      /* Midnight Blue */
+            --color-accent: #FFD23F;         /* Buttercup Yellow */
+            --color-coral: #FF6B4A;          /* Coral */
+            --color-sky: #0ea5e9;            /* Sky Blue */
+
+            /* Neutral Colors */
+            --color-neutral-100: #ffffff;
+            --color-neutral-200: #fffef9;    /* Warm white */
+            --color-neutral-300: #fffdf0;    /* Cream white */
+            --color-neutral-400: #fef9e7;    /* Light cream */
+            --color-neutral-500: #78716c;
+            --color-neutral-600: #57534e;
+            --color-neutral-700: #44403c;
+            --color-neutral-800: #292524;
+            --color-neutral-900: #1c1917;
+
+            /* Semantic Colors */
+            --color-light: var(--color-neutral-200);
+            --color-dark: var(--color-secondary);
+            --color-white: var(--color-neutral-100);
+
+            /* Typography */
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+            --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+            /* Pattern Configuration */
+            --pattern-color: var(--color-primary);
+            --pattern-bg: var(--color-neutral-200);
+            --pattern-duration: 150s;
+            --pattern-blur: 1em;
+            --pattern-density: 1;
+        }
+
+        /* ========================= Reset ========================= */
+        *, *::after, *::before {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-neutral-200);
+            color: var(--color-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Selection */
+        ::selection {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-100);
+            text-shadow: none;
+        }
+
+        /* ========================= Falling Pattern Component ========================= */
+        .falling-pattern-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .falling-pattern {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--pattern-bg);
+            background-image:
+                /* Row 1 */
+                radial-gradient(4px 100px at 0px 235px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 235px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 117.5px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 2 */
+                radial-gradient(4px 100px at 0px 252px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 252px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 126px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 3 */
+                radial-gradient(4px 100px at 0px 150px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 150px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 75px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 4 */
+                radial-gradient(4px 100px at 0px 253px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 253px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 126.5px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 5 */
+                radial-gradient(4px 100px at 0px 204px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 204px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 102px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 6 */
+                radial-gradient(4px 100px at 0px 134px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 134px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 67px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 7 */
+                radial-gradient(4px 100px at 0px 179px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 179px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 89.5px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 8 */
+                radial-gradient(4px 100px at 0px 299px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 299px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 149.5px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 9 */
+                radial-gradient(4px 100px at 0px 215px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 215px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 107.5px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 10 */
+                radial-gradient(4px 100px at 0px 281px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 281px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 140.5px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 11 */
+                radial-gradient(4px 100px at 0px 158px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 158px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 79px, var(--pattern-color) 100%, transparent 150%),
+                /* Row 12 */
+                radial-gradient(4px 100px at 0px 210px, var(--pattern-color), transparent),
+                radial-gradient(4px 100px at 300px 210px, var(--pattern-color), transparent),
+                radial-gradient(1.5px 1.5px at 150px 105px, var(--pattern-color) 100%, transparent 150%);
+
+            background-size:
+                300px 235px, 300px 235px, 300px 235px,
+                300px 252px, 300px 252px, 300px 252px,
+                300px 150px, 300px 150px, 300px 150px,
+                300px 253px, 300px 253px, 300px 253px,
+                300px 204px, 300px 204px, 300px 204px,
+                300px 134px, 300px 134px, 300px 134px,
+                300px 179px, 300px 179px, 300px 179px,
+                300px 299px, 300px 299px, 300px 299px,
+                300px 215px, 300px 215px, 300px 215px,
+                300px 281px, 300px 281px, 300px 281px,
+                300px 158px, 300px 158px, 300px 158px,
+                300px 210px, 300px 210px;
+
+            animation: fallingAnimation var(--pattern-duration) linear infinite;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fallingAnimation {
+            0% {
+                opacity: 1;
+                background-position:
+                    0px 220px, 3px 220px, 151.5px 337.5px,
+                    25px 24px, 28px 24px, 176.5px 150px,
+                    50px 16px, 53px 16px, 201.5px 91px,
+                    75px 224px, 78px 224px, 226.5px 230.5px,
+                    100px 19px, 103px 19px, 251.5px 121px,
+                    125px 120px, 128px 120px, 276.5px 187px,
+                    150px 31px, 153px 31px, 301.5px 120.5px,
+                    175px 235px, 178px 235px, 326.5px 384.5px,
+                    200px 121px, 203px 121px, 351.5px 228.5px,
+                    225px 224px, 228px 224px, 376.5px 364.5px,
+                    250px 26px, 253px 26px, 401.5px 105px,
+                    275px 75px, 278px 75px, 426.5px 180px;
+            }
+            100% {
+                background-position:
+                    0px 6800px, 3px 6800px, 151.5px 6917.5px,
+                    25px 13632px, 28px 13632px, 176.5px 13758px,
+                    50px 5416px, 53px 5416px, 201.5px 5491px,
+                    75px 17175px, 78px 17175px, 226.5px 17301.5px,
+                    100px 5119px, 103px 5119px, 251.5px 5221px,
+                    125px 8428px, 128px 8428px, 276.5px 8495px,
+                    150px 9876px, 153px 9876px, 301.5px 9965.5px,
+                    175px 13391px, 178px 13391px, 326.5px 13540.5px,
+                    200px 14741px, 203px 14741px, 351.5px 14848.5px,
+                    225px 18770px, 228px 18770px, 376.5px 18910.5px,
+                    250px 5082px, 253px 5082px, 401.5px 5161px,
+                    275px 6375px, 278px 6375px, 426.5px 6480px;
+            }
+        }
+
+        /* Blur overlay with radial gradient mask */
+        .pattern-overlay {
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(var(--pattern-blur));
+            -webkit-backdrop-filter: blur(var(--pattern-blur));
+            background-image: radial-gradient(
+                circle at 50% 50%,
+                transparent 0,
+                transparent 2px,
+                var(--pattern-bg) 2px
+            );
+            background-size: calc(8px * var(--pattern-density)) calc(8px * var(--pattern-density));
+            z-index: 1;
+        }
+
+        /* Radial gradient mask effect */
+        .pattern-mask {
+            position: absolute;
+            inset: 0;
+            mask-image: radial-gradient(
+                ellipse at center,
+                transparent,
+                var(--pattern-bg)
+            );
+            -webkit-mask-image: radial-gradient(
+                ellipse at center,
+                transparent,
+                var(--pattern-bg)
+            );
+        }
+
+        /* ========================= Content Overlay ========================= */
+        .content-overlay {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .main-title {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            animation: slideUp 0.8s ease-out forwards;
+            text-shadow: 0 4px 20px rgba(252, 191, 73, 0.3);
+        }
+
+        .subtitle {
+            font-family: var(--font-sans);
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--color-secondary);
+            font-weight: 500;
+            max-width: 600px;
+            margin-bottom: 2rem;
+            animation: slideUp 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            color: var(--color-white);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            border: none;
+            border-radius: 2rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 25px rgba(252, 191, 73, 0.25);
+            animation: slideUp 0.8s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 35px rgba(252, 191, 73, 0.4);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* ========================= Animations ========================= */
+        @keyframes slideUp {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ========================= Configuration Panel ========================= */
+        .config-panel {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(10, 17, 40, 0.15);
+            z-index: 100;
+            min-width: 280px;
+            border: 2px solid var(--color-primary);
+        }
+
+        .config-panel h3 {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .config-item {
+            margin-bottom: 1rem;
+        }
+
+        .config-item label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-neutral-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .config-item input[type="color"],
+        .config-item input[type="range"],
+        .config-item input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid var(--color-neutral-300);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .config-item input[type="color"] {
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .config-item input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .toggle-config {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 25px rgba(252, 191, 73, 0.25);
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--color-white);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-config:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 35px rgba(252, 191, 73, 0.4);
+        }
+
+        .config-panel.hidden {
+            display: none;
+        }
+
+        /* ========================= Responsive Design ========================= */
+        @media (max-width: 768px) {
+            .config-panel {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                min-width: auto;
+            }
+
+            .toggle-config {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .main-title {
+                font-size: 3rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        /* ========================= Utility Classes ========================= */
+        .glow-marigold {
+            box-shadow: 0 0 30px rgba(252, 191, 73, 0.5);
+        }
+
+        .text-gradient-golden {
+            background: linear-gradient(135deg, #FCBF49 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <!-- Falling Pattern Container -->
+    <div class="falling-pattern-container">
+        <!-- Animated Pattern Background -->
+        <div class="falling-pattern pattern-mask"></div>
+
+        <!-- Blur Overlay -->
+        <div class="pattern-overlay"></div>
+
+        <!-- Content Overlay -->
+        <div class="content-overlay">
+            <h1 class="main-title">Falling Pattern</h1>
+            <p class="subtitle">
+                Experience the beauty of DreamyHook's animated background patterns.
+                Customize colors, speed, and effects in real-time.
+            </p>
+            <button class="cta-button" onclick="toggleConfig()">Customize Pattern</button>
+        </div>
+    </div>
+
+    <!-- Configuration Panel -->
+    <button class="toggle-config" onclick="toggleConfig()" aria-label="Toggle configuration">
+        ⚙️
+    </button>
+
+    <div class="config-panel hidden" id="configPanel">
+        <h3>Pattern Configuration</h3>
+
+        <div class="config-item">
+            <label for="patternColor">Pattern Color:</label>
+            <input type="color" id="patternColor" value="#FCBF49" onchange="updatePattern()">
+        </div>
+
+        <div class="config-item">
+            <label for="backgroundColor">Background Color:</label>
+            <input type="color" id="backgroundColor" value="#fffef9" onchange="updatePattern()">
+        </div>
+
+        <div class="config-item">
+            <label for="duration">Animation Duration: <span id="durationValue">150s</span></label>
+            <input type="range" id="duration" min="10" max="300" value="150" step="10" oninput="updateDuration(this.value)">
+        </div>
+
+        <div class="config-item">
+            <label for="blur">Blur Intensity: <span id="blurValue">1em</span></label>
+            <input type="range" id="blur" min="0" max="3" value="1" step="0.1" oninput="updateBlur(this.value)">
+        </div>
+
+        <div class="config-item">
+            <label for="density">Pattern Density: <span id="densityValue">1</span></label>
+            <input type="range" id="density" min="0.5" max="3" value="1" step="0.1" oninput="updateDensity(this.value)">
+        </div>
+
+        <div class="config-item">
+            <button class="cta-button" onclick="resetDefaults()" style="width: 100%; margin-top: 1rem;">
+                Reset to Defaults
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Configuration state
+        const config = {
+            patternColor: '#FCBF49',
+            backgroundColor: '#fffef9',
+            duration: 150,
+            blur: 1,
+            density: 1
+        };
+
+        // Toggle configuration panel
+        function toggleConfig() {
+            const panel = document.getElementById('configPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        // Update pattern color and background
+        function updatePattern() {
+            const patternColor = document.getElementById('patternColor').value;
+            const backgroundColor = document.getElementById('backgroundColor').value;
+
+            config.patternColor = patternColor;
+            config.backgroundColor = backgroundColor;
+
+            document.documentElement.style.setProperty('--pattern-color', patternColor);
+            document.documentElement.style.setProperty('--pattern-bg', backgroundColor);
+        }
+
+        // Update animation duration
+        function updateDuration(value) {
+            config.duration = value;
+            document.getElementById('durationValue').textContent = value + 's';
+            document.documentElement.style.setProperty('--pattern-duration', value + 's');
+        }
+
+        // Update blur intensity
+        function updateBlur(value) {
+            config.blur = value;
+            document.getElementById('blurValue').textContent = value + 'em';
+            document.documentElement.style.setProperty('--pattern-blur', value + 'em');
+        }
+
+        // Update pattern density
+        function updateDensity(value) {
+            config.density = value;
+            document.getElementById('densityValue').textContent = value;
+            document.documentElement.style.setProperty('--pattern-density', value);
+        }
+
+        // Reset to default values
+        function resetDefaults() {
+            document.getElementById('patternColor').value = '#FCBF49';
+            document.getElementById('backgroundColor').value = '#fffef9';
+            document.getElementById('duration').value = 150;
+            document.getElementById('blur').value = 1;
+            document.getElementById('density').value = 1;
+
+            updatePattern();
+            updateDuration(150);
+            updateBlur(1);
+            updateDensity(1);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePattern();
+        });
+
+        // Keyboard accessibility for config panel
+        document.addEventListener('keydown', function(e) {
+            // Toggle config panel with 'C' key
+            if (e.key === 'c' || e.key === 'C') {
+                toggleConfig();
+            }
+            // Reset with 'R' key
+            if (e.key === 'r' || e.key === 'R') {
+                resetDefaults();
+            }
+        });
+    </script>
+</body>
+</html>
